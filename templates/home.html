@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+    <h1>HI! {{ user.username }}</h1>
+{% else %}
+<a href="{% url 'accounts:accounts_create' %}">회원가입</a>
+<a href="{% url 'accounts:accounts_login' %}">로그인</a>
+
+{% endif %}
+
+</body>
+</html>
