@@ -11,6 +11,8 @@ class User(AbstractUser):
     )
     sex = models.SmallIntegerField(choices=GENDER_OPTION, null=True)
     age = models.IntegerField(default=0)
+    bank_account_number = models.CharField(max_length=15)
+    bank = models.OneToOneField('bank.Bank', on_delete=models.CASCADE, related_name='bank', null=True)
 
     class Meta:
         swappable = settings.AUTH_USER_MODEL
