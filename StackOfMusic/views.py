@@ -1,4 +1,4 @@
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DetailView
 from music.models import Music
 
 
@@ -15,3 +15,13 @@ class HomeView(ListView):
         context['hot_list'] = Music.objects.order_by('like')[:5]
         return context
 
+
+class MusicDetailView(DetailView):
+    template_name = 'music_detail.html'
+    model = Music
+    pk_url_kwarg = 'music_id'
+
+    def get_context_data(self, **kwargs):
+        context = super(MusicDetailView, self).get_context_data(**kwargs)
+        context['music_list'] = self.object.all
+        return context
