@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, RedirectView
+from django.views.generic import CreateView, TemplateView, RedirectView, DetailView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from .forms import CreateUserForm, LoginForm
+from .models import User
 
 
 class CreateUserView(CreateView):
@@ -35,6 +36,15 @@ class UserLoginView(LoginView):
 class UserLogoutView(RedirectView):
 
     def get(self, request, *args, **kwargs):
-        url = super(UserLogoutView, self).get_redirect_url(*args, **kwargs)
         auth_logout(request)
-        return url
+        return super(UserLogoutView, self).get(request, *args, **kwargs)
+
+
+class UserDetailView(DetailView):
+    template_name = 'accounts/mypage.html'
+    model = User
+
+    def get_context_data(self, **kwargs):
+        context = super(UserDetailView, self).get_context_data(**kwargs)
+        context['user'] = self.object
+        return context
