@@ -17,6 +17,12 @@ class Music(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     like = models.IntegerField(default=0)
     participants = models.IntegerField(default=0)
+    MUSIC_COMPLETED, MUSIC_NOT_COMPLETED = 0, 1
+    MUSIC_OPTION = (
+        (MUSIC_COMPLETED, '완성'),
+        (MUSIC_NOT_COMPLETED, '미완성')
+    )
+    music_option = models.SmallIntegerField(choices=MUSIC_OPTION)
 
     def __str__(self):
         return self.title
