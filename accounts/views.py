@@ -43,6 +43,7 @@ class UserLogoutView(RedirectView):
 class UserDetailView(DetailView):
     template_name = 'accounts/mypage.html'
     model = User
+    pk_url_kwarg = 'account_id'
 
     def get_context_data(self, **kwargs):
         context = super(UserDetailView, self).get_context_data(**kwargs)
