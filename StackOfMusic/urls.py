@@ -22,4 +22,6 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('<int:music_id>', MusicDetailView.as_view(), name='music_detail'),
     path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('create/', include('createmusic.urls', namespace='create_music')),
+
 ]
