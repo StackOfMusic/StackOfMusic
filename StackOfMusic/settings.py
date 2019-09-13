@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'instrument.apps.InstrumentConfig',
     'bank.apps.BankConfig',
     'music.apps.MusicConfig',
+    'createmusic.apps.CreatemusicConfig',
+
 ]
 
 MIDDLEWARE = [
