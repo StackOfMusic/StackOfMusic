@@ -5,9 +5,10 @@ from music.models import Music
 class HomeView(ListView):
     template_name = 'home.html'
     model = Music
+    context_object_name = 'music_list'
 
     def get_queryset(self):
-        queryset = Music.objects.order_by('-create_date')[:5]
+        queryset = Music.objects.filter(music_option=self.model.MUSIC_COMPLETED).order_by('-create_date')[:5]
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
