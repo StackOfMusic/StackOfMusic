@@ -11,6 +11,7 @@ class CreateMusicForm(forms.ModelForm):
             'title',
             'album_jacket',
             'music_option',
+
         )
 
     def __init__(self, music_owner, *args, **kwargs):
