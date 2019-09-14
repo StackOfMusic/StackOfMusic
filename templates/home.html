@@ -12,6 +12,12 @@
     <h1><a href="{% url 'accounts:accounts_detail' user.id %}">HI! {{ user.username }}</a></h1>
     <br>
     <a href="{% url 'accounts:accounts_logout' %}">로그아웃</a>
+    <br>
+    <a href="{% url 'create_music:working_music_list' %}">StackMusic</a>
+    <br>
+    {% for completed_music in completed_music_list %}
+        <li><a href="{% url 'completed_music_detail' completed_music.id %}">{{ completed_music.title }}</a></li>
+    {% endfor %}
 {% else %}
 <a href="{% url 'accounts:accounts_create' %}">회원가입</a>
 <a href="{% url 'accounts:accounts_login' %}">로그인</a>
