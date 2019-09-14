@@ -1,14 +1,15 @@
-from django.views.generic import ListView, TemplateView, DetailView
+from django.views.generic import ListView, DetailView
+
 from music.models import Music
 
 
 class HomeView(ListView):
     template_name = 'home.html'
     model = Music
-    context_object_name = 'music_list'
+    context_object_name = 'completed_music_list'
 
     def get_queryset(self):
-        queryset = Music.objects.filter(music_option=self.model.MUSIC_COMPLETED).order_by('-create_date')[:5]
+        queryset = self.model.objects.filter(music_option=Music.MUSIC_COMPLETED).order_by('-create_date')[:5]
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -17,12 +18,12 @@ class HomeView(ListView):
         return context
 
 
-class MusicDetailView(DetailView):
+class CompletedMusicDetailView(DetailView):
     template_name = 'music_detail.html'
     model = Music
-    pk_url_kwarg = 'music_id'
+    pk_url_kwarg = 'completed_music_id'
 
     def get_context_data(self, **kwargs):
-        context = super(MusicDetailView, self).get_context_data(**kwargs)
-        context['music_list'] = self.object.all
+        context = super(CompletedMusicDetailView, self).get_context_data(**kwargs)
+        context['completed_music'] = self.object
         return context
