@@ -6,6 +6,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from .forms import CreateUserForm, LoginForm
 from .models import User
+from music.models import Music
 
 
 class CreateUserView(CreateView):
@@ -47,5 +48,6 @@ class UserDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(UserDetailView, self).get_context_data(**kwargs)
-        context['user'] = self.object
+        context['user'] = self.request.user
+        context['user_music_list'] = self.request.user.music_owner.all()
         return context
