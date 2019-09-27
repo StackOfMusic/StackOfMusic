@@ -3,6 +3,11 @@ from django.contrib.auth.models import AbstractUser
 from StackOfMusic import settings
 
 
+class Copyright(models.Model):
+    profit = models.IntegerField(default=0)
+    user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, related_name='copyright')
+
+
 class User(AbstractUser):
     GENDER_MAIL, GENDER_FEMAIL = 0, 1
     GENDER_OPTION = (
