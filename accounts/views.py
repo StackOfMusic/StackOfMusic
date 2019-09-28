@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, RedirectView, DetailView
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth import login as auth_login, logout as auth_logout
+from rest_framework import mixins, generics, viewsets
+
+from accounts.models import Copyright
 from .forms import CreateUserForm, LoginForm
 from .models import User
-from music.models import Music
+from .serializer import CopyrightSerializer
 
 
 class CreateUserView(CreateView):
@@ -51,3 +53,15 @@ class UserDetailView(DetailView):
         context['user'] = self.request.user
         context['user_music_list'] = self.request.user.music_owner.all()
         return context
+
+
+class CopyrightAPIView(mixins.ListModelMixin, generics.GenericAPIView):
+    object = Copyright.objects.all()
+    serializer_class = CopyrightSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class CopyrightTemplateView(TemplateView):
+    template_name = 'accounts/copyright.html'
