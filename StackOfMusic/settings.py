@@ -42,8 +42,15 @@ INSTALLED_APPS = [
     'bank.apps.BankConfig',
     'music.apps.MusicConfig',
     'createmusic.apps.CreatemusicConfig',
+    'rest_framework',
 
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -124,3 +131,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')

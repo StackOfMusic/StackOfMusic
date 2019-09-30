@@ -3,10 +3,10 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, RedirectView, DetailView
-from rest_framework import mixins, generics, viewsets
+from rest_framework import mixins, generics
 
 from accounts.models import Copyright
-from .forms import CreateUserForm, LoginForm
+from .forms import CreateUserForm, UserAuthenticationForm
 from .models import User
 from .serializer import CopyrightSerializer
 
@@ -23,10 +23,10 @@ class CreateUserDoneView(TemplateView):
 
 class UserLoginView(LoginView):
     template_name = 'accounts/login.html'
-    form_class = LoginForm
+    authentication_form = UserAuthenticationForm
 
     def get_success_url(self):
-        url = super(UserLoginView, self).get_success_url()
+        super(UserLoginView, self).get_success_url()
         url = reverse_lazy('home')
         return url
 
@@ -65,3 +65,8 @@ class CopyrightAPIView(mixins.ListModelMixin, generics.GenericAPIView):
 
 class CopyrightTemplateView(TemplateView):
     template_name = 'accounts/copyright.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CopyrightTemplateView, self).get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
