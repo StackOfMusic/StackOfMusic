@@ -9,7 +9,7 @@ class Genre(models.Model):
 
 
 class Music(models.Model):
-    genre = models.ForeignKey('music.Genre', on_delete=models.CASCADE, related_name='genre')
+    genre = models.ForeignKey('music.Genre', on_delete=models.CASCADE, related_name='music')
     owner = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='music_owner')
     contributor = models.ManyToManyField('accounts.User', related_name='music_contributor')
     title = models.CharField(max_length=30)
