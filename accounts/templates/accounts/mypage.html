@@ -8,7 +8,6 @@
     <title>마이페이</title>
 </head>
 <body>
-
 {{ user.username }}
 <br>
 {{ user.first_name }}
@@ -20,8 +19,10 @@
 {% endif %}
 <br>
 {% for user_music in user_music_list %}
-{{ user_music.title }}
+    {{ user_music.title }}
 {% endfor %}
+
+<li><a href="{% url 'accounts:accounts_copyright' user.id %}">COPYRIGHT</a></li>
 
 </body>
 </html>

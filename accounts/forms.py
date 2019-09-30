@@ -24,5 +24,5 @@ class CreateUserForm(UserCreationForm):
         self.queryset = forms.ModelChoiceField(queryset=Bank.objects.all())
 
 
-class LoginForm(AuthenticationForm):
+class UserAuthenticationForm(AuthenticationForm):
     error_messages = '비밀번호가 틀렸습니다.'
