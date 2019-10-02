@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Copyright
+from music.models import Music
 
 
 class CopyrightSerializer(serializers.ModelSerializer):
@@ -8,4 +9,14 @@ class CopyrightSerializer(serializers.ModelSerializer):
         model = Copyright
         fields = (
             'profit',
+            'pub_data',
+        )
+
+
+class UserWorkingProjectsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Music
+        fields = (
+            'title'
         )

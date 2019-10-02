@@ -8,7 +8,7 @@
     <title>회원가입</title>
 </head>
 <body>
-<form method="post">
+<form method="post" action="{% url 'accounts:accounts_create' %}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">회원가입완료!</button>
