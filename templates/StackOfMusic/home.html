@@ -1,0 +1,352 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>SOM</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "StackOfMusic/vendor/bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "StackOfMusic/css/business-casual.css" %}" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+
+<body>
+
+<section style="background-image: url('../../static/img/music.jpeg'); background-size: 200px;">
+
+    <nav class="navbar navbar-expand navbar-primary navbar-dark">
+        <ul class="navbar-nav">
+
+            {% if user.is_authenticated %}
+                <h1><a href="{% url 'accounts:accounts_detail' user.id %}">HI! {{ user.username }}</a></h1>
+                <br>
+                <a href="{% url 'accounts:accounts_logout' %}">logout</a>
+                <br>
+                <a href="{% url 'create_music:working_music_list' %}">StackMusic</a>
+                <br>
+                {% for completed_music in completed_music_list %}
+                    <li><a href="{% url 'completed_music_detail' completed_music.id %}">{{ completed_music.title }}</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="nav-item d-none d-sm-inline-block">
+                    <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"
+                            class="btn btn-block btn-success" style="width:100px;">SignUp
+                    </button>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <button type="button" onclick="location.href='{% url 'accounts:accounts_login' %}'"
+                            class="btn btn-block btn-info" style="width:100px;">SignIn
+                    </button>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <h1 class="site-heading text-center text-white d-none d-lg-block">
+        {#    <span class="site-heading-upper">A Free Bootstrap 4 Business Theme</span>#}
+        <span class="site-heading-lower  mb-3" style="color: #fa1e62"><b><b>Stack Of Music</b></b></span>
+    </h1>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background-color: #1d2124" id="mainNav">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item active px-lg-4">
+                        <a class="nav-link text-uppercase text-expanded" href={% url 'home' %}>Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-lg-4">
+                        <a class="nav-link text-uppercase text-expanded"
+                           href="{% url 'create_music:working_music_list' %}">Music</a>
+                    </li>
+                    <li class="nav-item px-lg-4">
+                        <a class="nav-link text-uppercase text-expanded" href="products.html">Products</a>
+                    </li>
+                    <li class="nav-item px-lg-4">
+                        <a class="nav-link text-uppercase text-expanded" href="store.html">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</section>
+<section style="background-color: #171a1d;height: 700px;">
+
+    <div class="container" style="margin-left: 400px;">
+        <div class="card" style="float:left;width:200px;background-color: #10707f">
+            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                 alt="Card image" style="width:100%">
+            <div class="card-body" style="background-color: #10707f">
+                <h4 class="card-title">John Doe</h4>
+            </div>
+        </div>
+
+
+        <div class="card" style="float:left;margin-left:10px;width:200px;background-color: #10707f">
+            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                 alt="Card image" style="width:100%">
+            <div class="card-body" style="background-color: #10707f">
+                <h4 class="card-title">John Doe</h4>
+            </div>
+        </div>
+        <div class="card" style="float:left;margin-left:10px;width:200px;background-color: #10707f">
+            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                 alt="Card image" style="width:100%">
+            <div class="card-body" style="background-color: #10707f">
+                <h4 class="card-title">John Doe</h4>
+            </div>
+        </div>
+
+        <div class="card" style="float:left;margin-left:10px;width:200px;background-color: #10707f">
+            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                 alt="Card image" style="width:100%">
+            <div class="card-body" style="background-color: #10707f">
+                <h4 class="card-title">John Doe</h4>
+            </div>
+        </div>
+
+        <div class="card" style="float:left;margin-left:10px;width:200px;background-color: #10707f">
+            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                 alt="Card image" style="width:100%">
+            <div class="card-body" style="background-color: #10707f">
+                <h4 class="card-title">John Doe</h4>
+            </div>
+        </div>
+    </div>
+
+    <a class="carousel-control-prev" href="#demo" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next" href="#demo" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </a>
+
+</section>
+
+<section style="background-color: #171a1d;height: 600px;">
+
+
+    <div id="demo" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-with-lb" data-slide-to="0" class="active secondary-color"></li>
+            <li data-target="#carousel-with-lb" data-slide-to="1" class="secondary-color"></li>
+            <li data-target="#carousel-with-lb" data-slide-to="2" class="secondary-color"></li>
+        </ol>
+        <ul class="carousel-indicators">
+            <li data-target="#demo" data-slide-to="0" class="active"></li>
+            <li data-target="#demo" data-slide-to="1"></li>
+            <li data-target="#demo" data-slide-to="2"></li>
+        </ul>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <center>
+                    <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                         alt="Los Angeles" width="1100" height="500">
+                </center>
+                <div class="carousel-caption">
+                    <h3>Los Angeles</h3>
+                    <p>We had such a great time in LA!</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <center>
+                    <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg" alt="Chicago"
+                         width="1100" height="500">
+                </center>
+                <div class="carousel-caption">
+                    <h3>Chicago</h3>
+                    <p>Thank you, Chicago!</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <center>
+                    <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg" alt="New York"
+                         width="1100" height="500">
+                </center>
+                <div class="carousel-caption">
+                    <h3>New York</h3>
+                    <p>We love the Big Apple!</p>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+
+</section>
+
+<section style="background-color: #171a1d;">
+    <!--Carousel Wrapper-->
+    <div id="carousel-with-lb" class="carousel slide carousel-multi-item" data-ride="carousel">
+
+        <!--Controls-->
+        <div class="controls-top">
+            <a class="btn-floating btn-secondary" href="#carousel-with-lb" data-slide="prev"><i
+                    class="fas fa-chevron-left"></i></a>
+            <a class="btn-floating btn-secondary" href="#carousel-with-lb" data-slide="next"><i
+                    class="fas fa-chevron-right"></i></a>
+        </div>
+        <!--/.Controls-->
+
+        <!--Indicators-->
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-with-lb" data-slide-to="0" class="active secondary-color"></li>
+            <li data-target="#carousel-with-lb" data-slide-to="1" class="secondary-color"></li>
+            <li data-target="#carousel-with-lb" data-slide-to="2" class="secondary-color"></li>
+        </ol>
+        <!--/.Indicators-->
+
+        <!--Slides and lightbox-->
+
+        <div class="carousel-inner mdb-lightbox" role="listbox">
+            <div id="mdb-lightbox-ui"></div>
+            <!--First slide-->
+            <div class=" carousel-item active text-center" style="margin-left: 150px">
+
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(2).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(2).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(6).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(6).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(10).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(10).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(12).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(12).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(14).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(14).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+
+            </div>
+            <!--/.First slide-->
+
+            <!--Second slide-->
+            <div class="carousel-item text-center" style="margin-left: 150px">
+
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(22).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(22).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(25).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(25).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(29).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(29).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(31).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(31).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(32).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(32).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+                <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
+                    <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(33).jpg"
+                       data-size="1600x1067">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(33).jpg"
+                             class="img-fluid">
+                    </a>
+                </figure>
+
+            </div>
+            <!--/.Second slide-->
+        </div>
+    </div>
+    <!--/.Slides-->
+
+    </div>
+    <!--/.Carousel Wrapper-->
+</section>
+
+<footer class="footer text-faded text-center py-5">
+    <div class="container">
+        <p class="m-0 small">Copyright &copy; Your Website 2019</p>
+    </div>
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script src="{% static "StackOfMusic/vendor/jquery/jquery.js" %}"></script>
+<script src="{% static "StackOfMusic/vendor/bootstrap/js/bootstrap.bundle.js" %}"></script>
+
+</body>
+
+</html>
