@@ -15,6 +15,9 @@ class CreateMusicView(CreateView):
         kwargs['music_owner'] = self.request.user
         return kwargs
 
+    def post(self, request, *args, **kwargs):
+        return super(CreateMusicView, self).post(request, *args, **kwargs)
+
 
 class WorkingMusicListView(ListView):
     template_name = 'createmusic/working_music_list.html'
