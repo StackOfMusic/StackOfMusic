@@ -49,13 +49,6 @@
 
 </head>
 <body>
-<form method="post" action="{% url 'accounts:accounts_create' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">회원가입완료!</button>
-</form>
-<div class="container">
-
 
     <div class="card bg-light">
         <article class="card-body mx-auto" style="max-width: 400px;">

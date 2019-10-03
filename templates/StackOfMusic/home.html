@@ -24,6 +24,31 @@
     <!-- Custom styles for this template -->
     <link href="{% static "StackOfMusic/css/business-casual.css" %}" rel="stylesheet">
 
+
+    <style>
+    section {
+        width: 100%;
+
+        border: 1px solid #000;
+    }
+    section.left {
+        width: 20%;
+        overflow: hidden;
+        float: left;
+        background-color: #171a1d;
+        box-sizing: border-box;
+    }
+    section.right {
+        width: 20%;
+        float: right;
+        box-sizing: border-box;
+        background-color: #39ace7;
+    }
+
+    </style>
+
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -49,7 +74,7 @@
                     </li>
                 {% endfor %}
             {% else %}
-                <li class="nav-item d-none d-sm-inline-block">
+                <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">
                     <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"
                             class="btn btn-block btn-success" style="width:100px;">SignUp
                     </button>
@@ -92,7 +117,8 @@
         </div>
     </nav>
 </section>
-<section style="background-color: #171a1d;height: 700px;">
+
+<section style="background-color: #171a1d;height: 300px;">
 
     <div class="container" style="margin-left: 400px;">
         <div class="card" style="float:left;width:200px;background-color: #10707f">
@@ -136,12 +162,7 @@
         </div>
     </div>
 
-    <a class="carousel-control-prev" href="#demo" data-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </a>
-    <a class="carousel-control-next" href="#demo" data-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </a>
+
 
 </section>
 
