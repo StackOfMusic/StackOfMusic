@@ -22,6 +22,8 @@ class CreateUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
         self.queryset = forms.ModelChoiceField(queryset=Bank.objects.all())
+        self.fields['bank'].required = False
+        self.fields['bank_account_number'].required = False
 
 
 class UserAuthenticationForm(AuthenticationForm):

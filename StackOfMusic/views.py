@@ -4,7 +4,7 @@ from music.models import Music
 
 
 class HomeView(ListView):
-    template_name = 'home.html'
+    template_name = 'StackOfMusic/home.html'
     model = Music
     context_object_name = 'completed_music_list'
 
@@ -19,7 +19,7 @@ class HomeView(ListView):
 
 
 class CompletedMusicDetailView(DetailView):
-    template_name = 'music_detail.html'
+    template_name = 'StackOfMusic/music_detail.html'
     model = Music
     pk_url_kwarg = 'completed_music_id'
 
