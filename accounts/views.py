@@ -1,9 +1,7 @@
-from django.contrib.auth import login as auth_login, logout as auth_logout, REDIRECT_FIELD_NAME
+from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
