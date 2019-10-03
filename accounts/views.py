@@ -1,12 +1,16 @@
 from django.contrib.auth import login as auth_login, logout as auth_logout
-from django.contrib.auth.views import LoginView
-from django.http import HttpResponseRedirect
+from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, RedirectView, DetailView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.generic import CreateView, TemplateView, RedirectView, DetailView, FormView
 from rest_framework import mixins, generics
 
 from accounts.models import Copyright
-from .forms import CreateUserForm, UserAuthenticationForm
+from music.models import Music
+from .forms import CreateUserForm
 from .models import User
 from .serializer import CopyrightSerializer
 
@@ -21,22 +25,33 @@ class CreateUserDoneView(TemplateView):
     template_name = 'accounts/create_user_done.html'
 
 
-class UserLoginView(LoginView):
+class UserLoginView(FormView):
     template_name = 'accounts/login.html'
-    authentication_form = UserAuthenticationForm
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('home')
 
-    def get_success_url(self):
-        super(UserLoginView, self).get_success_url()
-        url = reverse_lazy('home')
-        return url
+    @method_decorator(sensitive_post_parameters('password'))
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args, **kwargs):
+        request.session.set_test_cookie()
+
+        return super(UserLoginView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        """Security check complete. Log the user in."""
         auth_login(self.request, form.get_user())
-        return HttpResponseRedirect(self.get_success_url())
+
+        if self.request.session.test_cookie_worked():
+            self.request.session.delete_test_cookie()
+
+        return super(UserLoginView, self).form_valid(form)
+
+    def get_success_url(self):
+        return super(UserLoginView, self).get_success_url()
 
 
 class UserLogoutView(RedirectView):
+    url = reverse_lazy('home')
 
     def get(self, request, *args, **kwargs):
         auth_logout(request)
@@ -70,3 +85,17 @@ class CopyrightTemplateView(TemplateView):
         context = super(CopyrightTemplateView, self).get_context_data(**kwargs)
         context['user'] = self.request.user
         return context
+
+
+class UserWorkingProjects(mixins.ListModelMixin, generics.GenericAPIView):
+
+    def get_queryset(self):
+        queryset = Music.objects.filter(owner=self.request.user, contributor=self.request.user)
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class UserWorkingProjectsTemplates(TemplateView):
+    template_name = 'accounts/user_working_projects.html'
