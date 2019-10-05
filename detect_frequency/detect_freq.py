@@ -4,6 +4,8 @@ import wave
 import numpy as np
 
 chunk = 2048
+count = 0
+total_hz = 0.0
 
 # open up a wave
 wf = wave.open('test.wav', 'rb')
@@ -38,12 +40,23 @@ while len(data) == chunk*swidth:
         x1 = (y2 - y0) * .5 / (2 * y1 - y2 - y0)
         # find the frequency and output it
         thefreq = (which+x1)*RATE/chunk
+        #check thefreq is NaN, if not add thefreq value to total_hz
+        if thefreq == thefreq:
+            total_hz = total_hz + thefreq
+            count = count + 1
         print ('The freq is {} Hz.'.format(thefreq))
     else:
         thefreq = which*RATE/chunk
+        if thefreq == thefreq:
+            total_hz = total_hz + thefreq
+            count = count + 1
         print ('The freq is {} Hz.'.format(thefreq))
     # read some more data
     data = wf.readframes(chunk)
+#if count is not zero, then calculate the average frequency
+if count != 0:
+    total_hz = total_hz / count
+print('average freq is {} Hz.'.format(total_hz))
 if data:
     stream.write(data)
 stream.close()
