@@ -53,6 +53,7 @@ class UserLoginView(FormView):
 class UserLogoutView(RedirectView):
     url = reverse_lazy('home')
 
+    @method_decorator(never_cache)
     def get(self, request, *args, **kwargs):
         auth_logout(request)
         return super(UserLogoutView, self).get(request, *args, **kwargs)
