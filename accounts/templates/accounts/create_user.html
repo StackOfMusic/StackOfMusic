@@ -50,85 +50,103 @@
 </head>
 <body>
 
-    <div class="card bg-light">
-        <article class="card-body mx-auto" style="max-width: 400px;">
-            <h4 class="card-title mt-3 text-center">Create Account</h4>
-            <p class="text-center">Get started with your free account</p>
-            <p>
-                <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Login via Twitter</a>
-                <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
-            </p>
-            <p class="divider-text">
-                <span class="bg-light">OR</span>
-            </p>
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                    </div>
-                    <input placeholder="Username" class="form-control" type="text" name="username" maxlength="150" autofocus required id="id_username">
-                </div> <!-- form-group// -->
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-minus-square"></i> </span>
-                    </div>
-                    <input placeholder="First name" class="form-control" type="text" name="first_name" maxlength="30" id="id_first_name">
-                </div> <!-- form-group// -->
+<div class="card bg-light">
+    <article class="card-body mx-auto" style="max-width: 400px;">
+        <h4 class="card-title mt-3 text-center">Create Account</h4>
+        <p class="text-center">Get started with your free account</p>
+        <p>
+            <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Login via Twitter</a>
+            <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
+        </p>
+        <p class="divider-text">
+            <span class="bg-light">OR</span>
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                </div>
+                <input placeholder="Username" class="form-control" type="text" name="username" maxlength="150" autofocus required id="id_username">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-minus-square"></i> </span>
+                </div>
+                <input placeholder="First name" class="form-control" type="text" name="first_name" maxlength="30" id="id_first_name">
+            </div> <!-- form-group// -->
 
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-info-circle"></i> </span>
-                    </div>
-                    <input placeholder="Last name" class="form-control" type="text" name="last_name" maxlength="150" id="id_last_name">
-                </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-info-circle"></i> </span>
+                </div>
+                <input placeholder="Last name" class="form-control" type="text" name="last_name" maxlength="150" id="id_last_name">
+            </div> <!-- form-group// -->
 
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
-                    </div>
-                    <input placeholder="Email address" class="form-control" type="email" name="email" maxlength="254" id="id_email">
-                </div> <!-- form-group// -->
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-building"></i> </span>
-                    </div>
-                    <select class="form-control">
-                        <option selected=""> Sex </option>
-                        <option>Man</option>
-                        <option>Woman</option>
-                    </select>
-                </div> <!-- form-group end.// -->
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-check-circle"></i> </span>
-                    </div>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                </div>
+                <input placeholder="Email address" class="form-control" type="email" name="email" maxlength="254" id="id_email">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+                </div>
+                <select class="form-control">
+                    <option selected=""> Sex </option>
+                    <option>Man</option>
+                    <option>Woman</option>
+                </select>
+            </div> <!-- form-group end.// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-check-circle"></i> </span>
+                </div>
+                <input placeholder="Age" class="form-control" type="number" name="age" required id="id_age">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+                </div>
+                <input type="text" placeholder="Bank account number"class="form-control" name="bank_account_number" maxlength="15" required id="id_bank_account_number">
 
-                    <input placeholder="Age" class="form-control" type="number" name="age" required id="id_age">
-                </div> <!-- form-group// -->
+            </div> <!-- form-group// -->
 
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-                    </div>
-                    <input placeholder="Password" class="form-control" type="password" name="password1" required id="id_password1"> <span class="helptext"></span>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+                </div>
+                <select class="form-control" name="bank" required id="id_bank">
+                    <option value="" selected>Bank name</option>
 
-                </div> <!-- form-group// -->
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-                    </div>
-                    <input class="form-control" placeholder="Repeat password" type="password" name="password2" required id="id_password2"> <span class="helptext"></span>
+                    <option value="1">카카오</option>
+                </select>
+            </div> <!-- form-group end.// -->
 
-                </div> <!-- form-group// -->
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
-                </div> <!-- form-group// -->
-            </form>
 
-            <p class="text-center">Have an account? <a href="">Log In</a> </p>
-        </article>
-    </div> <!-- card.// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input placeholder="Password" class="form-control" type="password" name="password1" required id="id_password1"> <span class="helptext"></span>
+
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input class="form-control" placeholder="Repeat password" type="password" name="password2" required id="id_password2"> <span class="helptext"></span>
+
+            </div> <!-- form-group// -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+            </div> <!-- form-group// -->
+        </form>
+
+        <p class="text-center">Have an account? <a href="">Log In</a> </p>
+    </article>
+</div> <!-- card.// -->
 
 </div>
 <!--container end.//-->
