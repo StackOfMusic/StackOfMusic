@@ -303,7 +303,7 @@
 
         <!-- Login Form -->
 
-        <form method="post" action="/accounts/signin/">
+        <form method="post" action="{% url 'accounts:accounts_login' %}">
             {% csrf_token %}
             <input type="text" style="width: 200px;" placeholder="UserID" name="username" class="fadeIn second" autofocus required id="id_username">
             <input type="text" style="width: 200px;" placeholder="password" name="password" class="fadeIn third" autofocus required id="id_password"><br>

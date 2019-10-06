@@ -61,7 +61,7 @@
         <p class="divider-text">
             <span class="bg-light">OR</span>
         </p>
-        <form method="post">
+        <form method="post" action="{% url 'accounts:accounts_create' %}">
             {% csrf_token %}
             <div class="form-group input-group">
                 <div class="input-group-prepend">
@@ -93,10 +93,10 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-building"></i> </span>
                 </div>
-                <select class="form-control">
-                    <option selected=""> Sex </option>
-                    <option>Man</option>
-                    <option>Woman</option>
+                <select class="form-control" name="sex" required id ="id_sex">
+                    {% for male,female in form.fields.sex.choices %}
+                        <option value="{{ male }}"{% if form.fields.sex.value == male %} selected{% endif %}>{{ female }}</option>
+                    {% endfor %}
                 </select>
             </div> <!-- form-group end.// -->
             <div class="form-group input-group">
@@ -109,8 +109,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-building"></i> </span>
                 </div>
-                <input type="text" placeholder="Bank account number"class="form-control" name="bank_account_number" maxlength="15" required id="id_bank_account_number">
-
+                <input type="text" placeholder="Bank account number" class="form-control" name="bank_account_number" maxlength="15" required id="id_bank_account_number">
             </div> <!-- form-group// -->
 
             <div class="form-group input-group">
@@ -118,9 +117,9 @@
                     <span class="input-group-text"> <i class="fa fa-building"></i> </span>
                 </div>
                 <select class="form-control" name="bank" required id="id_bank">
-                    <option value="" selected>Bank name</option>
-
-                    <option value="1">카카오</option>
+                    {% for z in form.bank.field.queryset %}
+                        <option value="{{ z.pk }}" selected >{{ z.name }}</option>
+                    {% endfor %}
                 </select>
             </div> <!-- form-group end.// -->
 
@@ -142,16 +141,16 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
             </div> <!-- form-group// -->
+            {{ field.errors.as_ul }}
+            {{ field }}
         </form>
 
-        <p class="text-center">Have an account? <a href="">Log In</a> </p>
+        <p class="text-center">Have an account? <a href="{% url 'accounts:accounts_login' %}">Log In</a> </p>
     </article>
 </div> <!-- card.// -->
 
 </div>
 <!--container end.//-->
-
-
 
 </body>
 </html>
