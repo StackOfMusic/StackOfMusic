@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 <!doctype html>
 <html lang="ko">
 <head>
@@ -8,8 +10,88 @@
     <title>{% block title %}StackOfMusic{% endblock %}</title>
     {% block extra_style %}{% endblock %}
     {% block extra_scripts %}{% endblock %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "StackOfMusic/vendor/bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "StackOfMusic/css/business-casual.css" %}" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+
+
+<section style="background-image: url('../../static/img/mu.jpg'); background-position: center; background-size: 1700px" >
+
+    <nav class="navbar navbar-expand navbar-primary navbar-dark">
+        <ul class="navbar-nav">
+
+            {% if user.is_authenticated %}
+                <h1><a href="{% url 'accounts:accounts_detail' user.id %}">HI! {{ user.username }}</a></h1>
+                <br>
+                <a href="{% url 'accounts:accounts_logout' %}">logout</a>
+                <br>
+                <a href="{% url 'create_music:working_music_list' %}">StackMusic</a>
+                <br>
+                {% for completed_music in completed_music_list %}
+                    <li><a href="{% url 'completed_music_detail' completed_music.id %}">{{ completed_music.title }}</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">
+                    <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"
+                            class="btn btn-block btn-success" style="width:100px;">SignUp
+                    </button>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <button type="button" onclick="location.href='{% url 'accounts:accounts_login' %}'"
+                            class="btn btn-block btn-info" style="width:100px;">SignIn
+                    </button>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <h1 class="site-heading text-center text-white d-none d-lg-block">
+        {#    <span class="site-heading-upper">A Free Bootstrap 4 Business Theme</span>#}
+        <span class="site-heading-lower  mb-3" style="color: white; border-color: #fbfbff;"><b><b>Stack Of Music</b></b></span>
+    </h1>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background-color: white" id="mainNav">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item active px-lg-4">
+                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href={% url 'home' %}><b>Home</b>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-lg-4">
+                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;"
+                           href="{% url 'create_music:working_music_list' %}"><b>Music</b></a>
+                    </li>
+                    <li class="nav-item px-lg-4">
+                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="products.html"><b>Products</b></a>
+                    </li>
+                    <li class="nav-item px-lg-4">
+                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="store.html"><b>Store</b></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</section>
+
+
+
 {% block content %}
 {% endblock %}
 
@@ -17,6 +99,12 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+
+
+
+<!-- Bootstrap core JavaScript -->
+<script src="{% static "StackOfMusic/vendor/jquery/jquery.js" %}"></script>
+<script src="{% static "StackOfMusic/vendor/bootstrap/js/bootstrap.bundle.js" %}"></script>
 
 </body>
 </html>
