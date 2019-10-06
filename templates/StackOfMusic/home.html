@@ -1,4 +1,6 @@
 {% load staticfiles %}
+
+
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 
@@ -29,13 +31,12 @@
     section {
         width: 100%;
 
-        border: 1px solid #000;
     }
     section.left {
         width: 20%;
         overflow: hidden;
         float: left;
-        background-color: #171a1d;
+        background-color: white;
         box-sizing: border-box;
     }
     section.right {
@@ -57,7 +58,7 @@
 
 <body>
 
-<section style="background-image: url('../../static/img/music.jpeg'); background-size: 200px;">
+<section style="background-image: url('../../static/img/mu.jpg'); background-position: center; background-size: 1700px" >
 
     <nav class="navbar navbar-expand navbar-primary navbar-dark">
         <ul class="navbar-nav">
@@ -89,28 +90,28 @@
     </nav>
     <h1 class="site-heading text-center text-white d-none d-lg-block">
         {#    <span class="site-heading-upper">A Free Bootstrap 4 Business Theme</span>#}
-        <span class="site-heading-lower  mb-3" style="color: #fa1e62"><b><b>Stack Of Music</b></b></span>
+        <span class="site-heading-lower  mb-3" style="color: white; border-color: #fbfbff;text-shadow: -10px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><b><b>Stack Of Music</b></b></span>
     </h1>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background-color: #1d2124" id="mainNav">
+    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background-color: white" id="mainNav">
         <div class="container">
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item active px-lg-4">
-                        <a class="nav-link text-uppercase text-expanded" href={% url 'home' %}>Home
+                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href={% url 'home' %}><b>Home</b>
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item px-lg-4">
-                        <a class="nav-link text-uppercase text-expanded"
-                           href="{% url 'create_music:working_music_list' %}">Music</a>
+                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;"
+                           href="{% url 'create_music:working_music_list' %}"><b>Music</b></a>
                     </li>
                     <li class="nav-item px-lg-4">
-                        <a class="nav-link text-uppercase text-expanded" href="products.html">Products</a>
+                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="products.html"><b>Products</b></a>
                     </li>
                     <li class="nav-item px-lg-4">
-                        <a class="nav-link text-uppercase text-expanded" href="store.html">Store</a>
+                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="store.html"><b>Store</b></a>
                     </li>
                 </ul>
             </div>
@@ -118,56 +119,53 @@
     </nav>
 </section>
 
-<section style="background-color: #171a1d;height: 300px;">
+<section style="background-color: white;height: 300px;">
 
-    <div class="container" style="margin-left: 400px;">
-        <div class="card" style="float:left;width:200px;background-color: #10707f">
-            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+    <div class="container" style="margin-left: 350px;">
+        <div class="card" style="float:left;width:200px;background-color: white;border: none;text-align: left">
+            <img class="card-img-top" src="../../static/img/artist1.png"
                  alt="Card image" style="width:100%">
-            <div class="card-body" style="background-color: #10707f">
-                <h4 class="card-title">John Doe</h4>
+            <div class="card-body">
+                <h6 class="card-title">Camelot</h6>
             </div>
         </div>
 
 
-        <div class="card" style="float:left;margin-left:10px;width:200px;background-color: #10707f">
-            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+        <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
+            <img class="card-img-top" src="../../static/img/artist2.png"
                  alt="Card image" style="width:100%">
-            <div class="card-body" style="background-color: #10707f">
-                <h4 class="card-title">John Doe</h4>
+            <div class="card-body">
+                <h6 class="card-title">House Arrest Tingz</h6>
             </div>
         </div>
-        <div class="card" style="float:left;margin-left:10px;width:200px;background-color: #10707f">
-            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+        <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
+            <img class="card-img-top" src="../../static/img/artist3.png"
                  alt="Card image" style="width:100%">
-            <div class="card-body" style="background-color: #10707f">
-                <h4 class="card-title">John Doe</h4>
-            </div>
-        </div>
-
-        <div class="card" style="float:left;margin-left:10px;width:200px;background-color: #10707f">
-            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
-                 alt="Card image" style="width:100%">
-            <div class="card-body" style="background-color: #10707f">
-                <h4 class="card-title">John Doe</h4>
+            <div class="card-body">
+                <h6 class="card-title">223's ft.9lokknine</h6>
             </div>
         </div>
 
-        <div class="card" style="float:left;margin-left:10px;width:200px;background-color: #10707f">
-            <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+        <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
+            <img class="card-img-top" src="../../static/img/artist4.png"
                  alt="Card image" style="width:100%">
-            <div class="card-body" style="background-color: #10707f">
-                <h4 class="card-title">John Doe</h4>
+            <div class="card-body">
+                <h6 class="card-title">Hot (feat.Gunna)</h6>
+            </div>
+        </div>
+
+        <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
+            <img class="card-img-top" src="../../static/img/artist5.png"
+                 alt="Card image" style="width:100%">
+            <div class="card-body">
+                <h6 class="card-title">Dangerously In Love</h6>
             </div>
         </div>
     </div>
 
-
-
 </section>
 
-<section style="background-color: #171a1d;height: 600px;">
-
+<section style="background-color: white;height: 600px;">
 
     <div id="demo" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -183,12 +181,12 @@
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <center>
-                    <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
+                    <img src="../../static/img/artist8.png"
                          alt="Los Angeles" width="1100" height="500">
                 </center>
                 <div class="carousel-caption">
-                    <h3>Los Angeles</h3>
-                    <p>We had such a great time in LA!</p>
+                    <h3>Did It Again</h3>
+                    <p>We had such a great time</p>
                 </div>
             </div>
             <div class="carousel-item">
@@ -222,7 +220,7 @@
 
 </section>
 
-<section style="background-color: #171a1d;">
+<section style="background-color: white;">
     <!--Carousel Wrapper-->
     <div id="carousel-with-lb" class="carousel slide carousel-multi-item" data-ride="carousel">
 
@@ -357,16 +355,11 @@
     </div>
     <!--/.Carousel Wrapper-->
 </section>
-
 <footer class="footer text-faded text-center py-5">
     <div class="container">
         <p class="m-0 small">Copyright &copy; Your Website 2019</p>
     </div>
 </footer>
-
-<!-- Bootstrap core JavaScript -->
-<script src="{% static "StackOfMusic/vendor/jquery/jquery.js" %}"></script>
-<script src="{% static "StackOfMusic/vendor/bootstrap/js/bootstrap.bundle.js" %}"></script>
 
 </body>
 
