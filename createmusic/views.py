@@ -33,7 +33,7 @@ class WorkingMusicListView(ListView):
     context_object_name = 'working_music_list'
 
     def get_queryset(self):
-        queryset = self.model.objects.filter(Q(music_option=Music.MUSIC_NOT_COMPLETED))
+        queryset = self.request.user.music_owner.filter(Q(music_option=Music.MUSIC_NOT_COMPLETED))
         return queryset
 
     @method_decorator(login_required(login_url=login_url))
@@ -64,6 +64,6 @@ class WorkingMusicRetrieveView(mixins.RetrieveModelMixin, generics.GenericAPIVie
 
 class WorkingMusicDeleteView(DeleteView):
     template_name = 'createmusic/working_music_delete.html'
-    model = Music
+    model = Music   
     pk_url_kwarg = 'working_music_id'
     success_url = reverse_lazy('create_music:working_music_list')
