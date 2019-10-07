@@ -28,24 +28,31 @@
 
 
     <style>
-    section {
-        width: 100%;
+        section {
+            width: 100%;
 
-    }
-    section.left {
-        width: 20%;
-        overflow: hidden;
-        float: left;
-        background-color: white;
-        box-sizing: border-box;
-    }
-    section.right {
-        width: 20%;
-        float: right;
-        box-sizing: border-box;
-        background-color: #39ace7;
-    }
+        }
+        section.left {
+            width: 20%;
+            overflow: hidden;
+            float: left;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        section.right {
+            width: 20%;
+            float: right;
+            box-sizing: border-box;
+            background-color: #39ace7;
+        }
+        .my-transparent-button {
+            background-color: transparent !important;
+            background-image: none !important;
+            border-color: transparent;
+            border: none;
 
+            color: #FFFFFF;
+        }
     </style>
 
 
@@ -70,10 +77,6 @@
                 <br>
                 <a href="{% url 'create_music:working_music_list' %}">StackMusic</a>
                 <br>
-                {% for completed_music in completed_music_list %}
-                    <li><a href="{% url 'completed_music_detail' completed_music.id %}">{{ completed_music.title }}</a>
-                    </li>
-                {% endfor %}
             {% else %}
                 <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">
                     <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"
@@ -123,11 +126,16 @@
 
     <div class="container" style="margin-left: 350px;">
         <div class="card" style="float:left;width:200px;background-color: white;border: none;text-align: left">
-            <img class="card-img-top" src="../../static/img/artist1.png"
-                 alt="Card image" style="width:100%">
-            <div class="card-body">
-                <h6 class="card-title">Camelot</h6>
-            </div>
+            {% for completed_music in completed_music_list %}
+                <button class="my-transparent-button" onclick="location.href='{% url 'completed_music_detail' completed_music.id %}'">
+                    <img class="card-img-top" id="{{ completed_music.title }}" src="{{ completed_music.album_jacket.url }}" alt="Card image" style="width:100%">
+                    <a href="{% url 'completed_music_detail' completed_music.id %}">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ completed_music.title }}</h6>
+                        </div>
+                    </a>
+                </button>
+            {% endfor %}
         </div>
 
 
