@@ -1,8 +1,11 @@
+{% extends 'StackOfMusic/base.html' %}
 {% load staticfiles %}
 
 <!doctype html>
 <html lang="ko">
 <head>
+    {% block content %}
+
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -50,72 +53,8 @@
 </head>
 <body>
 
-<section style="background-image: url('../../../static/img/mu.jpg'); background-position: center; background-size: 1700px" >
-
-    <nav class="navbar navbar-expand navbar-primary navbar-dark">
-        <ul class="navbar-nav">
-
-            {% if user.is_authenticated %}
-                <h1><a href="{% url 'accounts:accounts_detail' user.id %}">HI! {{ user.username }}</a></h1>
-                <br>
-                <a href="{% url 'accounts:accounts_logout' %}">logout</a>
-                <br>
-                <a href="{% url 'create_music:working_music_list' %}">StackMusic</a>
-                <br>
-                {% for completed_music in completed_music_list %}
-                    <li><a href="{% url 'completed_music_detail' completed_music.id %}">{{ completed_music.title }}</a>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">
-                    <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"
-                            class="btn btn-block btn-success" style="width:100px;">SignUp
-                    </button>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <button type="button" onclick="location.href='{% url 'accounts:accounts_login' %}'"
-                            class="btn btn-block btn-info" style="width:100px;">SignIn
-                    </button>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-    <h1 class="site-heading text-center text-white d-none d-lg-block">
-        {#    <span class="site-heading-upper">A Free Bootstrap 4 Business Theme</span>#}
-        <span class="site-heading-lower  mb-3" style="color: white; border-color: #fbfbff;text-shadow: -10px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><b><b>Stack Of Music</b></b></span>
-    </h1>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background-color: white" id="mainNav">
-        <div class="container">
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item active px-lg-4">
-                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href={% url 'home' %}><b>Home</b>
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item px-lg-4">
-                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;"
-                           href="{% url 'create_music:working_music_list' %}"><b>Music</b></a>
-                    </li>
-                    <li class="nav-item px-lg-4">
-                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="products.html"><b>Products</b></a>
-                    </li>
-                    <li class="nav-item px-lg-4">
-                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="store.html"><b>Store</b></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</section>
-
-{% block content %}
     <audio controls="controls">
-
         <source id="audio-source"  src="../../../static/music/music.mp4" type="audio/mp4" />
-
     </audio>
     <div id="waveform"></div>
     <script>
@@ -182,12 +121,14 @@
 
     </section>
 
-{% endblock %}
 <a href="{% url 'create_music:create_music' %}">만들기</a>
 <br>
 {% for working_music in working_music_list %}
     <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
 {% endfor %}
+{% endblock %}
+
+
 
 </body>
 </html>
