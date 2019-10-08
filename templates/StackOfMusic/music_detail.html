@@ -2,15 +2,11 @@
 <!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SOM</title>
-
-    {% block content %}
-
-        <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+    
+    
+  {% block extra_scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
         <script src="https://unpkg.com/wavesurfer.js"></script>
         <script src="../../../static/js/wavesurfer.js"></script>
         <section class="links">
@@ -21,8 +17,11 @@
                 $('#myTab a:last').tab('show')
             })
 
-
         </script>
+  
+  {% endblock %}
+    {% block extra_style %}
+
 
         <style>
             rcorners1 {
@@ -51,12 +50,33 @@
             .widget .comment-text { font-size: 12px; }
             .widget .btn-block { border-top-left-radius:0px;border-top-right-radius:0px; }
         </style>
+  {% endblock %}
+  
         </head>
+  
         <body>
+    <div id="completd_music_img"></div>
 
+    <script type="text/javascript">
+        var completd_music = {};
 
+        $(function () {
+            $.ajax({
+                method: 'GET',
+                url: 'http://localhost:8000/RetrieveAPI/{{ completed_music_id }}',
+                success: function (data) {
+                    completd_music = data;
+                    console.log(completd_music);
+                },
+                error: function (error) {
+                    alert(error + 'data를 불러올수없습니다.')
+                },
 
+                xhrFields: {withCredentials: true,}
 
+            })
+        });
+    </script>
 
         <div class="container" >
             <div class="row well">
@@ -201,11 +221,6 @@
 
         </div>
 
-
-
-
-        {{ completed_music.title }}
-        {{ completed_music.genre }}
     {% endblock %}
     </body>
 </html>
