@@ -1,17 +1,134 @@
+{% extends 'StackOfMusic/base.html' %}
+{% load staticfiles %}
+
 <!doctype html>
 <html lang="ko">
 <head>
+    {% block content %}
+
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>SOM</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "StackOfMusic/vendor/bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "StackOfMusic/css/business-casual.css" %}" rel="stylesheet">
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+    <script src="../../../static/js/wavesurfer.js"></script>
+    <section class="links">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.1.10/wavesurfer.min.js"></script>
+    </section>
+    <style>
+        section {
+            width: 100%;
+
+        }
+        section.left {
+            width: 20%;
+            overflow: hidden;
+            float: left;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        section.right {
+            width: 20%;
+            float: right;
+            box-sizing: border-box;
+            background-color: #39ace7;
+        }
+
+    </style>
+
 </head>
 <body>
-    <a href="{% url 'create_music:create_music' %}">만들기</a>
-    <br>
-    {% for working_music in working_music_list %}
-        <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
-    {% endfor %}
+
+    <audio controls="controls">
+        <source id="audio-source"  src="../../../static/music/music.mp4" type="audio/mp4" />
+    </audio>
+    <div id="waveform"></div>
+    <script>
+        var wavesurfer = WaveSurfer.create({
+            container: '#waveform',
+            waveColor: 'grey',
+            backend: 'MediaElement',
+            mediaType:'audio',
+            progressColor: 'red',
+            normalize: true,
+            barWidth: 2
+        });
+
+
+        wavesurfer.load('http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3');
+        wavesurfer.on('ready', function () {
+            wavesurfer.play();
+        });
+    </script>
+
+    <section style="background-color: white;height: 300px;">
+
+        <div class="container" style="margin-left: 350px;">
+            <div class="card" style="float:left;width:200px;background-color: white;border: none;text-align: left">
+                <img class="card-img-top" src="../../static/img/artist1.png"
+                     alt="Card image" style="width:100%">
+                <div class="card-body">
+                    <h6 class="card-title">Camelot</h6>
+                </div>
+            </div>
+
+
+            <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
+                <img class="card-img-top" src="../../static/img/artist2.png"
+                     alt="Card image" style="width:100%">
+                <div class="card-body">
+                    <h6 class="card-title">House Arrest Tingz</h6>
+                </div>
+            </div>
+            <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
+                <img class="card-img-top" src="../../static/img/artist3.png"
+                     alt="Card image" style="width:100%">
+                <div class="card-body">
+                    <h6 class="card-title">223's ft.9lokknine</h6>
+                </div>
+            </div>
+
+            <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
+                <img class="card-img-top" src="../../static/img/artist4.png"
+                     alt="Card image" style="width:100%">
+                <div class="card-body">
+                    <h6 class="card-title">Hot (feat.Gunna)</h6>
+                </div>
+            </div>
+
+            <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
+                <img class="card-img-top" src="../../static/img/artist5.png"
+                     alt="Card image" style="width:100%">
+                <div class="card-body">
+                    <h6 class="card-title">Dangerously In Love</h6>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+<a href="{% url 'create_music:create_music' %}">만들기</a>
+<br>
+{% for working_music in working_music_list %}
+    <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
+{% endfor %}
+{% endblock %}
+
+
+
 </body>
 </html>

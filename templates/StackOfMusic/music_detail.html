@@ -1,0 +1,38 @@
+{% extends 'StackOfMusic/base.html' %}
+<!doctype html>
+<html lang="ko">
+<head>
+
+    {% block extra_scripts %}
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    {% endblock %}
+</head>
+
+<body>
+{% block content %}
+    <div id="completd_music_img"></div>
+
+    <script type="text/javascript">
+        var completd_music = {};
+
+        $(function () {
+            $.ajax({
+                method: 'GET',
+                url: 'http://localhost:8000/RetrieveAPI/{{ completed_music_id }}',
+                success: function (data) {
+                    completd_music = data;
+                    console.log(completd_music);
+                },
+                error: function (error) {
+                    alert(error + 'data를 불러올수없습니다.')
+                },
+
+                xhrFields: {withCredentials: true,}
+
+            })
+        });
+    </script>
+{% endblock %}
+</body>
+</html>

@@ -15,13 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import HomeView, CompletedMusicDetailView
+from .views import HomeView, CompletedMusicRetrieveView, CompletedMusicDetailTemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
-    path('<int:completed_music_id>', CompletedMusicDetailView.as_view(), name='completed_music_detail'),
+    path('<int:completed_music_id>/', CompletedMusicDetailTemplateView.as_view(), name='completed_music_detail'),
+    path('RetrieveAPI/<int:completed_music_id>/', CompletedMusicRetrieveView.as_view(), name='completed_music_detail_api'),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('create/', include('createmusic.urls', namespace='create_music')),
-
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

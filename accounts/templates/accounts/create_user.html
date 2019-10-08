@@ -1,18 +1,160 @@
 <!doctype html>
 <html lang="ko">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+
+<!------ Include the above in your HEAD tag ---------->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>회원가입</title>
+
+    <style>
+        .divider-text {
+            position: relative;
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .divider-text span {
+            padding: 7px;
+            font-size: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        .divider-text:after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            border-bottom: 1px solid #ddd;
+            top: 55%;
+            left: 0;
+            z-index: 1;
+        }
+
+        .btn-facebook {
+            background-color: #405D9D;
+            color: #fff;
+        }
+        .btn-twitter {
+            background-color: #42AEEC;
+            color: #fff;
+        }
+    </style>
+
 </head>
 <body>
-<form method="post" action="{% url 'accounts:accounts_create' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">회원가입완료!</button>
-</form>
+
+<div class="card bg-light">
+    <article class="card-body mx-auto" style="max-width: 400px;">
+        <h4 class="card-title mt-3 text-center">Create Account</h4>
+        <p class="text-center">Get started with your free account</p>
+        <p>
+            <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Login via Twitter</a>
+            <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
+        </p>
+        <p class="divider-text">
+            <span class="bg-light">OR</span>
+        </p>
+        <form method="post" action="{% url 'accounts:accounts_create' %}">
+            {% csrf_token %}
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                </div>
+                <input placeholder="Username" class="form-control" type="text" name="username" maxlength="150" autofocus required id="id_username">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-minus-square"></i> </span>
+                </div>
+                <input placeholder="First name" class="form-control" type="text" name="first_name" maxlength="30" id="id_first_name">
+            </div> <!-- form-group// -->
+
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-info-circle"></i> </span>
+                </div>
+                <input placeholder="Last name" class="form-control" type="text" name="last_name" maxlength="150" id="id_last_name">
+            </div> <!-- form-group// -->
+
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                </div>
+                <input placeholder="Email address" class="form-control" type="email" name="email" maxlength="254" id="id_email">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+                </div>
+                <select class="form-control" name="sex" required id ="id_sex">
+                    {% for male,female in form.fields.sex.choices %}
+                        <option value="{{ male }}"{% if form.fields.sex.value == male %} selected{% endif %}>{{ female }}</option>
+                    {% endfor %}
+                </select>
+            </div> <!-- form-group end.// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-check-circle"></i> </span>
+                </div>
+                <input placeholder="Age" class="form-control" type="number" name="age" required id="id_age">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+                </div>
+                <input type="text" placeholder="Bank account number" class="form-control" name="bank_account_number" maxlength="15" required id="id_bank_account_number">
+            </div> <!-- form-group// -->
+
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+                </div>
+                <select class="form-control" name="bank" required id="id_bank">
+                    {% for z in form.bank.field.queryset %}
+                        <option value="{{ z.pk }}" selected >{{ z.name }}</option>
+                    {% endfor %}
+                </select>
+            </div> <!-- form-group end.// -->
+
+
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input placeholder="Password" class="form-control" type="password" name="password1" required id="id_password1"> <span class="helptext"></span>
+
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input class="form-control" placeholder="Repeat password" type="password" name="password2" required id="id_password2"> <span class="helptext"></span>
+
+            </div> <!-- form-group// -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+            </div> <!-- form-group// -->
+            {{ field.errors.as_ul }}
+            {{ field }}
+        </form>
+
+        <p class="text-center">Have an account? <a href="{% url 'accounts:accounts_login' %}">Log In</a> </p>
+    </article>
+</div> <!-- card.// -->
+
+</div>
+<!--container end.//-->
 
 </body>
 </html>
+
+
+
+
