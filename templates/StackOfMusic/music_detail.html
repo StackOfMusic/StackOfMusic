@@ -6,13 +6,46 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>StackOfMusic</title>
+    {% block extra_scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    {% endblock %}
 </head>
 <body>
+{% block content %}
+    <script type="text/javascript">
 
+    </script>
+    <div id="completd_music_img"></div>
 
-{{ completed_music.title }}
-{{ completed_music.genre }}
+    <script type="text/javascript">
+        var completd_music = {};
+
+        $(function () {
+            $.ajax({
+                method: 'GET',
+                url: 'http://localhost:8000/RetrieveAPI/{{ completed_music_id }}',
+                success: function (data) {
+                    completd_music = data;
+                    console.log(completd_music);
+                },
+                error: function (error) {
+                    alert(error + 'data를 불러올수없습니다.')
+                },
+
+                xhrFields: {withCredentials: true,}
+
+            })
+        });
+        $(function () {
+            $('#completd_music_img').attr("src", completd_music['url'])
+
+        })
+    </script>
+    {#    {{ completed_music.title }}#}
+    {#    {{ completed_music.genre }}#}
+    {#    <audio controls src="{{ completed_music.seed_file.url }}" type="audio/mpeg">{{ completd_music.title }}</audio>#}
+{% endblock %}
 
 </body>
 </html>
