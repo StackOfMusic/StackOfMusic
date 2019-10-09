@@ -62,7 +62,7 @@
             <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
                 {% for completed_music in completed_music_list %}
                     <button class="my-transparent-button" onclick="location.href='{% url 'completed_music_detail' completed_music.id %}'" style="float: left">
-                        <img class="card-img-top" id="{{ completed_music.title }}" src="{{ completed_music.album_jacket.url }}" alt="Card image" style="width:200px">
+                        <img class="card-img-top" id="{{ completed_music.title }}" src="{{ completed_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
                         <a href="{% url 'completed_music_detail' completed_music.id %}">
                             <div class="card-body">
                                 <h6 class="card-title" style="color: black">{{ completed_music.title }}</h6>

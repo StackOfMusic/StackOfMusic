@@ -53,10 +53,9 @@
 </head>
 <body>
 
-    <audio controls="controls">
-        <source id="audio-source"  src="../../../static/music/music.mp4" type="audio/mp4" />
-    </audio>
+
     <div id="waveform"></div>
+
     <script>
         var wavesurfer = WaveSurfer.create({
             container: '#waveform',
@@ -75,48 +74,23 @@
         });
     </script>
 
+
     <section style="background-color: white;height: 300px;">
 
         <div class="container" style="margin-left: 350px;">
-            <div class="card" style="float:left;width:200px;background-color: white;border: none;text-align: left">
-                <img class="card-img-top" src="../../static/img/artist1.png"
-                     alt="Card image" style="width:100%">
-                <div class="card-body">
-                    <h6 class="card-title">Camelot</h6>
-                </div>
+            <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
+                {% for working_music in working_music_list %}
+                    <button class="my-transparent-button" onclick="location.href='{% url 'create_music:working_music_detail' working_music.id %}'" style="float: left">
+                        <img class="card-img-top" id="{{ working_music.title }}" src="{{ working_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
+                        <a href="{% url 'completed_music_detail' working_music.id %}">
+                            <div class="card-body">
+                                <h6 class="card-title" style="color: black">{{ working_music.title }}</h6>
+                            </div>
+                        </a>
+                    </button>
+                {% endfor %}
             </div>
 
-
-            <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
-                <img class="card-img-top" src="../../static/img/artist2.png"
-                     alt="Card image" style="width:100%">
-                <div class="card-body">
-                    <h6 class="card-title">House Arrest Tingz</h6>
-                </div>
-            </div>
-            <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
-                <img class="card-img-top" src="../../static/img/artist3.png"
-                     alt="Card image" style="width:100%">
-                <div class="card-body">
-                    <h6 class="card-title">223's ft.9lokknine</h6>
-                </div>
-            </div>
-
-            <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
-                <img class="card-img-top" src="../../static/img/artist4.png"
-                     alt="Card image" style="width:100%">
-                <div class="card-body">
-                    <h6 class="card-title">Hot (feat.Gunna)</h6>
-                </div>
-            </div>
-
-            <div class="card" style="float:left;margin-left:20px;width:200px;background-color: white;border: none">
-                <img class="card-img-top" src="../../static/img/artist5.png"
-                     alt="Card image" style="width:100%">
-                <div class="card-body">
-                    <h6 class="card-title">Dangerously In Love</h6>
-                </div>
-            </div>
         </div>
 
     </section>
