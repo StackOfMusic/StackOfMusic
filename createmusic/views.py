@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView, ListView, DeleteView
+from django.views.generic import CreateView, DetailView, ListView, DeleteView, TemplateView
 from rest_framework import mixins, generics
 from django.contrib.auth.mixins import LoginRequiredMixin
 from music.models import Music
@@ -58,12 +58,29 @@ class WorkingMusicRetrieveView(mixins.RetrieveModelMixin, generics.GenericAPIVie
     lookup_url_kwarg = 'working_music_id'
     serializer_class = WorkingMusicRetrieveSerializer
 
+    def dispatch(self, request, *args, **kwargs):
+        super(WorkingMusicRetrieveView,self).dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+    def setup(self, request, *args, **kwargs):
+        super(WorkingMusicRetrieveView, self).setup(request, *args, **kwargs)
+        self.woking_music_id = self.kwargs.get('working_music_id')
+
+
+class WorkingMusicRetrieveTemplateView(TemplateView):
+    template_name = 'createmusic/working_music_detail.html'
+    pk_url_kwarg = 'working_music_id'
+
+    def get_context_data(self, **kwargs):
+        context = super(WorkingMusicRetrieveTemplateView, self).get_context_data(**kwargs)
+        context['working_music_id'] = self.kwargs.get('working_music_id')
+        return context
 
 
 class WorkingMusicDeleteView(DeleteView):
     template_name = 'createmusic/working_music_delete.html'
-    model = Music   
+    model = Music
     pk_url_kwarg = 'working_music_id'
     success_url = reverse_lazy('create_music:working_music_list')

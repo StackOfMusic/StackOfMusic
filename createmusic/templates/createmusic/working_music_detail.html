@@ -1,17 +1,41 @@
-{% load static %}
+{% extends 'StackOfMusic/base.html' %}
 <!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    {% load static %}
+
+    {% block extra_scripts %}
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    {% endblock %}
 </head>
 <body>
-{#<img src="{{ working_music.album_jaket }}"></img>#}
-{{ working_music.title}}
-<audio src="{{ working_music.seed_file.path }}" type="audio/m4a" controls="" autoplay="" loop="" preload="auto"></audio>
-<a href="{% url 'create_music:working_music_delete' working_music.id%}">내가 음악한작업 지우기</a>
+{% block content %}
+
+    <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
+
+    <script type="text/javascript">
+
+        $(function () {
+            var working_music = {};
+
+            $.ajax({
+                method : 'GET',
+                url : 'http://localhost:8000/list/WorkingMusicRetrieveAPI/{{ working_music_id }}',
+                success: function (data) {
+                    working_music = data;
+                    console.log(working_music);
+                },
+                error: function (error) {
+                    alert(error + "data를 load할수없습니다.");
+                },
+                xhrFields: {withCredentials: true,}
+            });
+        })
+
+    </script>
+
+
+{% endblock %}
 </body>
 </html>
