@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 from rest_framework import mixins, generics
 
 from music.models import Music
+from accounts.models import User
 from .serializer import CompletedMusicSerializer
 
 
