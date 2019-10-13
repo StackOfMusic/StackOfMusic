@@ -58,9 +58,6 @@ class WorkingMusicRetrieveView(mixins.RetrieveModelMixin, generics.GenericAPIVie
     lookup_url_kwarg = 'working_music_id'
     serializer_class = WorkingMusicRetrieveSerializer
 
-    def dispatch(self, request, *args, **kwargs):
-        super(WorkingMusicRetrieveView,self).dispatch(request, *args, **kwargs)
-
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
