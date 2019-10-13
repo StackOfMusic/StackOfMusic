@@ -2,16 +2,13 @@
 <!doctype html>
 <html lang="ko">
 <head>
-
     {% block extra_scripts %}
-
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     {% endblock %}
 </head>
 
 <body>
 {% block content %}
-    <div id="completd_music_img"></div>
 
     <script type="text/javascript">
         var completd_music = {};
@@ -25,14 +22,20 @@
                     console.log(completd_music);
                 },
                 error: function (error) {
-                    alert(error + 'data를 불러올수없습니다.')
+                    alert(error + 'data를 불러올수없습니다.');
                 },
-
                 xhrFields: {withCredentials: true,}
-
             })
         });
+
+        $(function () {
+            $('#completed_music_img').attr("src", completd_music['album_jacket']);
+        });
     </script>
+
+
+    <img id="completed_music_img" src="" alt="">
+
 {% endblock %}
 </body>
 </html>

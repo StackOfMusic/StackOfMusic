@@ -26,6 +26,7 @@ urlpatterns = [
     path('RetrieveAPI/<int:completed_music_id>/', CompletedMusicRetrieveView.as_view(), name='completed_music_detail_api'),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('create/', include('createmusic.urls', namespace='create_music')),
+    # path('instrument/search/', include('instrument.urls', namespace='instrument_search')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
