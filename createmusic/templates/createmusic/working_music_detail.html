@@ -58,6 +58,7 @@
                     $('#music_image').attr("src", working_music['album_jacket']);
                     $('#music').attr("src", working_music['seed_file']);
 
+                    $("#music2").attr("src", working_music['seed_file']);
 
 
 
@@ -69,6 +70,21 @@
             })
 
         });
+        function play() {
+            var firstmusic = document.getElementById("check");
+            var secondmusic = document.getElementById("check2");
+
+            if($(firstmusic).prop("checked")==true){
+                var first = $("#music2").attr('src')
+            }
+            if($(secondmusic).prop("checked")==true){
+                var second = $("#music3").children().attr('src')
+            }
+            var audio = new Audio(first);
+            audio.play();
+            var audio2 = new Audio(second);
+            audio2.play();
+        }
 
         $(function () {
             $('#working_music_img').attr("src", working_music['album_jacket']);
@@ -176,7 +192,7 @@
         <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle2"></button>
         <input type="checkbox" id="check" class="hidden" style="display: none" >
         <audio id="music2" controls style="margin-top:20px;margin-left: 10px;">
-            <source id="audio-source" src="../../../media/audiofile/real.mp3" type="audio/mp3"/>
+            <source id="audio-source" src="" type="audio/mp3"/>
         </audio>
     </div>
     <div class="col-xs-4" style="float: left">
@@ -205,26 +221,12 @@
             </div>
         </div>
     </div>
-    <script>
-        function play() {
-            var firstmusic = document.getElementById("check");
-            var secondmusic = document.getElementById("check2");
-
-            if($(firstmusic).prop("checked")==true){
-                var first = $("#music2").children().attr('src')
-            }
-            if($(secondmusic).prop("checked")==true){
-                var second = $("#music3").children().attr('src')
-            }
-            var audio = new Audio(first);
-            audio.play();
-            var audio2 = new Audio(second);
-            audio2.play();
-        }
-    </script>
 
     <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;">Play</button>
     <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
+
+
+
 
 
 {% endblock %}
