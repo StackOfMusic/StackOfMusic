@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Music, Genre, MusicFile
+from .models import Music, Genre, SubMusic
 
 
 admin.site.register(Music)
 admin.site.register(Genre)
-admin.site.register(MusicFile)
+admin.site.register(SubMusic)
