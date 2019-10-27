@@ -1,6 +1,4 @@
 {% extends 'StackOfMusic/base.html' %}
-{% load staticfiles %}
-
 <!doctype html>
 <html lang="ko">
 <head>
@@ -10,25 +8,11 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>SOM</title>
-        <!-- Bootstrap core CSS -->
-        <link href="{% static "StackOfMusic/vendor/bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+        <title>Mypage</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-        <!-- Custom fonts for this template -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
-              rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <link href="{% static "StackOfMusic/css/business-casual.css" %}" rel="stylesheet">
-
-
-        <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
-        <script src="https://unpkg.com/wavesurfer.js"></script>
-        <script src="../../../static/js/wavesurfer.js"></script>
-        <section class="links">
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.1.10/wavesurfer.min.js"></script>
-        </section>
         <style>
             section {
                 width: 100%;
@@ -47,8 +31,25 @@
                 box-sizing: border-box;
                 background-color: #39ace7;
             }
+            .btn-radio {
+                width: 100%;
+            }
+            .img-radio {
+                opacity: 0.5;
+                margin-bottom: 5px;
+            }
+
+            .space-20 {
+                margin-top: 20px;
+            }
 
         </style>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+        <script src="https://unpkg.com/wavesurfer.js"></script>
+        <script src="../../../static/js/wavesurfer.js"></script>
+        <section class="links">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.1.10/wavesurfer.min.js"></script>
+        </section>
 
         </head>
         <body>
@@ -68,15 +69,37 @@
             });
 
 
-            wavesurfer.load('http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3');
+            wavesurfer.load('');
             wavesurfer.on('ready', function () {
                 wavesurfer.play();
             });
         </script>
 
 
-        <section style="background-color: white;height: 300px;">
 
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <!------ Include the above in your HEAD tag ---------->
+
+        <br />
+        <script>
+            $(function () {
+                $('.btn-radio').click(function(e) {
+                    if ($(this).siblings('input').prop("checked")==true) {
+                        $(this).removeClass('active')
+                            .siblings('input').prop('checked', false)
+                            .siblings('.img-radio').css('opacity', '0.5');
+                    }
+                    else if ($(this).siblings('input').prop("checked")==false) {
+                        $(this).addClass('active')
+                            .siblings('input').prop('checked', true)
+                            .siblings('.img-radio').css('opacity', '1');
+                    }
+                });
+            });
+        </script>
+
+        <section style="background-color: white;height: 300px;">
             <div class="container" style="margin-left: 350px;">
                 <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
                     {% for working_music in working_music_list %}
@@ -95,14 +118,38 @@
                 {% for working_music in working_music_list %}
                     <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
                 {% endfor %}
-
             </div>
-
         </section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-md-offset-3">
+                    <form class="form-horizontal well" role="form">
+                        <div class="row">
+                            {% for working_music in working_music_list %}
+                                <div class="col-xs-4" style="float: left">
+                                    <img src="{{ working_music.album_jacket.url }}" style="width: 200px;margin-left: 100px;" class="img-responsive img-radio">
+                                    <button type="button" class="btn btn-primary btn-radio" style="width: 100px;">{{ working_music.title }}</button>
+                                    <input type="checkbox" id="{{ working_music.id }}" class="hidden" style="display: none" >
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <audio id="music" controls style="margin-top:20px;margin-left: 10px;">
+            <source id="audio-source" src="" type="audio/mp4"/>
+        </audio>
 
+        </body>
     {% endblock %}
 
-
-
-    </body>
 </html>
+
+
+
+
+
+
+
+

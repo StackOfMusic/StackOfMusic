@@ -15,6 +15,7 @@ class Music(models.Model):
     title = models.CharField(max_length=30)
     album_jacket = models.ImageField(blank=True, upload_to='img')
     seed_file = models.FileField(upload_to='audiofile')
+    instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='music')
     create_date = models.DateTimeField(auto_now_add=True)
     like = models.IntegerField(default=0)
     participants = models.IntegerField(default=0)
@@ -29,10 +30,11 @@ class Music(models.Model):
         return self.title
 
 
-class MusicFile(models.Model):
-    music = models.ForeignKey('music.Music', on_delete=models.CASCADE, related_name='music_file')
+class SubMusic(models.Model):
+    music = models.ForeignKey('music.Music', on_delete=models.CASCADE, related_name='sub_music')
+    instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='sub_music')
     file_name = models.CharField(max_length=20)
-    music_file = models.FileField()
+    music_file = models.FileField(upload_to='audiofile')
 
     def __str__(self):
         return self.file_name

@@ -10,7 +10,34 @@
 <body>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    <p>
+        <label for="id_genre">Genre:</label>
+        <select name="genre" required id="id_genre">
+            {% for genre in form.genre.field.queryset %}
+                <option value="{{ genre.pk }}" selected >{{ genre.name }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <p>
+        <label for="id_title">Title:</label>
+        <input type="text" name="title" maxlength="30" required id="id_title">
+    </p>
+    <p>
+        <label for="id_album_jacket">Album jacket:</label>
+        <input type="file" name="album_jacket" accept="image/*" id="id_album_jacket">
+    </p>
+    <p>
+        <label for="id_seed_file">Seed file:</label>
+        <input type="file" name="seed_file" required id="id_seed_file">
+    </p>
+    <p>
+        <label for="id_instrument">Instrument:</label>
+        <select name="instrument" required id="id_instrument">
+            {% for instrument in form.instrument.field.queryset %}
+                <option value="{{ instrument.pk }}" selected>{{ instrument }}</option>
+            {% endfor %}
+        </select>
+    </p>
     <button type="submit">만들기</button>
 </form>
 
