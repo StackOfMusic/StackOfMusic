@@ -60,19 +60,6 @@
 
                 {% endfor %}
                 {% endcomment%}
-{% else %}
-                <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">
-                    <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"
-                            class="btn btn-block btn-success" style="width:100px;">SignUp
-                    </button>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <button type="button" onclick="location.href='{% url 'accounts:accounts_login' %}'"
-                            class="btn btn-block btn-info" style="width:100px;">SignIn
-                    </button>
-                </li>
-
-{% endif %}
 
             </ul>
         </nav>
@@ -110,6 +97,55 @@
         </nav>
 
     </section>
+{% else %}
+                <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">
+                    <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"
+                            class="btn btn-block btn-success" style="width:100px;">SignUp
+                    </button>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <button type="button" onclick="location.href='{% url 'accounts:accounts_login' %}'"
+                            class="btn btn-block btn-info" style="width:100px;">SignIn
+                    </button>
+                </li>
+
+            </ul>
+        </nav>
+
+                <h1 class="site-heading text-center text-white d-none d-lg-block">
+                    {#    <span class="site-heading-upper">A Free Bootstrap 4 Business Theme</span>#}
+                    <span class="site-heading-lower  mb-3" style="color: white; border-color: #fbfbff;text-shadow: -10px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><b><b>Stack Of Music</b></b></span>
+                </h1>
+                <section>
+                    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background-color: white" id="mainNav">
+                        <div class="container">
+                            <div class="collapse navbar-collapse" id="navbarResponsive">
+                                <ul class="navbar-nav mx-auto">
+                                    <li class="nav-item active px-lg-4">
+                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href={% url 'home' %}><b>Home</b>
+                                            <span class="sr-only">(current)</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item px-lg-4">
+                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;"
+                                           href="{% url 'create_music:working_music_list' %}"><b>Music</b></a>
+                                    </li>
+                                    <li class="nav-item px-lg-4">
+                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="#"><b>Instrument</b></a>
+                                    </li>
+                                    <li class="nav-item px-lg-4">
+                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="{% url 'accounts:accounts_login'%}"><b>Mypage</b></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </section>
+            </ul>
+        </nav>
+
+    </section>
+{% endif %}
 
 
 {% block content %}
