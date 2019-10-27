@@ -121,3 +121,6 @@ config/
 log/
 *.pyc
 000*
+
+media/*
+myvenv
