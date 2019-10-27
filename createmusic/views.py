@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView, ListView, DeleteView, TemplateView
+from django.views.generic import CreateView, DetailView, ListView, DeleteView, TemplateView, UpdateView
 from rest_framework import mixins, generics
-from django.contrib.auth.mixins import LoginRequiredMixin
+
 from music.models import Music
 from .forms import CreateMusicForm
 from .serializer import WorkingMusicRetrieveSerializer
@@ -33,7 +32,8 @@ class WorkingMusicListView(ListView):
     context_object_name = 'working_music_list'
 
     def get_queryset(self):
-        queryset = self.request.user.music_owner.filter(Q(music_option=Music.MUSIC_NOT_COMPLETED))
+        queryset = self.model.objects.filter(music_option=Music.MUSIC_NOT_COMPLETED).order_by('-create_date')[:5]
+        # queryset = self.request.user.music_owner.filter(Q(music_option=Music.MUSIC_NOT_COMPLETED))
         return queryset
 
     @method_decorator(login_required(login_url=login_url))
@@ -81,3 +81,13 @@ class WorkingMusicDeleteView(DeleteView):
     model = Music
     pk_url_kwarg = 'working_music_id'
     success_url = reverse_lazy('create_music:working_music_list')
+
+
+class MusicUpdateAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
+
+    queryset = Music.objects.all()
+    lookup_url_kwarg = 'working_music_id'
+    serializer_class = WorkingMusicRetrieveSerializer
+
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)

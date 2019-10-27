@@ -41,11 +41,11 @@
 
 
 
-    <section style="background-image: url({% static 'img/mu.jpg' %}); background-position: center; background-size: 1700px" >
+<section style="background-image: url({% static 'img/mu.jpg' %}); background-position: center; background-size: 1700px" >
 
-        <nav class="navbar navbar-expand navbar-primary navbar-dark">
-            <ul class="navbar-nav">
-{% if user.is_authenticated %}
+    <nav class="navbar navbar-expand navbar-primary navbar-dark">
+        <ul class="navbar-nav">
+            {% if user.is_authenticated %}
 
                 <a href="{% url 'accounts:accounts_detail' user.id %}"><img src="{% static 'img/login.png' %}" style="width: 40px;height: 40px;margin-left: 1670px;"></a>
                 <br>
@@ -53,7 +53,7 @@
                 <br>
                 <a href="{% url 'create_music:working_music_list' %}"><img src="{% static 'img/play-button.png' %}" style="width: 40px;height: 40px;margin-left: 15px;"></a>
                 <br>
-    {% comment %}
+                {% comment %}
                 {% for completed_music in completed_music_list %}
                     <li><a href="{% url 'completed_music_detail' completed_music.id %}">{{ completed_music.title }}</a>
                     </li>
@@ -61,8 +61,8 @@
                 {% endfor %}
                 {% endcomment%}
 
-            </ul>
-        </nav>
+                </ul>
+                </nav>
 
                 <h1 class="site-heading text-center text-white d-none d-lg-block">
                     {#    <span class="site-heading-upper">A Free Bootstrap 4 Business Theme</span>#}
@@ -93,24 +93,26 @@
                         </div>
                     </nav>
                 </section>
-            </ul>
-        </nav>
 
-    </section>
-{% else %}
-                <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">
-                    <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"
-                            class="btn btn-block btn-success" style="width:100px;">SignUp
-                    </button>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <button type="button" onclick="location.href='{% url 'accounts:accounts_login' %}'"
-                            class="btn btn-block btn-info" style="width:100px;">SignIn
-                    </button>
-                </li>
+                </section>
+            {% else %}
+                {#                <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">#}
+                {#                    <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"#}
+                {#                            class="btn btn-block btn-success" style="width:100px;">SignUp#}
+                {#                    </button>#}
+                {#                </li>#}
+                {#                <li class="nav-item d-none d-sm-inline-block">#}
+                {#                    <button type="button" onclick="location.href='{% url 'accounts:accounts_login' %}'"#}
+                {#                            class="btn btn-block btn-info" style="width:100px;">SignIn#}
+                {#                    </button>#}
+                {#                </li>#}
 
-            </ul>
-        </nav>
+                <a href="{% url 'accounts:accounts_login' %}"><img src="{% static 'img/login.png' %}" style="width: 40px;height: 40px;margin-left: 1670px;"></a>
+                <br>
+                <a href="{% url 'accounts:accounts_logout' %}"><img src="{% static 'img/logout.png' %}" style="width: 40px;height: 40px;margin-left: 20px;"></a>
+                <br>
+                <a href="{% url 'create_music:working_music_list' %}"><img src="{% static 'img/play-button.png' %}" style="width: 40px;height: 40px;margin-left: 15px;"></a>
+                <br>
 
                 <h1 class="site-heading text-center text-white d-none d-lg-block">
                     {#    <span class="site-heading-upper">A Free Bootstrap 4 Business Theme</span>#}
@@ -141,11 +143,11 @@
                         </div>
                     </nav>
                 </section>
-            </ul>
-        </nav>
+                </ul>
+                </nav>
 
-    </section>
-{% endif %}
+                </section>
+            {% endif %}
 
 
 {% block content %}
