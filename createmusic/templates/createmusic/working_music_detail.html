@@ -10,8 +10,6 @@
 <body>
 {% block content %}
 
-    <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
-
     <script type="text/javascript">
 
         $(function () {
@@ -32,6 +30,214 @@
         })
 
     </script>
+
+    <script type="text/javascript">
+
+        var working_music = {};
+        $(function () {
+            $.ajax({
+                method: 'GET',
+                url: 'http://localhost:8000/create/list/WorkingMusicRetrieveAPI/{{ working_music_id }}',
+                success: function (data) {
+                    working_music = data;
+                    console.log(working_music);
+                    var titleContainer = document.getElementById("mytitle");
+                    var title = document.getElementById("mytitle2");
+                    var ownerContainer = document.getElementById("myowner");
+                    var dateContainer = document.getElementById("mydate");
+                    var genreContainer = document.getElementById("mygenre");
+
+
+                    title.append(working_music['title']);
+                    dateContainer.append(working_music['create_date']);
+                    titleContainer.append(working_music['title']);
+                    ownerContainer.append(working_music['owner'].username);
+                    genreContainer.append(working_music['genre'].name);
+
+                    $('#image').attr("src", working_music['album_jacket']);
+                    $('#music_image').attr("src", working_music['album_jacket']);
+                    $('#music').attr("src", working_music['seed_file']);
+                },
+                error: function (error) {
+                    alert(error + 'data를 불러올수없습니다.');
+                },
+                xhrFields: {withCredentials: true,}
+            })
+
+        });
+
+        $(function () {
+            $('#working_music_img').attr("src", working_music['album_jacket']);
+        });
+
+
+    </script>
+
+
+
+
+    <img id="working_music_img" src="" alt="">
+    <div class="container">
+        <div class="row well">
+            <div class="col-md-12">
+                <div class="panel">
+                    <img id="music_image" src="" alt="" style="height:250px;width: 250px;float: left">
+                    <div class="row user-left-part">
+                        <div class="col-md-9 col-sm-9 col-xs-12 pull-right profile-right-section" style="height: 500px;">
+                            <div class="row profile-right-section-row">
+                                <div class="col-md-12 profile-header">
+                                    <div class="row">
+                                        <div class="col-md-8 col-sm-6 col-xs-6 profile-header-section1 pull-left">
+                                            <h1><div id="mytitle" style="float: left;"></div></h1>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <!-- Tab panes -->
+                                            <div class="tab-content">
+                                                <div role="tabpanel" class="tab-pane fade show active" id="profile">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>genre</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <h4><div id="mygenre" style="float: left;margin-left: 20px;"></div></h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Owner</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <h4><div id="myowner" style="float: left;margin-left: 20px;"></div></h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>발매날짜</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div id="mydate" style="float: left;margin-left: 20px;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <audio id="music" controls style="margin-top:20px;margin-left: 10px;">
+                                                        <source id="audio-source" src="" type="audio/mp4"/>
+                                                    </audio>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="post-comments">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="comment">Your Comment</label>
+                                                <textarea name="comment" class="form-control" rows="3"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-default">Send</button>
+                                        </form>
+                                    </div>
+                                    <!-- post-comments -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('.btn-radio').siblings('.img-radio').css('opacity', '0.5');
+            $('.btn-radio').click(function(e) {
+                if ($(this).siblings('input').prop("checked")==true) {
+                    $(this).removeClass('active')
+                        .siblings('input').prop('checked', false)
+                        .siblings('.img-radio').css('opacity', '0.5');
+                }
+                else if ($(this).siblings('input').prop("checked")==false) {
+                    $(this).addClass('active')
+                        .siblings('input').prop('checked', true)
+                        .siblings('.img-radio').css('opacity', '1');
+                }
+            });
+        });
+    </script>
+    <div class="col-xs-4" style="float: left">
+        <img src="" style="width: 200px;margin-left: 100px;" id="image" class="img-responsive img-radio">
+        <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle2"></button>
+        <input type="checkbox" id="check" class="hidden" style="display: none" >
+    </div>
+    <div class="col-xs-4" style="float: left">
+        <img src="../../../static/img/artist7.png" style="width: 200px;margin-left: 100px;" id="image2" class="img-responsive img-radio">
+        <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle3">Drum</button>
+        <input type="checkbox" id="check2" class="hidden" style="display: none" >
+    </div>
+
+    <audio id="music2" controls style="margin-top:20px;margin-left: 10px;">
+        <source id="audio-source" src="" type="audio/mp4"/>
+    </audio>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-md-offset-3">
+                <form class="form-horizontal well" role="form">
+                    <div class="row">
+                        {% for music in working_music %}
+                            <div class="col-xs-4" style="float: left">
+                                <img src="{{ music.album_jacket.url }}" style="width: 200px;margin-left: 100px;" class="img-responsive img-radio">
+                                <button type="button" class="btn btn-primary btn-radio" style="width: 100px;">{{ music.title }}</button>
+                                <input type="checkbox" id="{{ music.id }}" class="hidden" style="display: none" >
+                            </div>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        var snd1  = new Audio();
+        var src1  = document.createElement("source");
+        src1.src  = "audio/Dombra.mp3";
+        snd1.appendChild(src1);
+
+        var snd2  = new Audio();
+        var src2  = document.createElement("source");
+        src2.src  = "audio/(TESBIHAT).mp3";
+        snd2.appendChild(src2);
+
+        snd1.play(); snd2.play();
+        function play() {
+            var firstmusic = document.getElementById("check");
+            alert(document.getElementById("check").checked)
+            if($(firstmusic).prop("checked")==true){
+
+            }
+            alert($(firstmusic).prop("checked"));
+            $('.btn-radio').siblings('.img-radio').css('opacity', '0.5');
+            $('.btn-radio').click(function(e) {
+                if ($(this).siblings('input').prop("checked")==true) {
+                    $(this).removeClass('active')
+                        .siblings('input').prop('checked', false)
+                        .siblings('.img-radio').css('opacity', '0.5');
+                }
+                else if ($(this).siblings('input').prop("checked")==false) {
+                    $(this).addClass('active')
+                        .siblings('input').prop('checked', true)
+                        .siblings('.img-radio').css('opacity', '1');
+                }
+            });
+        }
+    </script>
+    <audio controls="controls">
+        <source src="" type="audio/mp4" />
+        <source src="" type="audio/mp4" />
+    </audio>
+    <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;">Play</button>
+    <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
 
 
 {% endblock %}
