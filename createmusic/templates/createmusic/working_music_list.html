@@ -69,37 +69,12 @@
             });
 
 
-            wavesurfer.load('http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3');
+            wavesurfer.load('');
             wavesurfer.on('ready', function () {
                 wavesurfer.play();
             });
         </script>
 
-
-        <section style="background-color: white;height: 300px;">
-
-            <div class="container" style="margin-left: 350px;">
-                <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
-                    {% for working_music in working_music_list %}
-                        <button class="my-transparent-button" onclick="location.href='{% url 'create_music:working_music_detail' working_music.id %}'" style="float: left">
-                            <img class="card-img-top" id="{{ working_music.title }}" src="{{ working_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
-                            <a href="{% url 'completed_music_detail' working_music.id %}">
-                                <div class="card-body">
-                                    <h6 class="card-title" style="color: black">{{ working_music.title }}</h6>
-                                </div>
-                            </a>
-                        </button>
-                    {% endfor %}
-                </div>
-                <a href="{% url 'create_music:create_music' %}">만들기</a>
-                <br>
-                {% for working_music in working_music_list %}
-                    <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
-                {% endfor %}
-
-            </div>
-
-        </section>
 
 
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
@@ -147,15 +122,14 @@
         </section>
         <div class="container">
             <div class="row">
-                <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12 col-md-offset-3">
                     <form class="form-horizontal well" role="form">
                         <div class="row">
                             {% for working_music in working_music_list %}
-                                <div class="col-xs-4">
-
+                                <div class="col-xs-4" style="float: left">
                                     <img src="{{ working_music.album_jacket.url }}" style="width: 200px;margin-left: 100px;" class="img-responsive img-radio">
-                                    <button type="button" class="btn btn-primary btn-radio">{{ working_music.title }}</button>
-                                    <input type="checkbox" id="{{ working_music.id }}" class="hidden" >
+                                    <button type="button" class="btn btn-primary btn-radio" style="width: 100px;">{{ working_music.title }}</button>
+                                    <input type="checkbox" id="{{ working_music.id }}" class="hidden" style="display: none" >
                                 </div>
                             {% endfor %}
                         </div>
@@ -163,7 +137,9 @@
                 </div>
             </div>
         </div>
-
+        <audio id="music" controls style="margin-top:20px;margin-left: 10px;">
+            <source id="audio-source" src="" type="audio/mp4"/>
+        </audio>
 
         </body>
     {% endblock %}
