@@ -1,5 +1,6 @@
 from django import forms
-from music.models import Music
+from music.models import Music, Genre
+from instrument.models import Instrument
 
 
 class CreateMusicForm(forms.ModelForm):
@@ -11,11 +12,14 @@ class CreateMusicForm(forms.ModelForm):
             'title',
             'album_jacket',
             'seed_file',
+            'instrument',
         )
 
     def __init__(self, music_owner, *args, **kwargs):
         self.owner = music_owner
         super(CreateMusicForm, self).__init__(*args, **kwargs)
+        self.fields['genre'].queryset = Genre.objects.all()
+        self.fields['instrument'].queryset = Instrument.objects.all()
         self.fields['album_jacket'].required = False
 
     def save(self, commit=True):
