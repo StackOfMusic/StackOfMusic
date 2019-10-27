@@ -1,15 +1,22 @@
 from pydub import AudioSegment
 
 # Open file
-song = AudioSegment.from_wav('a3.wav')
+song = AudioSegment.from_wav('./source/airplane.wav')
 
 # Slice audio
 # pydub uses milliseconds
-start_position = 200
-one_seconds = 0.3 * 1000
+elements = 0
+result_index = 0
+song_len = len(song)
+element_size = 400
 #one_min = ten_seconds * 6
 
-first_1_seconds = song[start_position:start_position + one_seconds]
+while elements < song_len:
+    if elements + element_size < song_len:
+        music_elements  = song[elements:elements + element_size]
+    else:
+        music_elements = song[elements:song_len]
+    elements = elements + element_size
 #last_5_seconds = song[-5000:]
 
 # up/down volumn
@@ -18,4 +25,6 @@ first_1_seconds = song[start_position:start_position + one_seconds]
 # Save the result
 # can give parameters-quality, channel, etc
 #beginning.exoprt('result.flac', format='flac', parameters=["-q:a", "10", "-ac", "1"])
-first_1_seconds.export('result_a3.wav', format='wav')
+    result_name = '{}.wav'.format(result_index)
+    result_index = result_index + 1
+    music_elements.export(result_name, format='wav')

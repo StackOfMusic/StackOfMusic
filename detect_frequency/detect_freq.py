@@ -5,15 +5,15 @@ import wave
 import numpy as np
 from reconstruct_music import recons_music
 
-
 def detect_freq():
-    chunk = 2048
+    chunk = 16384
     frequency_list = []
 
     PATH = "/home/junseok/jslee/capstone1/detect_frequency/music_element"
 
     for path, dirs, files in os.walk(PATH):
-        for filename in files:
+        sorted_files = sorted(files, key=lambda x: int(x.split('.')[0]))
+        for filename in sorted_files:
             fullpath = os.path.join(path, filename)
             count = 0
             total_hz = 0.0
