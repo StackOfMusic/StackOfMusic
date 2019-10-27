@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -51,7 +51,7 @@
                 <br>
                 <a href="{% url 'accounts:accounts_logout' %}"><img src="{% static 'img/logout.png' %}" style="width: 40px;height: 40px;margin-left: 20px;"></a>
                 <br>
-                <a href="{% url 'create_music:working_music_list' %}"><img src="{% static 'img/play-button.png' %}" style="width: 40px;height: 40px;margin-left: 15px;"></a>
+                <a href="{% url 'create_music:working_music_list' %}"><img src="{% static 'img/user.png' %}" style="width: 40px;height: 40px;margin-left: 15px;"></a>
                 <br>
                 {% comment %}
                 {% for completed_music in completed_music_list %}
@@ -94,7 +94,6 @@
                     </nav>
                 </section>
 
-                </section>
             {% else %}
                 {#                <li class="nav-item d-none d-sm-inline-block" style="margin-left: 1600px;">#}
                 {#                    <button type="button" onclick="location.href='{% url 'accounts:accounts_create' %}'"#}
@@ -111,9 +110,10 @@
                 <br>
                 <a href="{% url 'accounts:accounts_logout' %}"><img src="{% static 'img/logout.png' %}" style="width: 40px;height: 40px;margin-left: 20px;"></a>
                 <br>
-                <a href="{% url 'create_music:working_music_list' %}"><img src="{% static 'img/play-button.png' %}" style="width: 40px;height: 40px;margin-left: 15px;"></a>
+                <a href="{% url 'accounts:accounts_create' %}"><img src="{% static 'img/user.png' %}" style="width: 40px;height: 40px;margin-left: 15px;"></a>
                 <br>
-
+                </ul>
+                </nav>
                 <h1 class="site-heading text-center text-white d-none d-lg-block">
                     {#    <span class="site-heading-upper">A Free Bootstrap 4 Business Theme</span>#}
                     <span class="site-heading-lower  mb-3" style="color: white; border-color: #fbfbff;text-shadow: -10px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><b><b>Stack Of Music</b></b></span>
@@ -143,11 +143,13 @@
                         </div>
                     </nav>
                 </section>
-                </ul>
-                </nav>
-
-                </section>
             {% endif %}
+    </ul>
+    </nav>
+</section>
+
+
+
 
 
 {% block content %}
