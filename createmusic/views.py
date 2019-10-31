@@ -4,9 +4,9 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, DeleteView, TemplateView, UpdateView
 from rest_framework import mixins, generics
 
-from music.models import Music
+from music.models import Music, SubMusic
 from .forms import CreateMusicForm
-from .serializer import WorkingMusicRetrieveSerializer
+from .serializer import WorkingMusicRetrieveSerializer, SubMusicSerializer
 
 login_url = reverse_lazy('accounts:accounts_login')
 
@@ -81,6 +81,16 @@ class WorkingMusicDeleteView(DeleteView):
     model = Music
     pk_url_kwarg = 'working_music_id'
     success_url = reverse_lazy('create_music:working_music_list')
+
+
+class SubMusicCreateAPIView(mixins.CreateModelMixin, generics.GenericAPIView):
+
+    queryset = SubMusic.objects.all()
+    lookup_url_kwarg = 'working_music_id'
+    serializer_class = SubMusicSerializer
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class MusicUpdateAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
