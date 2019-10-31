@@ -4,6 +4,34 @@
 <head>
     {% block extra_scripts %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#upload-btn').click(function () {
+                    {#var file = $('#file-upload-form').serialize();#}
+                    var form = $('#file-upload-form')[0];
+                    var formData = new FormData(form);
+
+                    console.log(formData);
+
+                    $.ajax({
+                        url: 'http://localhost:8000/create/list/SubMusicCreateAPIView/{{ working_music_id }}',
+                        method: 'POST',
+                        contentType: false,
+                        processData: false,
+                        data: {
+                            formData,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success : function (data) {
+                            alert('data');
+                        },
+                        error: function (error) {
+                            alert('error');
+                        }
+                    })
+                })
+            })
+        </script>
     {% endblock %}
 </head>
 
@@ -68,7 +96,6 @@
                 },
                 xhrFields: {withCredentials: true,}
             })
-
         });
         function play() {
             var firstmusic = document.getElementById("check");
@@ -150,24 +177,30 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="container">
-                                    <div class="post-comments">
-                                        <form>
-                                            <div class="form-group">
-                                                <label for="comment">Your Comment</label>
-                                                <textarea name="comment" class="form-control" rows="3"></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-default">Send</button>
-                                        </form>
-                                    </div>
-                                    <!-- post-comments -->
-                                </div>
+                                <form enctype="multipart/form-data" id="file-upload-form" method="post">
+                                    {% csrf_token %}
+                                    <input type="file" name="music_file" id="ajaxFile">
+                                    <input type="hidden" name="music_id" value="{{ object.pk }}">
+                                    <input type="button" class="btn btn-primary" id='upload-btn' value="업로드"/>
+                                </form>
+                                {#                                <div class="container">#}
+                                {#                                    <div class="post-comments">#}
+                                {#                                        <form>#}
+                                {#                                            <div class="form-group">#}
+                                {#                                                <label for="comment">Your Comment</label>#}
+                                {#                                                <textarea name="comment" class="form-control" rows="3"></textarea>#}
+                                {#                                            </div>#}
+                                {#                                            <button type="submit" class="btn btn-default">Send</button>#}
+                                {#                                        </form>#}
+                                {#                                    </div>#}
+                                <!-- post-comments -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script>
@@ -222,6 +255,13 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+
+    </script>
+    <audio controls="controls">
+        <source src="" type="audio/mp4" />
+        <source src="" type="audio/mp4" />
+    </audio>
     <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;">Play</button>
     <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
 

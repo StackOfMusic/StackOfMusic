@@ -20,7 +20,6 @@ class CreateMusicForm(forms.ModelForm):
         super(CreateMusicForm, self).__init__(*args, **kwargs)
         self.fields['genre'].queryset = Genre.objects.all()
         self.fields['instrument'].queryset = Instrument.objects.all()
-        self.fields['album_jacket'].required = False
 
     def save(self, commit=True):
         self.instance.owner = self.owner
