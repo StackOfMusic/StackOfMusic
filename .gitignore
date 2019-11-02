@@ -124,5 +124,4 @@ log/
 
 media/*
 myvenv
-admin/
-rest_framework/
+static/
