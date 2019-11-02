@@ -14,8 +14,8 @@
                     console.log(formData);
 
                     $.ajax({
-                        url: 'http://localhost:8000/create/list/SubMusicCreateAPIView/{{ working_music_id }}',
-                        method: 'POST',
+                        url: 'http://stackofmusic.s3.amazonaws.com/',
+                        method: 'PUT',
                         contentType: false,
                         processData: false,
                         data: {
@@ -32,6 +32,7 @@
                 })
             })
         </script>
+
     {% endblock %}
 </head>
 
@@ -42,7 +43,6 @@
 
         $(function () {
             var working_music = {};
-
             $.ajax({
                 method : 'GET',
                 url : 'http://localhost:8000/create/list/WorkingMusicRetrieveAPI/{{ working_music_id }}',
