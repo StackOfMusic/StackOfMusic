@@ -4,9 +4,8 @@ from django.views.generic import ListView
 from rest_framework import mixins, generics
 from rest_framework.response import Response
 
-from instrument.models import Instrument
+from instrument.forms import MusicSearchForm
 from music.models import Music
-from search.forms import MusicSearchForm
 from .serializer import InstrumentSerializer
 
 
