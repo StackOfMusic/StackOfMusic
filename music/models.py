@@ -31,10 +31,10 @@ class Music(models.Model):
 
 
 class SubMusic(models.Model):
-    music = models.ForeignKey('music.Music', on_delete=models.CASCADE, related_name='sub_music')
+    music = models.ForeignKey('music.Music', on_delete=models.CASCADE, related_name='sub_musics')
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='sub_music')
-    file_name = models.CharField(max_length=20)
     music_file = models.FileField(upload_to='audiofile')
 
-    def __str__(self):
-        return self.file_name
+
+# Music.objects.prefetch_related('sub_musics').filter(instrument_id__in=[], sub_musics__instrument_id__in=[])
+# class CompletedMusic(models.Model):

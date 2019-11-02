@@ -74,6 +74,7 @@
                 url: 'http://localhost:8000/RetrieveAPI/{{ completed_music_id }}',
                 success: function (data) {
                     completd_music = data;
+                    ex = completd_music['owner'].username;
                     console.log(completd_music);
                     var titleContainer = document.getElementById("mytitle");
                     var ownerContainer = document.getElementById("myowner");
@@ -91,7 +92,7 @@
                     $('#music').attr("src", completd_music['seed_file']);
                 },
                 error: function (error) {
-                    alert(error + 'data를 불러올수없습니다.');
+                    console.log(error + 'data를 불러올수없습니다.');
                 },
                 xhrFields: {withCredentials: true,}
             })
@@ -100,6 +101,7 @@
 
         $(function () {
             $('#completed_music_img').attr("src", completd_music['album_jacket']);
+
         });
     </script>
     <img id="completed_music_img" src="" alt="">

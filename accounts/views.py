@@ -12,7 +12,7 @@ from accounts.models import Copyright
 from music.models import Music
 from .forms import CreateUserForm
 from .models import User
-from .serializer import CopyrightSerializer
+from .serializer import CopyrightSerializer, UserWorkingProjectsSerializer
 
 
 class CreateUserView(CreateView):
@@ -68,6 +68,7 @@ class UserDetailView(DetailView):
         context = super(UserDetailView, self).get_context_data(**kwargs)
         context['user'] = self.request.user
         context['user_music_list'] = self.request.user.music_owner.all()
+        context['user_contrib_music_list'] = self.request.user.music_contributor.all()
         return context
 
 
@@ -89,6 +90,8 @@ class CopyrightTemplateView(TemplateView):
 
 
 class UserWorkingProjects(mixins.ListModelMixin, generics.GenericAPIView):
+
+    serializer_class = UserWorkingProjectsSerializer
 
     def get_queryset(self):
         queryset = Music.objects.filter(owner=self.request.user, contributor=self.request.user)

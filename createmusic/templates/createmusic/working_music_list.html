@@ -54,9 +54,9 @@
         </head>
         <body>
 
-
+{% comment %}
         <div id="waveform"></div>
-
+{% endcomment %}
         <script>
             var wavesurfer = WaveSurfer.create({
                 container: '#waveform',
@@ -115,6 +115,8 @@
                 </div>
                 <a href="{% url 'create_music:create_music' %}">만들기</a>
                 <br>
+            </div>
+            {% comment %}
                 {% for working_music in working_music_list %}
                     <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
                 {% endfor %}
@@ -137,9 +139,7 @@
                 </div>
             </div>
         </div>
-        <audio id="music" controls style="margin-top:20px;margin-left: 10px;">
-            <source id="audio-source" src="" type="audio/mp4"/>
-        </audio>
+            {% endcomment %}
 
         </body>
     {% endblock %}
