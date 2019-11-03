@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'storages',
     's3direct',
-    'search.apps.SearchConfig',
     'example.apps.ExampleConfig',
 ]
 
