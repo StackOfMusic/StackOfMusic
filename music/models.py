@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Genre(models.Model):
@@ -11,7 +12,7 @@ class Genre(models.Model):
 class Music(models.Model):
     genre = models.ForeignKey('music.Genre', on_delete=models.CASCADE, related_name='music')
     owner = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='music_owner')
-    contributor = models.ManyToManyField('accounts.User', related_name='music_contributor')
+    # contributor = models.ManyToManyField('accounts.User', related_name='music_contributor')
     title = models.CharField(max_length=30)
     album_jacket = models.ImageField(blank=True, upload_to='img')
     seed_file = models.FileField(upload_to='audiofile')
@@ -29,11 +30,16 @@ class Music(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('create_music:working_music_detail', args=(self.pk,))
+
 
 class SubMusic(models.Model):
     music = models.ForeignKey('music.Music', on_delete=models.CASCADE, related_name='sub_musics')
+    contributor = models.ForeignKey('accounts.User', related_name='music_contributor', on_delete=models.CASCADE)
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='sub_music')
     music_file = models.FileField(upload_to='audiofile')
+    create_date = models.DateTimeField(auto_now_add=True)
 
 
 # Music.objects.prefetch_related('sub_musics').filter(instrument_id__in=[], sub_musics__instrument_id__in=[])
