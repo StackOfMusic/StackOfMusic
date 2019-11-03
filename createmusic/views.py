@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, DeleteView, TemplateView, UpdateView
 from rest_framework import mixins, generics
 
 from music.models import Music, SubMusic
-from .forms import CreateMusicForm
+from .forms import CreateMusicForm, CreateSubMusicForm
 from .serializer import WorkingMusicRetrieveSerializer, SubMusicSerializer
 
 login_url = reverse_lazy('accounts:accounts_login')
@@ -83,21 +84,38 @@ class WorkingMusicDeleteView(DeleteView):
     success_url = reverse_lazy('create_music:working_music_list')
 
 
-class SubMusicCreateAPIView(mixins.CreateModelMixin, generics.GenericAPIView):
+class SubMusicCreateView(CreateView):
+    template_name = 'createmusic/create_submusic.html'
+    form_class = CreateSubMusicForm
+    pk_url_kwarg = 'working_music_id'
 
-    queryset = SubMusic.objects.all()
-    lookup_url_kwarg = 'working_music_id'
-    serializer_class = SubMusicSerializer
+    def get_form_kwargs(self):
+        kwargs = super(SubMusicCreateView, self).get_form_kwargs()
+        kwargs['working_music_id'] = self.kwargs.get('working_music_id')
+        kwargs['music_contributor'] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(SubMusicCreateView, self).get_context_data(**kwargs)
+        context['working_music_id'] = self.kwargs.get('working_music_id')
+        return context
+
+    def get_success_url(self):
+        working_music_id = self.kwargs.get('working_music_id')
+        return reverse_lazy('create_music:working_music_detail', kwargs={'working_music_id': working_music_id})
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        return super(SubMusicCreateView, self).post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return super(SubMusicCreateView, self).get(request, *args, **kwargs)
 
 
-class MusicUpdateAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
+class MusicUpdateView(UpdateView):
 
     queryset = Music.objects.all()
     lookup_url_kwarg = 'working_music_id'
     serializer_class = WorkingMusicRetrieveSerializer
 
     def post(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        return super(MusicUpdateView, self).post(request, *args, **kwargs)
