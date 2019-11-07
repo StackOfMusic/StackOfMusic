@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from accounts.models import User
 
 
 class Genre(models.Model):
@@ -33,6 +34,15 @@ class Music(models.Model):
     def get_absolute_url(self):
         return reverse('create_music:working_music_detail', args=(self.pk,))
 
+    # def is_owner(self):
+    #     return self.owner == User.USER_TEACHER
+
+    def is_complete(self):
+        return self.music_option == Music.MUSIC_COMPLETED
+
+    def is_not_complete(self):
+        return self.music_option == Music.MUSIC_NOT_COMPLETED
+
 
 class SubMusic(models.Model):
     music = models.ForeignKey('music.Music', on_delete=models.CASCADE, related_name='sub_musics')
@@ -40,6 +50,12 @@ class SubMusic(models.Model):
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='sub_music')
     music_file = models.FileField(upload_to='audiofile')
     create_date = models.DateTimeField(auto_now_add=True)
+    ACCEPT, PENDING = 0, 1
+    STATUS = (
+        (ACCEPT, '머지'),
+        (PENDING, '대기'),
+    )
+    status = models.SmallIntegerField(choices=STATUS)
 
 
 # Music.objects.prefetch_related('sub_musics').filter(instrument_id__in=[], sub_musics__instrument_id__in=[])

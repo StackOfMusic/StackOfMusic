@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import CreateMusicView, WorkingMusicListView, WorkingMusicDeleteView, WorkingMusicRetrieveView, \
-    WorkingMusicRetrieveTemplateView, MusicUpdateView, SubMusicCreateView
+    WorkingMusicRetrieveTemplateView, MusicMergeView, SubMusicCreateView, MusicStatusChangeView
 
 app_name = 'create_music'
 
@@ -12,5 +12,6 @@ urlpatterns = [
     path('list/<int:working_music_id>/', WorkingMusicRetrieveTemplateView.as_view(), name='working_music_detail'),
     path('list/WorkingMusicRetrieveAPI/<int:working_music_id>/', WorkingMusicRetrieveView.as_view(), name='working_music_detail_api'),
     path('list/<int:working_music_id>/SubMusicCreate', SubMusicCreateView.as_view(), name='sub_music_create'),
-    path('list/<int:working_music_id>/MusicUpdate', MusicUpdateView.as_view(), name='music_update'),
+    path('list/<int:working_music_id>/MusicUpdate', MusicMergeView.as_view(), name='music_update'),
+    path('list/<int:working_music_id>/MusicStatusUpdate', MusicStatusChangeView.as_view(), name='music_status_change')
 ]

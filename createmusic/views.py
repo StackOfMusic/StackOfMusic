@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, DeleteView, TemplateView, UpdateView
@@ -72,8 +72,10 @@ class WorkingMusicRetrieveTemplateView(TemplateView):
     pk_url_kwarg = 'working_music_id'
 
     def get_context_data(self, **kwargs):
+        working_music_id = self.kwargs.get('working_music_id')
         context = super(WorkingMusicRetrieveTemplateView, self).get_context_data(**kwargs)
-        context['working_music_id'] = self.kwargs.get('working_music_id')
+        context['working_music_id'] = working_music_id
+        # context['music_option'] = Music.m
         return context
 
 
@@ -85,7 +87,6 @@ class WorkingMusicDeleteView(DeleteView):
 
 
 class SubMusicCreateView(CreateView):
-    template_name = 'createmusic/create_submusic.html'
     form_class = CreateSubMusicForm
     pk_url_kwarg = 'working_music_id'
 
@@ -100,6 +101,10 @@ class SubMusicCreateView(CreateView):
         context['working_music_id'] = self.kwargs.get('working_music_id')
         return context
 
+    # def form_valid(self, form):
+    #     self.object = form.save()
+    #     return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
         working_music_id = self.kwargs.get('working_music_id')
         return reverse_lazy('create_music:working_music_detail', kwargs={'working_music_id': working_music_id})
@@ -111,11 +116,45 @@ class SubMusicCreateView(CreateView):
         return super(SubMusicCreateView, self).get(request, *args, **kwargs)
 
 
-class MusicUpdateView(UpdateView):
-
-    queryset = Music.objects.all()
-    lookup_url_kwarg = 'working_music_id'
-    serializer_class = WorkingMusicRetrieveSerializer
+class MusicMergeView(UpdateView):
+    model = Music
+    fields = [
+        'music_file'
+    ]
+    pk_url_kwarg = 'working_music_id'
 
     def post(self, request, *args, **kwargs):
-        return super(MusicUpdateView, self).post(request, *args, **kwargs)
+        return super(MusicMergeView, self).post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        raise Http404
+
+
+class MusicStatusChangeView(UpdateView):
+    model = Music
+    pk_url_kwarg = 'working_music_id'
+    fields = [
+        'music_option'
+    ]
+
+    def post(self, request, *args, **kwargs):
+        working_music_id = self.kwargs.get('working_music_id')
+        if Music.objects.get(id=working_music_id).owner == self.request.user:
+            return super(MusicStatusChangeView, self).post(request, *args, **kwargs)
+        raise Http404
+
+    def get(self, request, *args, **kwargs):
+        raise Http404
+
+    def get_success_url(self):
+        working_music_id = self.kwargs.get('working_music_id')
+        return reverse_lazy('create_music:working_music_detail', kwargs={'working_music_id': working_music_id})
+
+    def form_invalid(self, form):
+        return super(MusicStatusChangeView, self).form_valid(form)
+
+    def form_valid(self, form):
+        working_music_id = self.kwargs.get('working_music_id')
+        Music.objects.get(id=working_music_id).music_option = int(form.data['music_option'])
+        self.object = form.save()
+        return HttpResponseRedirect(reverse_lazy('create_music:working_music_list'))
