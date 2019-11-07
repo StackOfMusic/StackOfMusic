@@ -3,62 +3,12 @@
 <html lang="ko">
 <head>
     {% block extra_scripts %}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script type="text/javascript">
-            $(function () {
-                $('#upload-btn').click(function () {
-                    {#var file = $('#file-upload-form').serialize();#}
-                    var form = $('#file-upload-form')[0];
-                    var formData = new FormData(form);
-
-                    console.log(formData);
-
-                    $.ajax({
-                        url: 'http://stackofmusic.s3.amazonaws.com/',
-                        method: 'PUT',
-                        contentType: false,
-                        processData: false,
-                        data: {
-                            formData,
-                            csrfmiddlewaretoken: '{{ csrf_token }}'
-                        },
-                        success : function (data) {
-                            alert('data');
-                        },
-                        error: function (error) {
-                            alert('error');
-                        }
-                    })
-                })
-            })
-        </script>
 
     {% endblock %}
 </head>
 
 <body>
 {% block content %}
-
-    <script type="text/javascript">
-
-        $(function () {
-            var working_music = {};
-            $.ajax({
-                method : 'GET',
-                url : 'http://localhost:8000/create/list/WorkingMusicRetrieveAPI/{{ working_music_id }}',
-                success: function (data) {
-                    working_music = data;
-                    console.log(working_music);
-                },
-                error: function (error) {
-                    console.log(error);
-                },
-                xhrFields: {withCredentials: true,}
-            });
-        })
-
-    </script>
-
     <script type="text/javascript">
 
         var working_music = {};
@@ -177,12 +127,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <form enctype="multipart/form-data" id="file-upload-form" method="post">
-                                    {% csrf_token %}
-                                    <input type="file" name="music_file" id="ajaxFile">
-                                    <input type="hidden" name="music_id" value="{{ object.pk }}">
-                                    <input type="button" class="btn btn-primary" id='upload-btn' value="업로드"/>
-                                </form>
                                 {#                                <div class="container">#}
                                 {#                                    <div class="post-comments">#}
                                 {#                                        <form>#}
@@ -254,10 +198,21 @@
             </div>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+    </script>
 
     <script type="text/javascript">
-
+        function handleFiles(event) {
+            var files = event.target.files;
+            $('#rlly').attr('src', URL.createObjectURL(files[0]));
+            document.getElementById("rllly").load();
+        }
+        document.getElementById("rll").addEventListener("change", handleFiles, false);
     </script>
+    <input type="file" id="rll"/>
+    <audio id="rllly" controls>
+        <source src="" id="rlly"/>
+    </audio>
     <audio controls="controls">
         <source src="" type="audio/mp4" />
         <source src="" type="audio/mp4" />
@@ -266,9 +221,22 @@
     <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
     <br>
     <a href="{% url 'create_music:sub_music_create' working_music_id %}">Contribution</a>
+    <br>
+    <a href="{% url 'create_music:music_update' working_music_id%}">update</a>
+    <br>
+    <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
+        {% csrf_token %}
+        <th><label for="id_music_option">Music option:</label></th><td>
+        <select name="music_option" required id="id_music_option">
+            <option value="" selected>---------</option>
 
+            <option value="0">완성</option>
 
+            <option value="1">미완성</option>
 
+        </select></td>
+        <button type="submit">제출</button>
+    </form>
 
 
 {% endblock %}
