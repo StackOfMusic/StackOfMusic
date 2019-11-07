@@ -45,4 +45,5 @@ class CreateSubMusicForm(forms.ModelForm):
     def save(self, commit=True):
         self.instance.contributor = self.contributor
         self.instance.music_id = self.music
+        self.instance.status = 1
         return super(CreateSubMusicForm, self).save(commit=commit)
