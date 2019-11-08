@@ -19,7 +19,6 @@ class Music(models.Model):
     seed_file = models.FileField(upload_to='audiofile')
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='music')
     create_date = models.DateTimeField(auto_now_add=True)
-    like = models.IntegerField(default=0)
     participants = models.IntegerField(default=0)
     MUSIC_COMPLETED, MUSIC_NOT_COMPLETED = 0, 1
     MUSIC_OPTION = (
