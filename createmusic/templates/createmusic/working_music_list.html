@@ -51,12 +51,17 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.1.10/wavesurfer.min.js"></script>
         </section>
 
+
+        <script src="https://unpkg.com/siriwave/dist/siriwave.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/howler@2.1.2/dist/howler.min.js"></script>
+        <script src="../../../static/js/howler.js"></script>
         </head>
         <body>
 
-{% comment %}
-        <div id="waveform"></div>
-{% endcomment %}
+
+
         <script>
             var wavesurfer = WaveSurfer.create({
                 container: '#waveform',
@@ -81,7 +86,6 @@
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         <!------ Include the above in your HEAD tag ---------->
 
-        <br />
         <script>
             $(function () {
                 $('.btn-radio').click(function(e) {
@@ -100,6 +104,10 @@
         </script>
 
         <section style="background-color: white;height: 300px;">
+            <center>
+                <button class="btn btn-lg btn-default" onclick="location.href='{% url 'create_music:create_music' %}'" style="width: 1000px;font-size:70px;">Create Music</button>
+            </center>
+            <br><br><br>
             <div class="container" style="margin-left: 350px;">
                 <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
                     {% for working_music in working_music_list %}
@@ -113,10 +121,10 @@
                         </button>
                     {% endfor %}
                 </div>
-                <a href="{% url 'create_music:create_music' %}">만들기</a>
-                <br>
             </div>
-            {% comment %}
+
+        </section>
+        {% comment %}
                 {% for working_music in working_music_list %}
                     <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
                 {% endfor %}
