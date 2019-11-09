@@ -25,7 +25,7 @@ CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.j
 SECRET_KEY = 'h9e@=*_df72)j3pz$20n!vsgi$_gad6ychvdeiyfw9sb)pdze6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.209.15.144']
 
@@ -49,14 +49,27 @@ INSTALLED_APPS = [
     'storages',
     's3direct',
     'example.apps.ExampleConfig',
+    'rest_framework.authtoken',
+    'oauth2_provider',
+
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     )
+
 }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,6 +82,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsPostCsrfMiddleware',
+    # 'django.contrib.auth.models.AnonymousUser',
 ]
 
 ROOT_URLCONF = 'StackOfMusic.urls'
