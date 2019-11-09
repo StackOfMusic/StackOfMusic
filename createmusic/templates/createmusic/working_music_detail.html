@@ -4,11 +4,86 @@
 <head>
     {% block extra_scripts %}
 
+        <script src="https://unpkg.com/siriwave/dist/siriwave.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/howler@2.1.2/dist/howler.min.js"></script>
+        <script src="../../../static/js/howler.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#upload-btn').click(function () {
+                    {#var file = $('#file-upload-form').serialize();#}
+                    var form = $('#file-upload-form')[0];
+                    var formData = new FormData(form);
+
+                    console.log(formData);
+
+                    $.ajax({
+                        url: 'http://stackofmusic.s3.amazonaws.com/',
+                        method: 'PUT',
+                        contentType: false,
+                        processData: false,
+                        data: {
+                            formData,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success : function (data) {
+                            alert('data');
+                        },
+                        error: function (error) {
+                            alert('error');
+                        }
+                    })
+                })
+            })
+        </script>
+    {% endblock %}
+    {% block extra_style %}
+        <style>
+            button {
+                margin: 25px 0 0 25px;
+            }
+
+            .hide{
+                display: none;
+            }
+
+            .time{
+                text-align: right;
+                position: absolute;
+                top: 3px;
+                right: 10px;
+                left: 0;
+                color: #335fb8;
+                z-index: 2;
+            }
+            .audio-progress{
+                height: 22px;
+                position: relative;
+                margin-top: 15px;
+                background-color: #e5eff1;
+
+            }
+            #progress {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 100%;
+                background-color: #006182;
+                z-index: 1;
+            }
+        </style>
     {% endblock %}
 </head>
 
 <body>
 {% block content %}
+
+
+
+
     <script type="text/javascript">
 
         var working_music = {};
@@ -72,6 +147,213 @@
 
 
 
+
+
+    <script>
+        $(function(){
+            var howler_example = new Howl({
+                src: ['../../../static/js/howler.js/tests/audio/sound1.mp3'],
+                volume: 0.5,
+                "sprite": {
+                    "doorbell": [
+                        0,
+                        20462.3582766439908
+                    ],
+                    "car": [
+                        3000,
+                        3266.802721088435
+                    ]
+                }
+            });
+            $("#howler-play").on("click", function(){
+                howler_example.play('doorbell');
+            });
+            $("#howler-pause").on("click", function(){
+                howler_example.pause();
+            });
+            $("#howler-stop").on("click", function(){
+                howler_example.stop();
+            });
+            $("#howler-volup").on("click", function(){
+                var vol = howler_example.volume();
+                vol += 0.1;
+                if (vol > 1) {
+                    vol = 1;
+                }
+                howler_example.volume(vol);
+            });
+            $("#howler-voldown").on("click", function(){
+                var vol = howler_example.volume();
+                vol -= 0.1;
+                if (vol < 0) {
+                    vol = 0;
+                }
+                howler_example.volume(vol);
+            });
+        });
+    </script>
+    <button id='howler-play'>Play</button>
+    <button id='howler-pause'>Pause</button>
+    <button id='howler-stop'>Stop</button>
+    <button id='howler-volup'>Vol+</button>
+    <button id='howler-voldown'>Vol-</button>
+    <script src="../../../static/js/howler.js/src/howler.core.js"></script>
+    <script src="../../../static/js/howler.js/examples/player/siriwave.js"></script>
+    <script src="../../../static/js/howler.js/examples/player/player.js"></script>
+    <style>
+        button {
+            margin: 25px 0 0 25px;
+        }
+
+        .hide{
+            display: none;
+        }
+
+        .time{
+            text-align: right;
+            position: absolute;
+            top: 3px;
+            right: 10px;
+            left: 0;
+            color: #335fb8;
+            z-index: 2;
+        }
+        .audio-progress{
+            height: 22px;
+            position: relative;
+            margin-top: 15px;
+            background-color: #e5eff1;
+
+        }
+        #progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #006182;
+            z-index: 1;
+        }
+    </style>
+
+    <script>
+        var utils = {
+            formatTime: function (secs) {
+                var minutes = Math.floor(secs / 60) || 0;
+                var seconds = (secs - minutes * 60) || 0;
+                return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            },
+            updateTimeTracker: function () {
+                var self = this;
+                var seek = sound.seek() || 0;
+                var currentTime = utils.formatTime(Math.round(seek));
+                console.log(currentTime);
+                $('#timer').text(currentTime);
+                console.log(seek);
+                console.log(self.duration);
+                var elem = document.getElementById('progress');
+                elem.style.width = (((seek / self.duration()) * 100) || 0) + '%';
+                if (self.playing()) {
+                    requestAnimationFrame(utils.updateTimeTracker.bind(self));
+                }
+            }
+        };
+        var sound = new Howl({
+            src: ['../../../static/js/howler.js/tests/audio/sound1.mp3'],
+            volume: 0.5,
+
+            onplay: function() {
+                audioPlayed = true;
+                var time = Math.round(sound.duration());
+
+                $('#duration').html(utils.formatTime(time));
+                // Start upating the progress of the track.
+                requestAnimationFrame(utils.updateTimeTracker.bind(this));
+
+                $('img.play').addClass('hide');
+                $('img.pause').removeClass('hide');
+            },
+            onpause: function() {
+                $('img.play').removeClass('hide');
+                $('img.pause').addClass('hide');
+            },
+            onend: function() {
+                console.log('ENDED ...');
+                $('img.play').removeClass('hide');
+                $('img.pause').addClass('hide');
+                $('#sound').toggleClass('playing');
+            }
+        });
+
+        function gogo() {
+            $('#sound').toggleClass('playing');
+
+            if($('#sound').hasClass('playing')){
+                sound.play();
+            } else {
+                sound.pause();
+            }
+        }
+
+
+    </script>
+
+    <div class="audio-controls">
+        <button type="button" id="sound" onclick="gogo()" class="static">
+            <img src="https://image.flaticon.com/icons/png/128/117/117999.png" class="play">
+            <img src="https://image.flaticon.com/icons/png/128/52/52285.png" class="pause hide">
+        </button>
+    </div>
+    <div class="audio-progress">
+        <div id="progress"></div>
+        <div class="time">
+            <span id="timer">0:00 </span>
+            <span id="duration">0:00</span>
+        </div>
+    </div>
+
+
+
+
+    <audio id="push_music" controls style="margin-top:20px;margin-left: 10px;">
+        <source id="push_music2" src="" type="audio/mp3"/>
+    </audio>
+    <br>
+    <input  id="audioFileChooser" type="file" onchange="readFile(this.files);">
+    <script>
+        function readFile(files) {
+            var file    = document.getElementById('audioFileChooser').files[0];
+            alert(file);
+            var path = URL.createObjectURL(file);
+            alert(path);
+
+        }
+    </script>
+    {% comment %}
+    <script>
+        function readFile(files) {
+            var fileReader = new FileReader();
+            var url = fileReader.readAsDataURL(files[0]);
+            var blobUrl = URL.createObjectURL(files[0]);
+            alert(blobUrl);
+            fileReader.onload = function(e) {
+                playAudioFile(blobUrl);
+                console.log(("Filename: '" + files[0].name + "'"), ( "(" + ((Math.floor(files[0].size/1024/1024*100))/100) + " MB)" ));
+            }
+        }
+        function playAudioFile(file) {
+            $("#push_music").attr("src", file);
+            var context = new window.AudioContext();
+            context.decodeAudioData(file, function(buffer) {
+                var source = context.createBufferSource();
+                source.buffer = buffer;
+                source.loop = false;
+                source.connect(context.destination);
+                source.start(0);
+            });
+        }
+    </script>
+    {% endcomment %}
 
     <img id="working_music_img" src="" alt="">
     <div class="container">
