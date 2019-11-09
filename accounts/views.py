@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import CreateView, TemplateView, RedirectView, DetailView, FormView
+from django.views.generic import CreateView, TemplateView, RedirectView, DetailView, FormView, ListView
 from rest_framework import mixins, generics
 
 from accounts.models import Copyright
@@ -101,5 +101,21 @@ class UserWorkingProjects(mixins.ListModelMixin, generics.GenericAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class UserWorkingProjectsTemplates(TemplateView):
+class UserWorkingProjectsListView(ListView):
     template_name = 'accounts/user_working_projects.html'
+    model = Music
+    pk_url_kwarg = 'account_id'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserWorkingProjectsListView, self).get_context_data(object_list=None, **kwargs)
+        context['working_music_list'] = self.request.user.music_owner.all()
+        return context
+
+
+class MyPageListTemplateView(TemplateView):
+    template_name = 'accounts/mypage_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyPageListTemplateView, self).get_context_data(**kwargs)
+        context['account_id'] = self.request.user.id
+        return context

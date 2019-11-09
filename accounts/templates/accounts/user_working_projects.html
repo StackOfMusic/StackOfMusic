@@ -1,0 +1,7 @@
+{% extends 'StackOfMusic/base.html' %}
+
+{% block content %}
+    {% for working_music in working_music_list%}
+        <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music }}</a></li>
+    {% endfor %}
+{% endblock %}
