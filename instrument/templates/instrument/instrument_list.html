@@ -5,15 +5,14 @@
 {% block content %}
     <div>
         <form method="get">
-        {{ form.as_p }}
+            {{ form.as_p }}
             <button>검색</button>
-
         </form>
     </div>
     <br>
     <div id="result_list">
         {% for music in music_list %}
-            {{ music.title }}
+            <li><a href="{{ music.get_absolute_url }}">{{ music.title }}</a></li>
         {% endfor %}
     </div>
 

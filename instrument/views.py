@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
@@ -20,12 +21,16 @@ class MusicListView(ListView):
         search_word = self.request.GET.get('search_word')
 
         if search_word:
-            queryset = queryset.filter(title__contains=search_word)
+            queryset = queryset.filter(
+                Q(title__contains=search_word) |
+                Q(genre__name__contains=search_word) |
+                Q(owner__username__contains=search_word)
+            )
 
         if instrument_id_list:
             queryset = queryset.filter(
-                instrument_id__in=instrument_id_list,
-                sub_musics__instrument_id__in=instrument_id_list,
+                Q(instrument_id__in=instrument_id_list) |
+                Q(sub_musics__instrument_id__in=instrument_id_list)
             )
 
         return queryset
@@ -34,6 +39,9 @@ class MusicListView(ListView):
         context = super(MusicListView, self).get_context_data(object_list=None, **kwargs)
         context['form'] = MusicSearchForm(self.request.GET)
         return context
+
+    def get(self, request, *args, **kwargs):
+        return super(MusicListView, self).get(request, *args, **kwargs)
 
 
 class InstrumentSearchResultListAPIView(mixins.ListModelMixin, generics.GenericAPIView):
