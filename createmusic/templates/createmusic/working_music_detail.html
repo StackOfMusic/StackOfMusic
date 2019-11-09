@@ -201,18 +201,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
     </script>
 
-    <script type="text/javascript">
-        function handleFiles(event) {
-            var files = event.target.files;
-            $('#rlly').attr('src', URL.createObjectURL(files[0]));
-            document.getElementById("rllly").load();
-        }
-        document.getElementById("rll").addEventListener("change", handleFiles, false);
-    </script>
-    <input type="file" id="rll"/>
-    <audio id="rllly" controls>
-        <source src="" id="rlly"/>
-    </audio>
     <audio controls="controls">
         <source src="" type="audio/mp4" />
         <source src="" type="audio/mp4" />
