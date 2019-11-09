@@ -1,0 +1,11 @@
+{% extends 'StackOfMusic/base.html' %}
+
+{% block content %}
+    <a href="{% url 'accounts:accounts_copyright' account_id %}">copyright</a>
+    <br>
+    <a href="{% url 'accounts:accounts_working_projects' account_id %}">MyWorkingProjects</a>
+    <br>
+    <a href="{% url 'accounts:accounts_detail' account_id %}">My info</a>
+    <br>
+    <a href="#"></a>
+{% endblock %}

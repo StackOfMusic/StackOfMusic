@@ -42,17 +42,6 @@ class WorkingMusicListView(ListView):
         return super(WorkingMusicListView, self).get(request, *args, **kwargs)
 
 
-class WorkingMusicDetailView(DetailView):
-    template_name = 'createmusic/working_music_detail.html'
-    model = Music
-    pk_url_kwarg = 'working_music_id'
-
-    def get_context_data(self, **kwargs):
-        context = super(WorkingMusicDetailView, self).get_context_data(**kwargs)
-        context['working_music'] = self.object
-        return context
-
-
 class WorkingMusicRetrieveView(mixins.RetrieveModelMixin, generics.GenericAPIView):
 
     queryset = Music.objects.all()
@@ -87,6 +76,7 @@ class WorkingMusicDeleteView(DeleteView):
 
 
 class SubMusicCreateView(CreateView):
+    template_name = 'createmusic/create_submusic.html'
     form_class = CreateSubMusicForm
     pk_url_kwarg = 'working_music_id'
 
