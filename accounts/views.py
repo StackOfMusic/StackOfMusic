@@ -5,14 +5,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import CreateView, TemplateView, RedirectView, DetailView, FormView
+from django.views.generic import CreateView, TemplateView, RedirectView, DetailView, FormView, ListView
 from rest_framework import mixins, generics
 
 from accounts.models import Copyright
 from music.models import Music
 from .forms import CreateUserForm
 from .models import User
-from .serializer import CopyrightSerializer
+from .serializer import CopyrightSerializer, UserWorkingProjectsSerializer
 
 
 class CreateUserView(CreateView):
@@ -68,6 +68,7 @@ class UserDetailView(DetailView):
         context = super(UserDetailView, self).get_context_data(**kwargs)
         context['user'] = self.request.user
         context['user_music_list'] = self.request.user.music_owner.all()
+        context['user_contrib_music_list'] = self.request.user.music_contributor.all()
         return context
 
 
@@ -90,6 +91,8 @@ class CopyrightTemplateView(TemplateView):
 
 class UserWorkingProjects(mixins.ListModelMixin, generics.GenericAPIView):
 
+    serializer_class = UserWorkingProjectsSerializer
+
     def get_queryset(self):
         queryset = Music.objects.filter(owner=self.request.user, contributor=self.request.user)
         return queryset
@@ -98,5 +101,21 @@ class UserWorkingProjects(mixins.ListModelMixin, generics.GenericAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class UserWorkingProjectsTemplates(TemplateView):
+class UserWorkingProjectsListView(ListView):
     template_name = 'accounts/user_working_projects.html'
+    model = Music
+    pk_url_kwarg = 'account_id'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserWorkingProjectsListView, self).get_context_data(object_list=None, **kwargs)
+        context['working_music_list'] = self.request.user.music_owner.all()
+        return context
+
+
+class MyPageListTemplateView(TemplateView):
+    template_name = 'accounts/mypage_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyPageListTemplateView, self).get_context_data(**kwargs)
+        context['account_id'] = self.request.user.id
+        return context

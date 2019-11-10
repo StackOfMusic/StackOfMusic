@@ -1,0 +1,19 @@
+{% extends 'StackOfMusic/base.html' %}
+
+{% block content %}
+    <center>
+        <button class="btn btn-lg btn-default" onclick="location.href='{% url 'accounts:accounts_copyright' account_id %}'" style="width: 1000px;font-size:70px;">Copyright</button>
+
+        <button class="btn btn-lg btn-default" onclick="location.href='{% url 'accounts:accounts_working_projects' account_id %}'" style="width: 1000px;font-size:70px;">My Working Projects</button>
+
+        <button class="btn btn-lg btn-default" onclick="location.href='{% url 'accounts:accounts_detail' account_id %}'" style="width: 1000px;font-size:70px;">My Info</button>
+
+    </center>
+{#    <a href="{% url 'accounts:accounts_copyright' account_id %}">copyright</a>#}
+{#    <br>#}
+{#    <a href="{% url 'accounts:accounts_working_projects' account_id %}">MyWorkingProjects</a>#}
+{#    <br>#}
+{#    <a href="{% url 'accounts:accounts_detail' account_id %}">My info</a>#}
+{#    <br>#}
+{#    <a href="#"></a>#}
+{% endblock %}

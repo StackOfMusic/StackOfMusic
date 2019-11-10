@@ -1,11 +1,35 @@
 from rest_framework import serializers
-from music.models import Music
+from music.models import Music, SubMusic
+from instrument.models import Instrument
 from StackOfMusic.serializer import UserSerializer, GenreSerializer
+
+
+class InstrumentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Instrument
+        fields = '__all__'
+
+
+class SubMusicSerializer(serializers.ModelSerializer):
+    contributor = UserSerializer()
+    instrument = InstrumentSerializer()
+
+    class Meta:
+        model = SubMusic
+        fields = (
+            'instrument'
+            'contributor',
+            'music_file',
+            'create_date',
+        )
 
 
 class WorkingMusicRetrieveSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     genre = GenreSerializer()
+    instrument = InstrumentSerializer()
+    sub_musics = SubMusicSerializer(many=True, read_only=True)
 
     class Meta:
         model = Music
@@ -16,5 +40,6 @@ class WorkingMusicRetrieveSerializer(serializers.ModelSerializer):
             'album_jacket',
             'owner',
             'create_date',
-            'like',
+            'instrument',
+            'sub_musics',
         )

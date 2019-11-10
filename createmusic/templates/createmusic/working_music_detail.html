@@ -3,35 +3,475 @@
 <html lang="ko">
 <head>
     {% block extra_scripts %}
+
+        <script src="https://unpkg.com/siriwave/dist/siriwave.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/howler@2.1.2/dist/howler.min.js"></script>
+        <script src="../../../static/js/howler.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#upload-btn').click(function () {
+                    {#var file = $('#file-upload-form').serialize();#}
+                    var form = $('#file-upload-form')[0];
+                    var formData = new FormData(form);
+
+                    console.log(formData);
+
+                    $.ajax({
+                        url: 'http://stackofmusic.s3.amazonaws.com/',
+                        method: 'PUT',
+                        contentType: false,
+                        processData: false,
+                        data: {
+                            formData,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success : function (data) {
+                            alert('data');
+                        },
+                        error: function (error) {
+                            alert('error');
+                        }
+                    })
+                })
+            })
+        </script>
+    {% endblock %}
+    {% block extra_style %}
+        <style>
+
+
+            .hide{
+                display: none;
+            }
+
+            .time{
+                text-align: right;
+                position: absolute;
+                top: 3px;
+                right: 10px;
+                left: 0;
+                color: #335fb8;
+                z-index: 2;
+            }
+            .audio-progress{
+                height: 22px;
+                position: relative;
+                margin-top: 15px;
+                background-color: #e5eff1;
+
+            }
+            #progress {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 100%;
+                background-color: #006182;
+                z-index: 1;
+            }
+        </style>
     {% endblock %}
 </head>
 
 <body>
 {% block content %}
 
-    <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
+
+
 
     <script type="text/javascript">
 
+        var working_music = {};
         $(function () {
-            var working_music = {};
-
             $.ajax({
-                method : 'GET',
-                url : 'http://localhost:8000/create/list/WorkingMusicRetrieveAPI/{{ working_music_id }}',
+                method: 'GET',
+                url: 'http://localhost:8000/create/list/WorkingMusicRetrieveAPI/{{ working_music_id }}',
                 success: function (data) {
                     working_music = data;
                     console.log(working_music);
+                    var titleContainer = document.getElementById("mytitle");
+                    var title = document.getElementById("mytitle2");
+                    var ownerContainer = document.getElementById("myowner");
+                    var dateContainer = document.getElementById("mydate");
+                    var genreContainer = document.getElementById("mygenre");
+
+                    var ownername = document.getElementById("ownername");
+
+
+
+                    title.append(working_music['title']);
+                    dateContainer.append(working_music['create_date']);
+                    titleContainer.append(working_music['title']);
+                    ownerContainer.append(working_music['owner'].username);
+                    genreContainer.append(working_music['genre'].name);
+
+                    $('#image').attr("src", working_music['album_jacket']);
+                    $('#music_image').attr("src", working_music['album_jacket']);
+                    $('#music').attr("src", working_music['seed_file']);
+
+                    $("#music2").attr("src", working_music['seed_file']);
+
+                    ownername.append(working_music['owner'].username);
+                    $("#ownermusic").attr("src", working_music['seed_file']);
+
+                    for (var i = 0; i < working_music["sub_musics"].length; i++) {
+                        document.getElementById("sub").innerHTML += working_music['owner'].username;
+                        document.getElementById("sub").innerHTML += "<input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >" ;
+                        document.getElementById("sub").innerHTML += "<audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio>"+ "<br>";
+
+                    }
                 },
                 error: function (error) {
-                    console.log(error);
+                    alert(error + 'data를 불러올수없습니다.');
                 },
                 xhrFields: {withCredentials: true,}
-            });
-        })
+            })
+        });
+        function play() {
+            var origin =document.getElementById("ownercheck");
+            var submusics = new Array(20);
+            for (var i = 0; i < working_music["sub_musics"].length; i++) {
+                submusics[i] = document.getElementById("subcheck"+i);
+                if($(submusics[i]).prop("checked")==true){
+                    var first = $("#submusic"+i).attr('src');
+                }
+                var audio = new Audio(first);
+                audio.play();
+            }
+            var secondmusic = document.getElementById("check2");
+            if($(origin).prop("checked")==true){
+                var ori = $('#ownermusic').attr('src');
+                var audio = new Audio(ori);
+                audio.play();
+            }
+            if($(secondmusic).prop("checked")==true) {
+                var second = $("#music3").attr('src');
+                var audio = new Audio(second);
+                audio.play();
+            }
+
+
+        }
+
+        $(function () {
+            $('#working_music_img').attr("src", working_music['album_jacket']);
+        });
 
     </script>
+    <script src="../../../static/js/howler.js/src/howler.core.js"></script>
+    <script src="../../../static/js/howler.js/examples/player/siriwave.js"></script>
+    <script src="../../../static/js/howler.js/examples/player/player.js"></script>
+    <style>
+
+
+        .hide{
+            display: none;
+        }
+
+        .time{
+            text-align: right;
+            position: absolute;
+            top: 3px;
+            right: 10px;
+            left: 0;
+            color: #335fb8;
+            z-index: 2;
+        }
+        .audio-progress{
+            height: 22px;
+            position: relative;
+            margin-top: 15px;
+            background-color: #e5eff1;
+
+        }
+        #progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #006182;
+            z-index: 1;
+        }
+
+
+    </style>
+
+    <script>
+        var utils = {
+            formatTime: function (secs) {
+                var minutes = Math.floor(secs / 60) || 0;
+                var seconds = (secs - minutes * 60) || 0;
+                return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            },
+            updateTimeTracker: function () {
+                var self = this;
+                var seek = sound.seek() || 0;
+                var currentTime = utils.formatTime(Math.round(seek));
+                console.log(currentTime);
+                $('#timer').text(currentTime);
+                console.log(seek);
+                console.log(self.duration);
+                var elem = document.getElementById('progress');
+                elem.style.width = (((seek / self.duration()) * 100) || 0) + '%';
+                if (self.playing()) {
+                    requestAnimationFrame(utils.updateTimeTracker.bind(self));
+                }
+            }
+        };
+        function cutcut() {
+            var start = $('#start').val();
+            var end = $('#end').val();
+            sound._sprite.mysprite = [start,end];
+            sound.play('mysprite');
+        }
+        var sound = new Howl({
+            src: ['../../../static/js/howler.js/tests/audio/sound1.mp3'],
+            volume: 0.5,
+            onplay: function() {
+                audioPlayed = true;
+                var time = Math.round(sound.duration());
+
+                $('#duration').html(utils.formatTime(time));
+                // Start upating the progress of the track.
+                requestAnimationFrame(utils.updateTimeTracker.bind(this));
+
+                $('img.play').addClass('hide');
+                $('img.pause').removeClass('hide');
+            },
+            onpause: function() {
+                $('img.play').removeClass('hide');
+                $('img.pause').addClass('hide');
+            },
+            onend: function() {
+                console.log('ENDED ...');
+                $('img.play').removeClass('hide');
+                $('img.pause').addClass('hide');
+                $('#sound').toggleClass('playing');
+            }
+        });
+
+        function gogo() {
+            $('#sound').toggleClass('playing');
+
+            if($('#sound').hasClass('playing')){
+                sound.play();
+            } else {
+                sound.pause();
+            }
+        }
+    </script>
+
+
+    <img id="working_music_img" src="" alt="">
+    <div class="container">
+        <div class="row well">
+            <div class="col-md-12">
+                <div class="panel">
+                    <img id="music_image" src="" alt="" style="height:250px;width: 250px;float: left">
+                    <div class="row user-left-part">
+                        <div class="col-md-9 col-sm-9 col-xs-12 pull-right profile-right-section" style="height: 300px;">
+                            <div class="row profile-right-section-row">
+                                <div class="col-md-12 profile-header">
+                                    <div class="row">
+                                        <div class="col-md-8 col-sm-6 col-xs-6 profile-header-section1 pull-left">
+                                            <h1><div id="mytitle" style="float: left;"></div></h1>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <!-- Tab panes -->
+                                            <div class="tab-content">
+                                                <div role="tabpanel" class="tab-pane fade show active" id="profile">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>genre</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <h4><div id="mygenre" style="float: left;margin-left: 20px;"></div></h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Owner</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <h4><div id="myowner" style="float: left;margin-left: 20px;"></div></h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>발매날짜</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div id="mydate" style="float: left;margin-left: 20px;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <audio id="music" controls style="margin-top:20px;margin-left: 10px;">
+                                                        <source id="audio-source" src="" type="audio/mp4"/>
+                                                    </audio>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#                                <div class="container">#}
+                                {#                                    <div class="post-comments">#}
+                                {#                                        <form>#}
+                                {#                                            <div class="form-group">#}
+                                {#                                                <label for="comment">Your Comment</label>#}
+                                {#                                                <textarea name="comment" class="form-control" rows="3"></textarea>#}
+                                {#                                            </div>#}
+                                {#                                            <button type="submit" class="btn btn-default">Send</button>#}
+                                {#                                        </form>#}
+                                {#                                    </div>#}
+                                <!-- post-comments -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div>
+                    <input type="checkbox" id="ownercheck" style="float: left;">
+                    <div id="ownername" style="float: left;"></div>
+                    <audio id="ownermusic" controls >
+                        <source id="audio-source" src="" type="audio/mp4"/>
+                    </audio>
+                    <br>
+                    <div id="sub" style="float:left;">
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-radio" style="width: 100px;float: right;" id="mytitle3">Drum</button>
+                    <input type="checkbox" id="check2" class="hidden" style="display: none;float: right;" >
+                    <audio id="music3" controls style="float: right;">
+                        <source id="audio-source" src="" type="audio/mp4"/>
+                    </audio>
+
+                    <p>
+                        <input id="audioFileChooser" type="file" style="float: right;" onchange="readFile(this.files);">
+                    </p>
+                    <p style="float: right;">
+                        <input type="text" id="start" name="test_name" value="">
+                        <input type="text" id="end" name="test_name" value="">
+                        <button type="button" class="btn-dark" id="cutcut" onclick="cutcut()"></button>
+                    </p>
+                </div>
+                <br>
+                <div style="float: left; width: 100%">
+                    <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;">Play</button>
+                    <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
+                    <br>
+                    <a href="{% url 'create_music:sub_music_create' working_music_id %}">Contribution</a>
+                    <br>
+                    <a href="{% url 'create_music:music_update' working_music_id%}">update</a>
+                    <br>
+                    <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
+                        {% csrf_token %}
+                        <th><label for="id_music_option">Music option:</label></th><td>
+                        <select name="music_option" required id="id_music_option">
+                            <option value="" selected>---------</option>
+
+                            <option value="0">완성</option>
+
+                            <option value="1">미완성</option>
+
+                        </select></td>
+                        <button type="submit">제출</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function readFile(files) {
+            var fileReader = new FileReader();
+            var url = fileReader.readAsDataURL(files[0]);
+            var blobUrl = URL.createObjectURL(files[0]);
+            fileReader.onload = function(e) {
+                playAudioFile(blobUrl);
+                console.log(("Filename: '" + files[0].name + "'"), ( "(" + ((Math.floor(files[0].size/1024/1024*100))/100) + " MB)" ));
+            }
+        }
+        function playAudioFile(file) {
+            $("#music3").attr("src", file);
+            var context = new window.AudioContext();
+            context.decodeAudioData(file, function(buffer) {
+                var source = context.createBufferSource();
+                source.buffer = buffer;
+                source.loop = false;
+                source.connect(context.destination);
+                source.start(0);
+            });
+        }
+    </script>
+
+    <div class="audio-controls">
+        <button type="button" id="sound" onclick="gogo()" class="static">
+            <img src="https://image.flaticon.com/icons/png/128/117/117999.png" class="play">
+            <img src="https://image.flaticon.com/icons/png/128/52/52285.png" class="pause hide">
+        </button>
+    </div>
+    <div class="audio-progress">
+        <div id="progress"></div>
+        <div class="time">
+            <span id="timer">0:00 </span>
+            <span id="duration">0:00</span>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('.btn-radio').siblings('.img-radio').css('opacity', '0.5');
+            $('.btn-radio').click(function(e) {
+                if ($(this).siblings('input').prop("checked")==true) {
+                    $(this).removeClass('active')
+                        .siblings('input').prop('checked', false)
+                        .siblings('.img-radio').css('opacity', '0.5');
+                }
+                else if ($(this).siblings('input').prop("checked")==false) {
+                    $(this).addClass('active')
+                        .siblings('input').prop('checked', true)
+                        .siblings('.img-radio').css('opacity', '1');
+                }
+            });
+        });
+    </script>
+    <div class="col-xs-4" style="float: left">
+        <img src="" style="width: 200px;margin-left: 100px;" id="image" class="img-responsive img-radio">
+        <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle2"></button>
+        <input type="checkbox" id="check" class="hidden" style="display: none" >
+        <audio id="music2" controls style="margin-top:20px;margin-left: 10px;">
+            <source id="audio-source" src="" type="audio/mp3"/>
+        </audio>
+    </div>
+    {% comment %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-md-offset-3">
+                <form class="form-horizontal well" role="form">
+                    <div class="row">
+                        {% for music in working_music %}
+                            <div class="col-xs-4" style="float: left">
+                                <img src="{{ music.album_jacket.url }}" style="width: 200px;margin-left: 100px;" class="img-responsive img-radio">
+                                <button type="button" class="btn btn-primary btn-radio" style="width: 100px;">{{ music.title }}</button>
+                                <input type="checkbox" id="{{ music.id }}" class="hidden" style="display: none" >
+                            </div>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+    </script>
+{% endcomment %}
 
 
 {% endblock %}

@@ -153,8 +153,8 @@
                                 <img src="../../../static/img/artist5.png" class="rounded-circle">
                             </div>
                             <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">
-                                <button id="btn-contact" (click)="clearModal()" data-toggle="modal" data-target="#contact" class="btn btn-success btn-block follow">Contactarme</button>
-                                <button class="btn btn-warning btn-block">Descargar Curriculum</button>
+                                <button id="btn-contact" (click)="clearModal()" data-toggle="modal" data-target="#contact" class="btn btn-success btn-block follow">Contact</button>
+                                <button class="btn btn-warning btn-block">Modify Profile</button>
                             </div>
                             <div class="row user-detail-row">
                                 <div class="col-md-12 col-sm-12 user-detail-section2 pull-left">
@@ -184,9 +184,7 @@
                                             <li class="nav-item">
                                                 <a class="nav-link active" href="#profile" role="tab" data-toggle="tab"><i class="fas fa-user-circle"></i> Perfil Profesional</a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="#buzz" role="tab" data-toggle="tab"><i class="fas fa-info-circle"></i> Información Detallada</a>
-                                            </li>
+
                                         </ul>
 
                                         <!-- Tab panes -->
@@ -198,7 +196,6 @@
                                                     </div>
                                                     <div class="col-md-4">
                                                         {{ user.username }}
-
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -218,7 +215,7 @@
                                                         <label>Email</label>
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <p>juanp@gmail.com</p>
+                                                        <p>{{ user.email }}</p>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -237,55 +234,6 @@
                                                         {% for user_music in user_music_list %}
                                                             {{ user_music.title }}
                                                         {% endfor %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div role="tabpanel" class="tab-pane fade" id="buzz">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label>Experience</label>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p>Expert</p>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label>Hourly Rate</label>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p>10$/hr</p>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label>Total Projects</label>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p>230</p>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label>English Level</label>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p>Expert</p>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label>Availability</label>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p>6 months</p>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <label>Your Bio</label>
-                                                        <br/>
-                                                        <p>Your detail description</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -324,17 +272,17 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="contact">Contactarme</h5>
+                        <h5 class="modal-title" id="contact">Contact</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <p for="msj">Se enviará este mensaje a la persona que desea contactar, indicando que te quieres comunicar con el. Para esto debes de ingresar tu información personal.</p>
+                            <p for="msj">Hiru~</p>
                         </div>
                         <div class="form-group">
-                            <label for="txtFullname">Nombre completo</label>
+                            <label for="txtFullname">FullName</label>
                             <input type="text" id="txtFullname" class="form-control">
                         </div>
                         <div class="form-group">
@@ -342,37 +290,18 @@
                             <input type="text" id="txtEmail" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="txtPhone">Teléfono</label>
+                            <label for="txtPhone">TelePhone</label>
                             <input type="text" id="txtPhone" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" (click)="openModal()" data-dismiss="modal">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                        <button type="button" class="btn btn-primary" (click)="openModal()" data-dismiss="modal">Send</button>
                     </div>
                 </div>
             </div>
         </div>
 
-
-
-
-        {{ user.username }}
-        <br>
-        {{ user.first_name }}
-        <br>
-        {% if user.sex == 0 %}
-            남성
-        {% else %}
-            여성
-        {% endif %}
-        <br>
-        {% for user_music in user_music_list %}
-            {{ user_music.title }}
-        {% endfor %}
-
-        <li><a href="{% url 'accounts:accounts_copyright' user.id %}">COPYRIGHT</a></li>
-        <li><a href="{% url 'accounts:accounts_working_projects' user.id %}">MY WORKING PROJECTS</a></li>
 
     {% endblock %}
     </body>
