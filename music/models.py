@@ -17,10 +17,9 @@ class Music(models.Model):
     title = models.CharField(max_length=30)
     album_jacket = models.ImageField(blank=True, upload_to='img')
     seed_file = models.FileField(upload_to='audiofile')
-    instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='music')
+    instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='music', blank=True, null=True)
     create_date = models.DateTimeField(auto_now_add=True)
     liked_music = models.ManyToManyField('accounts.User', blank=True, related_name='music')
-
     participants = models.IntegerField(default=0)
     MUSIC_COMPLETED, MUSIC_NOT_COMPLETED = 0, 1
     MUSIC_OPTION = (
