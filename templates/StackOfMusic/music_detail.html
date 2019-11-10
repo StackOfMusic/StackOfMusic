@@ -166,7 +166,6 @@
                                     <script type="text/javascript">
                                         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
                                         function csrfSafeMethod(method) {
-                                            // these HTTP methods do not require CSRF protection
                                             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
                                         }
                                         $.ajaxSetup({
@@ -182,7 +181,7 @@
                                                     type: "post",
                                                 }).done(function (data) {
                                                     console.log(data);
-                                                    document.getElementById('like-count').innerHTML = data['total_music_like'];
+                                                    document.getElementById('like-count').innerHTML = data['total_music_like']+'명이 좋아요 하였습니다!';
                                                 });
                                         }
                                     </script>
