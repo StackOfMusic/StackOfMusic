@@ -19,6 +19,8 @@ class Music(models.Model):
     seed_file = models.FileField(upload_to='audiofile')
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='music')
     create_date = models.DateTimeField(auto_now_add=True)
+    liked_music = models.ManyToManyField('accounts.User', blank=True, related_name='music')
+
     participants = models.IntegerField(default=0)
     MUSIC_COMPLETED, MUSIC_NOT_COMPLETED = 0, 1
     MUSIC_OPTION = (
@@ -33,8 +35,12 @@ class Music(models.Model):
     def get_absolute_url(self):
         return reverse('create_music:working_music_detail', args=(self.pk,))
 
-    # def is_owner(self):
-    #     return self.owner == User.USER_TEACHER
+    @property
+    def total_likes_user(self):
+        return self.liked_music.count()
+
+    def is_liked_user(self):
+        pass
 
     def is_complete(self):
         return self.music_option == Music.MUSIC_COMPLETED
