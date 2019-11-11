@@ -80,13 +80,15 @@
                     var ownerContainer = document.getElementById("myowner");
                     var dateContainer = document.getElementById("mydate");
                     var genreContainer = document.getElementById("mygenre");
-
+                    var total_like = document.getElementById("total_likes");
 
                     dateContainer.append(completd_music['create_date']);
                     titleContainer.append(completd_music['title']);
                     ownerContainer.append(completd_music['owner'].username);
                     genreContainer.append(completd_music['genre'].name);
+                    total_like.append(completd_music['total_like_user']+"명이 좋아합니당");
 
+                    $('#total_likes').attr("value",)
 
                     $('#music_image').attr("src", completd_music['album_jacket']);
                     $('#music').attr("src", completd_music['seed_file']);
@@ -158,6 +160,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="container">
                                     <div class="post-comments">
                                         <form>
