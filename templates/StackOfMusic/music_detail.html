@@ -160,6 +160,38 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div id="total_likes" value="" style="width: 100%;"></div>
+                                <a href="javascript:void(0);" onclick="music_like();">
+                                    <button type="button" class="button button-like"><i class="fa fa-heart"></i> </button>
+                                </a>
+                                <div id="like-count" value=""></div>
+                                <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+                                <script type="text/javascript">
+                                    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+                                    function csrfSafeMethod(method) {
+                                        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                                    }
+                                    $.ajaxSetup({
+                                        beforeSend: function (xhr, settings) {
+                                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                            }
+                                        }
+                                    });
+                                    function music_like() {
+                                        $.ajax({
+                                            url: "{% url 'like_music_update' completed_music_id%}",
+                                            type: "post",
+                                        }).done(function (data) {
+                                            console.log(data);
+                                            document.getElementById('like-count').innerHTML = data['total_music_like']+'명이 좋아요 하였습니다!';
+                                            var count = $('#like-count').attr("value", data['total_music_like']);
+
+                                            var total_like = document.getElementById("total_likes");
+                                            $('#total_like').attr("value",completd_music['total_like_user']+data['total_music_like']);
+                                        });
+                                    }
+                                </script>
 
                                 <div class="container">
                                     <div class="post-comments">
