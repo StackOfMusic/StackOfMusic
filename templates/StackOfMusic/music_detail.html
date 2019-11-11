@@ -80,13 +80,15 @@
                     var ownerContainer = document.getElementById("myowner");
                     var dateContainer = document.getElementById("mydate");
                     var genreContainer = document.getElementById("mygenre");
-
+                    var total_like = document.getElementById("total_likes");
 
                     dateContainer.append(completd_music['create_date']);
                     titleContainer.append(completd_music['title']);
                     ownerContainer.append(completd_music['owner'].username);
                     genreContainer.append(completd_music['genre'].name);
+                    total_like.append(completd_music['total_like_user']+"명이 좋아합니당");
 
+                    $('#total_likes').attr("value",)
 
                     $('#music_image').attr("src", completd_music['album_jacket']);
                     $('#music').attr("src", completd_music['seed_file']);
@@ -161,32 +163,30 @@
                                 <div id="total_likes" value="" style="width: 100%;"></div>
 
                                 <a href="javascript:void(0);" onclick="music_like();">
-                                    <SVG class=""></SVG>
+                                    <button type="button" class="button button-like"><i class="fa fa-heart"></i> </button>
                                 </a>
-                                <a id="like-count"><a>
-                                    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-                                    <script type="text/javascript">
-                                        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-                                        function csrfSafeMethod(method) {
-                                            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                                        }
-                                        $.ajaxSetup({
-                                            beforeSend: function (xhr, settings) {
-                                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                                                }
+                                <div id="like-count" value=""></div>
+                                <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+                                <script type="text/javascript">
+                                    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+                                    function csrfSafeMethod(method) {
+                                        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                                    }
+                                    $.ajaxSetup({
+                                        beforeSend: function (xhr, settings) {
+                                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
                                             }
-                                        });
-                                        function music_like() {
-                                                $.ajax({
-                                                    url: "{% url 'like_music_update' completed_music_id%}",
-                                                    type: "post",
-                                                }).done(function (data) {
-                                                    console.log(data);
-                                                    document.getElementById('like-count').innerHTML = data['total_music_like']+'명이 좋아요 하였습니다!';
-                                                });
                                         }
-                                    </script>
+                                    });
+                                    function music_like() {
+                                        $.ajax({
+                                            url: "{% url 'like_music_update' completed_music_id%}",
+                                            type: "post",
+                                        }).done(function (data) {
+                                            console.log(data);
+                                            document.getElementById('like-count').innerHTML = data['total_music_like']+'명이 좋아요 하였습니다!';
+                                            var count = $('#like-count').attr("value", data['total_music_like']);
 
                                     <div class="container">
                                         <div class="post-comments">
