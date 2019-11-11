@@ -91,10 +91,6 @@ class SubMusicCreateView(CreateView):
         context['working_music_id'] = self.kwargs.get('working_music_id')
         return context
 
-    # def form_valid(self, form):
-    #     self.object = form.save()
-    #     return HttpResponseRedirect(self.get_success_url())
-
     def get_success_url(self):
         working_music_id = self.kwargs.get('working_music_id')
         return reverse_lazy('create_music:working_music_detail', kwargs={'working_music_id': working_music_id})
@@ -107,7 +103,7 @@ class SubMusicCreateView(CreateView):
 
 
 class MusicMergeView(UpdateView):
-    model = Music
+    model = SubMusic
     fields = [
         'music_file'
     ]
@@ -115,7 +111,9 @@ class MusicMergeView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         working_music_id = self.kwargs.get('working_music_id')
-        return super(MusicMergeView, self).post(request, *args, **kwargs)
+        if Music.objects.get(id=working_music_id).owner == self.request.user:
+            return super(MusicMergeView, self).post(request, *args, **kwargs)
+        raise Http404
 
     def get(self, request, *args, **kwargs):
         raise Http404
