@@ -472,7 +472,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
     </script>
 {% endcomment %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p><label for="id_instrument">Instrument:</label> <select name="instrument" required id="id_instrument">
+            {% for instrument in form.instrument.field.queryset %}
 
+                <option value="{{ instrument.id }}">{{ instrument.name }}</option>
+            {% endfor %}
+
+        </select></p>
+        <p><label for="id_music_file">Music file:</label> <input type="file" name="music_file" required id="id_music_file"></p>
+        <button type="submit">제출</button>
+    </form>
 
 {% endblock %}
 </body>
