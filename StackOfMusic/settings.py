@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'storages',
     's3direct',
-    'example.apps.ExampleConfig',
+    # 'example.apps.ExampleConfig',
     'rest_framework.authtoken',
     'oauth2_provider',
 
