@@ -25,6 +25,7 @@ class CompletedMusicSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     genre = GenreSerializer()
     # contributor = UserSrializer()
+    total_like_user = serializers.IntegerField(source='total_likes_user')
 
     class Meta:
         model = Music
@@ -35,13 +36,14 @@ class CompletedMusicSerializer(serializers.ModelSerializer):
             'album_jacket',
             'owner',
             'create_date',
-            'like',
+            'total_like_user',
         )
 
 
+class LikeMusicSerializer(serializers.ModelSerializer):
 
-    # def save(self, commit=True):
-    #     self.owner =
-    #     self.contributor =
-    #     self.genre =
-    #     return super(CompletedMusicSerializer, self).save(commit=commit)
+    class Meta:
+        model = User
+        fields = (
+            'liked_music'
+        )

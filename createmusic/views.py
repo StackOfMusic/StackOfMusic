@@ -2,12 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView, ListView, DeleteView, TemplateView, UpdateView
+from django.views.generic import CreateView, ListView, DeleteView, TemplateView, UpdateView
 from rest_framework import mixins, generics
 
-from music.models import Music, SubMusic
+from music.models import Music
 from .forms import CreateMusicForm, CreateSubMusicForm
-from .serializer import WorkingMusicRetrieveSerializer, SubMusicSerializer
+from .serializer import WorkingMusicRetrieveSerializer
 
 login_url = reverse_lazy('accounts:accounts_login')
 
@@ -114,6 +114,7 @@ class MusicMergeView(UpdateView):
     pk_url_kwarg = 'working_music_id'
 
     def post(self, request, *args, **kwargs):
+        working_music_id = self.kwargs.get('working_music_id')
         return super(MusicMergeView, self).post(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):

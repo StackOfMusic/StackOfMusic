@@ -8,38 +8,38 @@ class InstrumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Instrument
-        fields = (
-            'name'
-        )
+        fields = '__all__'
 
 
 class SubMusicSerializer(serializers.ModelSerializer):
     contributor = UserSerializer()
-    # instrument = InstrumentSerializer()
+    instrument = InstrumentSerializer()
 
     class Meta:
         model = SubMusic
-        fields = [
-            # 'instrument'
+        fields = (
+            'instrument'
             'contributor',
             'music_file',
             'create_date',
-        ]
+        )
 
 
 class WorkingMusicRetrieveSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     genre = GenreSerializer()
+    instrument = InstrumentSerializer()
     sub_musics = SubMusicSerializer(many=True, read_only=True)
 
     class Meta:
         model = Music
-        fields = [
+        fields = (
             'genre',
             'title',
             'seed_file',
             'album_jacket',
             'owner',
             'create_date',
+            'instrument',
             'sub_musics',
-        ]
+        )
