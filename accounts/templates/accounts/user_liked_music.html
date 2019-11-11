@@ -1,0 +1,7 @@
+{% extends 'StackOfMusic/base.html' %}
+
+{% block content %}
+    {% for user_liked_music in user_liked_music_list %}
+        <li><a>{{ u }}</a></li>
+    {% endfor %}
+{% endblock %}
