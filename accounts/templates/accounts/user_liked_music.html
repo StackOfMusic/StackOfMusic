@@ -2,6 +2,6 @@
 
 {% block content %}
     {% for user_liked_music in user_liked_music_list %}
-        <li><a>{{ u }}</a></li>
+        <li><a href="{% url 'completed_music_detail' user_liked_music.id %}">{{ user_liked_music }}</a></li>
     {% endfor %}
 {% endblock %}

@@ -15,5 +15,5 @@ urlpatterns = [
     path('mypage/<int:account_id>/copyright/', CopyrightTemplateView.as_view(), name='accounts_copyright'),
     path('mypage/<int:account_id>/myworkingmusic/', UserWorkingProjectsListView.as_view(), name='accounts_working_projects'),
     path('mypage/<int:account_id>', MyPageListTemplateView.as_view(), name='account_list'),
-    path('mypage/<int:account_id>', UserLikedMusicListView.as_view(), name='user_liked_music')
+    path('mypage/<int:account_id>/LkeMusic', UserLikedMusicListView.as_view(), name='user_liked_music'),
 ]
