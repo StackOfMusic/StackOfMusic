@@ -123,7 +123,7 @@ class MyPageListTemplateView(TemplateView):
 
 class UserLikedMusicListView(ListView):
     template_name = 'accounts/user_liked_music.html'
-    model = User
+    model = Music
     context_object_name = 'user_liked_music_list'
     pk_url_kwarg = 'account_id'
 
@@ -132,7 +132,5 @@ class UserLikedMusicListView(ListView):
 
     def get_queryset(self):
         user_id = self.request.user.id
-        queryset = User.objects.filter(music__liked_music=user_id)
+        queryset = User.objects.get(id=user_id).music.all()
         return queryset
-
-
