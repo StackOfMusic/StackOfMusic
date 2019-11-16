@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import json
+import djcelery
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,7 +53,9 @@ INSTALLED_APPS = [
     # 'example.apps.ExampleConfig',
     'rest_framework.authtoken',
     'oauth2_provider',
-
+    'djcelery',
+    'celery',
+    'django_celery_results',
 ]
 
 REST_FRAMEWORK = {
@@ -111,15 +115,34 @@ WSGI_APPLICATION = 'StackOfMusic.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'OPTION': {
-        #     'read_default_file': os.path.join(BASE_DIR, 'mysql.cnf'),
-        #     'init_command': "SET sql_mod='STRICT_TRANS_TABLES'",
-        #     'charset': 'utf8mb4',
-        # }
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': os.path.join(CONFIG_SECRET_DIR, 'mysql.cnf'),
+            'charset': 'utf8mb4',
+        }
     }
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://13.125.169.112:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Worker broker settings
+
+# BROKER_URL = 'amqp://13.125.169.112/default'
+CELERY_CACHE_BACKEND = 'django-cache'
+
+BROKER_URL = 'amqp://chaemoon:chaemoon@13.125.169.112:5673/default'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
 
 
 # Password validation
