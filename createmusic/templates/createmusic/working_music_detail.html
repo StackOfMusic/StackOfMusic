@@ -72,6 +72,17 @@
                 background-color: #006182;
                 z-index: 1;
             }
+            select {
+                width: 200px;
+                padding: .8em .5em;
+                border: 1px solid #999;
+                font-family: inherit;
+                border-radius: 0px;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+            }
+
         </style>
     {% endblock %}
 </head>
@@ -118,10 +129,15 @@
                     $("#ownermusic").attr("src", working_music['seed_file']);
 
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
-                        document.getElementById("sub").innerHTML += working_music['owner'].username;
-                        document.getElementById("sub").innerHTML += "<input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >" ;
-                        document.getElementById("sub").innerHTML += "<audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio>"+ "<br>";
+                        //기존 방식으로 폼으로 묶어버렸는데 크롬이 시벌빡치게 자동완성해버리는 코드
+                        {#var content = "<form method=\"post\" id=\"music_file_upload_form\" action=\"{% url 'create_music:music_update' working_music_id %}\" enctype=\"multipart/form-data\"><td>" + working_music['owner'].username +"</td>" + "<td><audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" ></td><td></td>";#}
 
+                        //폼 안묶은 코드
+                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music['owner'].username +"</td>" + "<td><audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" ></td><td></td></tr>";
+                        document.getElementById("musics").innerHTML += content;
+
+                        //폼으로는 묶이는데 먼가 부족스트련
+                        {#$("#tr"+i).wrap('<form method="post" id="music_file_upload_form" action="{% url 'create_music:music_update' working_music_id %}" enctype="multipart/form-data"></form>');#}
                     }
                 },
                 error: function (error) {
@@ -337,52 +353,78 @@
 
                 </div>
 
-                <div>
-                    <input type="checkbox" id="ownercheck" style="float: left;">
-                    <div id="ownername" style="float: left;"></div>
-                    <audio id="ownermusic" controls >
-                        <source id="audio-source" src="" type="audio/mp4"/>
-                    </audio>
-                    <br>
-                    <div id="sub" style="float:left;">
-                    </div>
+                <div class="container">
+                    <table class="table table-striped custab">
+                        <thead>
 
-                    <button type="button" class="btn btn-primary btn-radio" style="width: 100px;float: right;" id="mytitle3">Drum</button>
-                    <input type="checkbox" id="check2" class="hidden" style="display: none;float: right;" >
-                    <audio id="music3" controls style="float: right;">
-                        <source id="audio-source" src="" type="audio/mp4"/>
-                    </audio>
+                        <tr>
+                            <th>Owner</th>
+                            <th>Sub_Musics</th>
+                            <th>Select</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="musics">
+                        <tr>
+                            <td>
+                                <div id="ownername" style="float: left;"></div>
+                            </td>
+                            <td>
+                                <audio id="ownermusic" controls >
+                                    <source id="audio-source" src="" type="audio/mp4"/>
+                                </audio>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="ownercheck" style="float: left;">
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Try Your Music with SUB Musics</div>
 
                     <p>
-                        <input id="audioFileChooser" type="file" style="float: right;" onchange="readFile(this.files);">
-                    </p>
-                    <p style="float: right;">
+                        <audio id="music3" controls style="float: left;margin-left: 250px;">
+                            <source id="audio-source" src="" type="audio/mp4"/>
+                        </audio>
+                    </p>&emsp;
+                    <input id="audioFileChooser" type="file" style="width: 250px;" onchange="readFile(this.files);">
+                    <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle3">SUB</button>
+                    <input type="checkbox" id="check2" class="hidden" style="display: none;float: right;" >
+                    <br><br><br>
+                    <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Play a part of a Music</div>
+
+                    <div style="margin-left: 300px;float: left;margin-right: 30px;">
                         <input type="text" id="start" name="test_name" value="">
                         <input type="text" id="end" name="test_name" value="">
                         <button type="button" class="btn-dark" id="cutcut" onclick="cutcut()"></button>
-                    </p>
+                    </div>
+                    <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;float: left">Play</button>
                 </div>
+                <br><br>
                 <br>
-                <div style="float: left; width: 100%">
-                    <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;">Play</button>
-                    <a href="{% url 'create_music:working_music_delete' working_music_id %}">지워버리기~</a>
-                    <br>
-                    <a href="{% url 'create_music:sub_music_create' working_music_id %}">Contribution</a>
-                    <br>
-                    <a href="{% url 'create_music:music_update' working_music_id%}">update</a>
-                    <br>
+                <div style="float: left; width: 100%;margin-left: 250px;">
+                    <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:working_music_delete'  working_music_id %}'" style="width: 200px;font-size:20px;">지워버리깅</button>
+                    <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:sub_music_create'  working_music_id %}'" style="width: 200px;font-size:20px;">Contribution</button>
+                    <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:music_update'  working_music_id %}'" style="width: 200px;font-size:20px;">Update</button>
+
+
+
                     <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
                         {% csrf_token %}
                         <th><label for="id_music_option">Music option:</label></th><td>
                         <select name="music_option" required id="id_music_option">
-                            <option value="" selected>---------</option>
-
+                            <option value="" selected>select</option>
                             <option value="0">완성</option>
-
                             <option value="1">미완성</option>
-
                         </select></td>
-                        <button type="submit">제출</button>
+                        <br><br>
+                        <button class="btn btn-lg btn-default" type="submit" style="width: 700px;font-size:70px;">Merge & Submit</button>
+
                     </form>
                 </div>
             </div>
