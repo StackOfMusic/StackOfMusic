@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'storages',
     's3direct',
-    # 'example.apps.ExampleConfig',
     'rest_framework.authtoken',
     'oauth2_provider',
     'djcelery',
@@ -135,7 +134,6 @@ CACHES = {
 
 # Worker broker settings
 
-# BROKER_URL = 'amqp://13.125.169.112/default'
 CELERY_CACHE_BACKEND = 'django-cache'
 
 BROKER_URL = 'amqp://chaemoon:chaemoon@13.125.169.112:5673/default'
