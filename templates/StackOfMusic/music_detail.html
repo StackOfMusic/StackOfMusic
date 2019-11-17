@@ -71,7 +71,7 @@
         $(function () {
             $.ajax({
                 method: 'GET',
-                url: 'http://localhost:8000/RetrieveAPI/{{ completed_music_id }}',
+                url: '{% url 'completed_music_detail_api' completed_music_id %}',
                 success: function (data) {
                     completd_music = data;
                     ex = completd_music['owner'].username;
