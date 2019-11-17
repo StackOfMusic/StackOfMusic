@@ -29,7 +29,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('create/', include('createmusic.urls', namespace='create_music')),
     path('instrument/search/', include('instrument.urls', namespace='instrument_search')),
-    path('', include('example.urls', namespace='example')),
+    # path('', include('example.urls', namespace='example')),
     path('s3direct/', include('s3direct.urls')),
 ]
 

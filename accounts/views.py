@@ -68,7 +68,7 @@ class UserDetailView(DetailView):
         context = super(UserDetailView, self).get_context_data(**kwargs)
         context['user'] = self.request.user
         context['user_music_list'] = self.request.user.music_owner.all()
-        context['user_contrib_music_list'] = self.request.user.music_contributor.all()
+        # context['user_contrib_music_list'] = self.request.user.music_contributor.all()
         return context
 
 
@@ -119,3 +119,18 @@ class MyPageListTemplateView(TemplateView):
         context = super(MyPageListTemplateView, self).get_context_data(**kwargs)
         context['account_id'] = self.request.user.id
         return context
+
+
+class UserLikedMusicListView(ListView):
+    template_name = 'accounts/user_liked_music.html'
+    model = Music
+    context_object_name = 'user_liked_music_list'
+    pk_url_kwarg = 'account_id'
+
+    def get(self, request, *args, **kwargs):
+        return super(UserLikedMusicListView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        queryset = User.objects.get(id=user_id).music.all()
+        return queryset

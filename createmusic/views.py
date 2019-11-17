@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, ListView, DeleteView, TemplateView, UpdateView
+from django.views.generic import CreateView, ListView, DeleteView, TemplateView, UpdateView, View, RedirectView
+from django.shortcuts import get_object_or_404
 from rest_framework import mixins, generics
 
-from music.models import Music
+from music.models import Music, SubMusic
 from .forms import CreateMusicForm, CreateSubMusicForm
 from .serializer import WorkingMusicRetrieveSerializer
 
@@ -60,12 +61,21 @@ class WorkingMusicRetrieveTemplateView(TemplateView):
     template_name = 'createmusic/working_music_detail.html'
     pk_url_kwarg = 'working_music_id'
 
+    def get(self, request, *args, **kwargs):
+        # working_music_id = self.kwargs.get(self.pk_url_kwarg)
+        # if request.user == Music.objects.get(id=working_music_id).owner:
+        #     pass
+        return super(WorkingMusicRetrieveTemplateView, self).get(request, *args, *kwargs)
+
     def get_context_data(self, **kwargs):
-        working_music_id = self.kwargs.get('working_music_id')
+        working_music_id = self.kwargs.get(self.pk_url_kwarg)
         context = super(WorkingMusicRetrieveTemplateView, self).get_context_data(**kwargs)
         context['working_music_id'] = working_music_id
         # context['music_option'] = Music.m
         return context
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
 
 
 class WorkingMusicDeleteView(DeleteView):
@@ -91,10 +101,6 @@ class SubMusicCreateView(CreateView):
         context['working_music_id'] = self.kwargs.get('working_music_id')
         return context
 
-    # def form_valid(self, form):
-    #     self.object = form.save()
-    #     return HttpResponseRedirect(self.get_success_url())
-
     def get_success_url(self):
         working_music_id = self.kwargs.get('working_music_id')
         return reverse_lazy('create_music:working_music_detail', kwargs={'working_music_id': working_music_id})
@@ -106,19 +112,42 @@ class SubMusicCreateView(CreateView):
         return super(SubMusicCreateView, self).get(request, *args, **kwargs)
 
 
-class MusicMergeView(UpdateView):
-    model = Music
-    fields = [
-        'music_file'
-    ]
+class MusicMergeView(View):
+
     pk_url_kwarg = 'working_music_id'
 
     def post(self, request, *args, **kwargs):
-        working_music_id = self.kwargs.get('working_music_id')
-        return super(MusicMergeView, self).post(request, *args, **kwargs)
+        submusic_pk = request.POST.get('data')
+        music_pk = self.kwargs.get(self.pk_url_kwarg)
+
+        submusic = get_object_or_404(SubMusic, pk=submusic_pk)
+        submusic.status = 0
+        submusic.save()
+        message = '성공!'
+        return JsonResponse(status=200, data={'message': message})
+
+    def get(self, request, *args, **kwrags):
+        message = '잘못 된 접근입니다'
+        return JsonResponse(status=405, data={'message': message})
+
+
+class SubMusicDeleteView(View):
+
+    pk_url_kwargs = 'working_music_id'
+
+    def post(self, request, *args, **kwargs):
+        submusic_pk = request.POST.get('data')
+        music_pk = self.kwargs.get(self.pk_url_kwargs)
+
+        sub_music = get_object_or_404(SubMusic, pk=submusic_pk)
+        sub_music.delete()
+
+        message = '삭제가 완료되었습니다.'
+        return JsonResponse(status=200, data={'message': message})
 
     def get(self, request, *args, **kwargs):
-        raise Http404
+        message = '잘못 된 접근입니다.'
+        return JsonResponse(status=405, data={'message': message})
 
 
 class MusicStatusChangeView(UpdateView):

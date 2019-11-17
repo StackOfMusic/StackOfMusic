@@ -1,5 +1,182 @@
 {% extends 'StackOfMusic/base.html' %}
+
 {% block content %}
+
+
+    <!doctype html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+
+        <style>
+            input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+                background-color: #39ace7;
+            }
+
+            input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+                -moz-transform: scale(0.95);
+                -webkit-transform: scale(0.95);
+                -o-transform: scale(0.95);
+                -ms-transform: scale(0.95);
+                transform: scale(0.95);
+            }
+
+            input[type=text] {
+                background-color: #e9ecf0;
+                border: none;
+                color: #0d0d0d;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 5px;
+                width: 70%;
+                border: 2px solid #f6f6f6;
+                -webkit-transition: all 0.5s ease-in-out;
+                -moz-transition: all 0.5s ease-in-out;
+                -ms-transition: all 0.5s ease-in-out;
+                -o-transition: all 0.5s ease-in-out;
+                transition: all 0.5s ease-in-out;
+                -webkit-border-radius: 5px 5px 5px 5px;
+                border-radius: 5px 5px 5px 5px;
+            }
+            input[type=file] {
+                background-color: #e9ecf0;
+                display: inline-block;
+                border: none;
+                color: #0d0d0d;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 5px;
+                width: 70%;
+                border: 2px solid #f6f6f6;
+                -webkit-transition: all 0.5s ease-in-out;
+                -moz-transition: all 0.5s ease-in-out;
+                -ms-transition: all 0.5s ease-in-out;
+                -o-transition: all 0.5s ease-in-out;
+                transition: all 0.5s ease-in-out;
+                -webkit-border-radius: 5px 5px 5px 5px;
+                border-radius: 5px 5px 5px 5px;
+            }
+            /* FORM TYPOGRAPHY*/
+            button[type=submit]{
+                background-color: #56baed;
+                border: none;
+                color: white;
+                padding: 15px 80px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                text-transform: uppercase;
+                font-size: 13px;
+                -webkit-box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+                box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+                -webkit-border-radius: 5px 5px 5px 5px;
+                border-radius: 5px 5px 5px 5px;
+                margin: 5px 20px 40px 20px;
+                -webkit-transition: all 0.3s ease-in-out;
+                -moz-transition: all 0.3s ease-in-out;
+                -ms-transition: all 0.3s ease-in-out;
+                -o-transition: all 0.3s ease-in-out;
+                transition: all 0.3s ease-in-out;
+            }
+            input[type=button], input[type=submit], input[type=reset]  {
+                background-color: #56baed;
+                border: none;
+                color: white;
+                padding: 15px 30px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                text-transform: uppercase;
+                font-size: 13px;
+
+            }
+
+            input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+                background-color: #39ace7;
+            }
+            input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+                -moz-transform: scale(0.95);
+                -webkit-transform: scale(0.95);
+                -o-transform: scale(0.95);
+                -ms-transform: scale(0.95);
+                transform: scale(0.95);
+            }
+
+            input[type=text]:focus {
+                background-color: #fff;
+                border-bottom: 2px solid #5fbae9;
+            }
+
+
+            .divider-text {
+                position: relative;
+                text-align: center;
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+            .divider-text span {
+                padding: 7px;
+                font-size: 12px;
+                position: relative;
+                z-index: 2;
+            }
+            .divider-text:after {
+                content: "";
+                position: absolute;
+                width: 100%;
+                border-bottom: 1px solid #ddd;
+                top: 55%;
+                left: 0;
+                z-index: 1;
+            }
+
+            .btn-facebook {
+                background-color: #405D9D;
+                color: #fff;
+            }
+            .btn-twitter {
+                background-color: #42AEEC;
+                color: #fff;
+            }
+
+
+
+            .file_input_textbox
+            {
+                float: left
+            }
+
+            .file_input_hidden
+            {
+                width: 10px;
+                font-size: 45px;
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                opacity: 0;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <p><label for="id_instrument">Instrument:</label> <select name="instrument" required id="id_instrument">
@@ -12,4 +189,67 @@
         <p><label for="id_music_file">Music file:</label> <input type="file" name="music_file" required id="id_music_file"></p>
         <button type="submit">제출</button>
     </form>
-{% endblock %}
+
+
+    <div class="card bg-light" style="height: 100%;display: inline;">
+        <article class="card-body mx-auto" style="max-width: 400px;margin-top: 100px;">
+            <h4 class="card-title mt-3 text-center">Create Music</h4>
+            <p class="text-center">Get started with your Talent!</p>
+            <p class="divider-text">
+                <span class="bg-light"></span>
+            </p>
+            <br>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group input-group">
+                    <label for="id_genre">Genre:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <select name="genre" required id="id_genre" class="form-control">
+                        {% for genre in form.genre.field.queryset %}
+                            <option value="{{ genre.pk }}" selected >{{ genre.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                    <label for="id_instrument">Instrument:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <select name="instrument" required id="id_instrument" class="form-control">
+                        {% for instrument in form.instrument.field.queryset %}
+                            <option value="{{ instrument.pk }}" selected>{{ instrument }}</option>
+                        {% endfor %}
+                    </select>
+                </div> <!-- form-group end.// -->
+                <div class="form-group input-group">
+
+                    <label for="id_title">Title :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input type="text" name="title" maxlength="30" required id="id_title">
+                </div> <!-- form-group// -->
+
+
+                <div class="form-group input-group">
+                    <label for="id_album_jacket"style="float: left">Albumjacket:&nbsp;</label>
+                    <input type="text" id="fileName" class="file_input_textbox" style="float: left" readonly="readonly">
+                    <input type="file" class="file_input_hidden"  name="album_jacket" accept="image/*" id="id_album_jacket" onchange="javascript: document.getElementById('fileName').value = this.value" />
+
+                </div> <!-- form-group// -->
+
+                <div class="form-group input-group">
+                    <label for="id_seed_file">Seedfile :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input type="text" id="fileName2" class="file_input_textbox" style="float: left" readonly="readonly">
+                    <input type="file" class="file_input_hidden" name="seed_file" required id="id_seed_file" onchange="javascript: document.getElementById('fileName2').value = this.value" />
+                </div> <!-- form-group// -->
+
+                <center>
+                    <button type="submit">만들기</button>
+                </center>
+            </form>
+
+        </article>
+        <br>
+        <br>
+    </div> <!-- card.// -->
+
+    </div>
+    <!--container end.//-->
+
+    </body>
+    {% endblock %}
+    </html>

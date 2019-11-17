@@ -38,9 +38,6 @@ class Music(models.Model):
     def total_likes_user(self):
         return self.liked_music.count()
 
-    def is_liked_user(self):
-        pass
-
     def is_complete(self):
         return self.music_option == Music.MUSIC_COMPLETED
 
