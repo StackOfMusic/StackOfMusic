@@ -25,7 +25,7 @@ class HomeView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HomeView, self).get_context_data(object_list=None, **kwargs)
-        context['hot_list'] = Music.objects.order_by('like')[:5]
+        context['hot_list'] = Music.objects.filter()
         return context
 
 
