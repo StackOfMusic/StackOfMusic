@@ -3,7 +3,6 @@
 <html lang="ko">
 <head>
     {% block extra_scripts %}
-
         <script src="https://unpkg.com/siriwave/dist/siriwave.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
@@ -89,10 +88,6 @@
 
 <body>
 {% block content %}
-
-
-
-
     <script type="text/javascript">
 
         var working_music = {};
@@ -133,8 +128,11 @@
                         {#var content = "<form method=\"post\" id=\"music_file_upload_form\" action=\"{% url 'create_music:music_update' working_music_id %}\" enctype=\"multipart/form-data\"><td>" + working_music['owner'].username +"</td>" + "<td><audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" ></td><td></td>";#}
 
                         //폼 안묶은 코드
-                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music['owner'].username +"</td>" + "<td><audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" ></td><td></td></tr>";
+                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music['owner'].username +"</td>" + "<td><audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n" +
+                            "<button class=\"update-btn\" data-pk = \" "+ working_music['sub_musics'][i].id +"\">update</button>\n" +
+                            "<button class = \"delete-btn\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button></td><td></td></tr>";
                         document.getElementById("musics").innerHTML += content;
+
 
                         //폼으로는 묶이는데 먼가 부족스트련
                         {#$("#tr"+i).wrap('<form method="post" id="music_file_upload_form" action="{% url 'create_music:music_update' working_music_id %}" enctype="multipart/form-data"></form>');#}
@@ -280,7 +278,9 @@
             }
         }
     </script>
+    <form method="post" id="music_file_upload_form" action="{% url 'create_music:music_update' working_music_id %}" enctype="multipart/form-data">
 
+    </form>
 
     <img id="working_music_img" src="" alt="">
     <div class="container">
@@ -378,12 +378,53 @@
                                 <input type="checkbox" id="ownercheck" style="float: left;">
                             </td>
                             <td>
-
                             </td>
                         </tr>
                         </tbody>
+
                     </table>
+
                 </div>
+                <script>
+                    var token = '{{ csrf_token }}';
+
+                    $(function () {
+                        $('body').on('click', '.update-btn', function () {
+                            var data_pk = $(this).attr('data-pk');
+                            $.ajax({
+                                headers: { 'X-CSRFToken' : token },
+                                url: '{% url 'create_music:music_update' working_music_id %}',
+                                method: 'post',
+                                data: {
+                                    data: data_pk,
+                                    {#csrfmiddlewaretoken: {% csrf_token %}#}
+                                },
+                                success(data){
+                                    alert(data['message']);
+                                }
+                            })
+                        });
+                    });
+
+                    $(function () {
+                        $('body').on('click', '.delete-btn', function () {
+                            alert('z');
+                            var data_pk = $(this).attr('data-pk');
+                            $.ajax({
+                                headers: {'X-CSRFToken' : token},
+                                url: '{% url 'create_music:submusic_delete' working_music_id %}',
+                                method: 'post',
+                                data: {
+                                    data: data_pk,
+                                },
+                                success(data){
+                                    alert(data['message']);
+                                }
+                            })
+                        });
+                    });
+
+                </script>
                 <div>
                     <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Try Your Music with SUB Musics</div>
 
@@ -410,8 +451,6 @@
                 <div style="float: left; width: 100%;margin-left: 250px;">
                     <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:working_music_delete'  working_music_id %}'" style="width: 200px;font-size:20px;">지워버리깅</button>
                     <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:sub_music_create'  working_music_id %}'" style="width: 200px;font-size:20px;">Contribution</button>
-                    <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:music_update'  working_music_id %}'" style="width: 200px;font-size:20px;">Update</button>
-
 
 
                     <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
@@ -469,6 +508,7 @@
     </div>
 
     <script>
+
         $(function () {
             $('.btn-radio').siblings('.img-radio').css('opacity', '0.5');
             $('.btn-radio').click(function(e) {
@@ -493,40 +533,6 @@
             <source id="audio-source" src="" type="audio/mp3"/>
         </audio>
     </div>
-    {% comment %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-md-offset-3">
-                <form class="form-horizontal well" role="form">
-                    <div class="row">
-                        {% for music in working_music %}
-                            <div class="col-xs-4" style="float: left">
-                                <img src="{{ music.album_jacket.url }}" style="width: 200px;margin-left: 100px;" class="img-responsive img-radio">
-                                <button type="button" class="btn btn-primary btn-radio" style="width: 100px;">{{ music.title }}</button>
-                                <input type="checkbox" id="{{ music.id }}" class="hidden" style="display: none" >
-                            </div>
-                        {% endfor %}
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
-    </script>
-{% endcomment %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p><label for="id_instrument">Instrument:</label> <select name="instrument" required id="id_instrument">
-            {% for instrument in form.instrument.field.queryset %}
-
-                <option value="{{ instrument.id }}">{{ instrument.name }}</option>
-            {% endfor %}
-
-        </select></p>
-        <p><label for="id_music_file">Music file:</label> <input type="file" name="music_file" required id="id_music_file"></p>
-        <button type="submit">제출</button>
-    </form>
-
 {% endblock %}
 </body>
 </html>

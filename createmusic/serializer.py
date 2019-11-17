@@ -18,10 +18,12 @@ class SubMusicSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubMusic
         fields = (
+            'id',
             'instrument',
             'contributor',
             'music_file',
             'create_date',
+            'status',
         )
 
 
