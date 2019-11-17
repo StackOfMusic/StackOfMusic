@@ -94,7 +94,7 @@
         $(function () {
             $.ajax({
                 method: 'GET',
-                url: 'http://localhost:8000/create/list/WorkingMusicRetrieveAPI/{{ working_music_id }}',
+                url: '{% url 'create_music:working_music_detail_api' working_music_id %}',
                 success: function (data) {
                     working_music = data;
                     console.log(working_music);
