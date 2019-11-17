@@ -125,7 +125,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://13.125.169.112:6379/1",
+        "LOCATION": 'redis://54.180.115.149/1',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -136,7 +136,7 @@ CACHES = {
 
 CELERY_CACHE_BACKEND = 'django-cache'
 
-BROKER_URL = 'amqp://chaemoon:chaemoon@13.125.169.112:5673/default'
+BROKER_URL = 'amqp://chaemoon:chaemoon@13.125.169.112:5672/default'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
