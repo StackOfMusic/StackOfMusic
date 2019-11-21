@@ -41,7 +41,6 @@
     {% block extra_style %}
         <style>
 
-
             .hide{
                 display: none;
             }
@@ -128,9 +127,9 @@
                         {#var content = "<form method=\"post\" id=\"music_file_upload_form\" action=\"{% url 'create_music:music_update' working_music_id %}\" enctype=\"multipart/form-data\"><td>" + working_music['owner'].username +"</td>" + "<td><audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" ></td><td></td>";#}
 
                         //폼 안묶은 코드
-                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music['owner'].username +"</td>" + "<td><audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n" +
-                            "<button class=\"update-btn\" data-pk = \" "+ working_music['sub_musics'][i].id +"\">update</button>\n" +
-                            "<button class = \"delete-btn\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button></td><td></td></tr>";
+                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" + "<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n" +
+                            "<td><button class=\"update-btn btn btn-lg btn-default\"  data-pk = \" "+ working_music['sub_musics'][i].id +"\">update</button>\n" +
+                            "<button class = \"delete-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button></td></tr>";
                         document.getElementById("musics").innerHTML += content;
 
 
@@ -149,24 +148,44 @@
             var submusics = new Array(20);
             for (var i = 0; i < working_music["sub_musics"].length; i++) {
                 submusics[i] = document.getElementById("subcheck"+i);
+                alert(submusics[i]);
                 if($(submusics[i]).prop("checked")==true){
                     var first = $("#submusic"+i).attr('src');
+                    var audio = new Audio(first);
+                    var x = document.getElementById("submusic"+i).duration;
+                    var timeout = x - (x%5);
+                    audio.play();
+                    setInterval(function(){
+                        audio.currentTime=0;
+                        audio.play(); }, timeout*1000);
                 }
-                var audio = new Audio(first);
-                audio.play();
+
             }
             var secondmusic = document.getElementById("check2");
             if($(origin).prop("checked")==true){
                 var ori = $('#ownermusic').attr('src');
                 var audio = new Audio(ori);
+                var x = document.getElementById("ownermusic").duration;
+
+                var timeout = x - (x%5);
+                alert(timeout);
                 audio.play();
+                setInterval(function(){
+                    audio.currentTime=0;
+                    audio.play(); }, timeout*1000);
+
             }
             if($(secondmusic).prop("checked")==true) {
                 var second = $("#music3").attr('src');
                 var audio = new Audio(second);
-                audio.play();
-            }
+                var x = document.getElementById("music3").duration;
 
+                var timeout = x - (x%5);
+                audio.play();
+                setInterval(function(){
+                    audio.currentTime=0;
+                    audio.play(); }, timeout*1000);
+            }
 
         }
 
@@ -248,7 +267,6 @@
             onplay: function() {
                 audioPlayed = true;
                 var time = Math.round(sound.duration());
-
                 $('#duration').html(utils.formatTime(time));
                 // Start upating the progress of the track.
                 requestAnimationFrame(utils.updateTimeTracker.bind(this));
@@ -352,9 +370,11 @@
                     </div>
 
                 </div>
+                <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:working_music_delete'  working_music_id %}'" style="width: 200px;font-size:20px;float: right;background-color: whitesmoke">작업중인 음악삭제</button>
+                <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:sub_music_create'  working_music_id %}'" style="width: 200px;font-size:20px;float: right;background-color: whitesmoke">SubMusic 업로드</button>
 
                 <div class="container">
-                    <table class="table table-striped custab">
+                    <table class="table table-striped custab" style="text-align: center">
                         <thead>
 
                         <tr>
@@ -366,11 +386,11 @@
                         </thead>
                         <tbody id="musics">
                         <tr>
-                            <td>
+                            <td style="text-align: center;valign:middle;">
                                 <div id="ownername" style="float: left;"></div>
                             </td>
                             <td>
-                                <audio id="ownermusic" controls >
+                                <audio id="ownermusic" controls>
                                     <source id="audio-source" src="" type="audio/mp4"/>
                                 </audio>
                             </td>
@@ -447,22 +467,18 @@
                     <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;float: left">Play</button>
                 </div>
                 <br><br>
-                <br>
                 <div style="float: left; width: 100%;margin-left: 250px;">
-                    <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:working_music_delete'  working_music_id %}'" style="width: 200px;font-size:20px;">지워버리깅</button>
-                    <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:sub_music_create'  working_music_id %}'" style="width: 200px;font-size:20px;">Contribution</button>
 
 
                     <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
                         {% csrf_token %}
-                        <th><label for="id_music_option">Music option:</label></th><td>
-                        <select name="music_option" required id="id_music_option">
-                            <option value="" selected>select</option>
-                            <option value="0">완성</option>
-                            <option value="1">미완성</option>
-                        </select></td>
-                        <br><br>
-                        <button class="btn btn-lg btn-default" type="submit" style="width: 700px;font-size:70px;">Merge & Submit</button>
+{#                        <th><label for="id_music_option">Music option:</label></th><td>#}
+{#                        <select name="music_option" required id="id_music_option">#}
+{#                            <option value="" selected>select</option>#}
+{#                            <option value="0">완성</option>#}
+{#                            <option value="1">미완성</option>#}
+{#                        </select></td>#}
+                        <button class="btn btn-lg btn-default" type="submit" style="width: 700px;font-size:70px;margin-left: -60px;">Complete Music</button>
 
                     </form>
                 </div>
