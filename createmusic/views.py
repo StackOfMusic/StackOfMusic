@@ -52,26 +52,18 @@ class WorkingMusicRetrieveView(mixins.RetrieveModelMixin, generics.GenericAPIVie
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
-    def setup(self, request, *args, **kwargs):
-        super(WorkingMusicRetrieveView, self).setup(request, *args, **kwargs)
-        self.woking_music_id = self.kwargs.get('working_music_id')
-
 
 class WorkingMusicRetrieveTemplateView(TemplateView):
     template_name = 'createmusic/working_music_detail.html'
     pk_url_kwarg = 'working_music_id'
 
     def get(self, request, *args, **kwargs):
-        # working_music_id = self.kwargs.get(self.pk_url_kwarg)
-        # if request.user == Music.objects.get(id=working_music_id).owner:
-        #     pass
         return super(WorkingMusicRetrieveTemplateView, self).get(request, *args, *kwargs)
 
     def get_context_data(self, **kwargs):
         working_music_id = self.kwargs.get(self.pk_url_kwarg)
         context = super(WorkingMusicRetrieveTemplateView, self).get_context_data(**kwargs)
         context['working_music_id'] = working_music_id
-        # context['music_option'] = Music.m
         return context
 
     def post(self, request, *args, **kwargs):

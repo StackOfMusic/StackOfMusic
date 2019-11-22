@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'djcelery',
     'celery',
     'django_celery_results',
+    # 'cachalot',
+    # 'debug_toolbar',
 ]
 
 REST_FRAMEWORK = {
@@ -73,7 +75,6 @@ REST_FRAMEWORK = {
 
 }
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -85,7 +86,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsPostCsrfMiddleware',
-    # 'django.contrib.auth.models.AnonymousUser',
 ]
 
 ROOT_URLCONF = 'StackOfMusic.urls'
@@ -125,9 +125,11 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": 'redis://54.180.115.149/1',
+        # "LOCATION": 'redis://54.180.115.149/1',
+        "LOCATION": 'redis://127.0.0.1/1',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            'PICKLE_VERSION': 2,
         }
     }
 }
@@ -136,14 +138,14 @@ CACHES = {
 
 CELERY_CACHE_BACKEND = 'django-cache'
 
-BROKER_URL = 'amqp://chaemoon:chaemoon@13.125.169.112:5672/default'
+# BROKER_URL = 'amqp://chaemoon:chaemoon@13.125.169.112:5672/default'
+BROKER_URL = 'amqp://chaemoon:chaemoon@127.0.0.1:5672/default'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Seoul'
 
 
-# Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -229,8 +231,6 @@ else:
     MEDIA_URL = 'http://%s/' % AWS_S3_CUSTOM_DOMAIN
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     MEDIAFILES_LOCATION = 'media'
-
-    AWS_S3_ENDPOINT_URL = 'http://s3-website.ap-northeast-2.amazonaws.com'
 
     AWS_DEFAULT_ACL = None
     S3DIRECT_DESTINATIONS = {
