@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, TemplateView
@@ -25,7 +26,9 @@ class HomeView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HomeView, self).get_context_data(object_list=None, **kwargs)
-        context['hot_list'] = Music.objects.filter()
+        context['hot_music_list'] = Music.objects.filter(music_option=0) \
+            .annotate(liked_count=Count('liked_music')) \
+            .order_by('-liked_count')
         return context
 
 
@@ -55,10 +58,6 @@ class CompletedMusicRetrieveView(mixins.RetrieveModelMixin, generics.GenericAPIV
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-
-    def setup(self, request, *args, **kwargs):
-        super(CompletedMusicRetrieveView, self).setup(request, *args, **kwargs)
-        self.completed_music_id = self.kwargs.get('completed_music_id')
 
     def get_queryset(self):
         queryset = Music.objects.all()

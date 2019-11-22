@@ -80,10 +80,10 @@
                             </span>
                     <div class="container">
                         <div class="row" style="padding: 50px;">
-                            <div style="width: 200px;">
-                                <input type="checkbox" name="instruments" value="1" id="id_instruments_0" style="float: left">
-                                <label for="id_instruments_0" style="float: left;">꽹과리</label>
-                            </div>
+{#                            <div style="width: 200px;">#}
+{#                                <input type="checkbox" name="instruments" value="1" id="id_instruments_0" style="float: left">#}
+{#                                <label for="id_instruments_0" style="float: left;">꽹과리</label>#}
+{#                            </div>#}
                             <div style="width: 200px;">
                                 <input type="checkbox" name="instruments" value="2" id="id_instruments_1" style="float: left">
                                 <label for="id_instruments_1" style="float: left">드럼</label>
@@ -99,6 +99,11 @@
                             <div style="width: 200px;">
                                 <input type="checkbox" name="instruments" value="5" id="id_instruments_4" style="float: left">
                                 <label for="id_instruments_4" style="float: left">일렉기타</label>
+                            </div>
+
+                            <div style="width: 200px;">
+                                <input type="checkbox" name="instruments" value="5" id="id_instruments_4" style="float: left">
+                                <label for="id_instruments_4" style="float: left">ETC</label>
                             </div>
                         </div>
                     </div>
@@ -138,25 +143,19 @@
 
             </table>
         </div>
+        <br>
+        <div>
+            {{ form.search_word }}
+        </div>
+        <br>
+        <div>
+            {% for instrument in form.instruments %}
+                <li>{{ instrument }}</li>
+            {% endfor %}
+        </div>
 
 
 
     </div>
-
-    {% comment %}
-    <div>
-        <form method="get">
-            {{ form.as_p }}
-            <button>검색</button>
-        </form>
-    </div>
-    <br>
-    <div id="result_list">
-        {% for music in music_list %}
-            <li><a href="{{ music.get_absolute_url }}">{{ music.title }}</a></li>
-        {% endfor %}
-    </div>
-    {% endcomment %}
-
 
 {% endblock %}

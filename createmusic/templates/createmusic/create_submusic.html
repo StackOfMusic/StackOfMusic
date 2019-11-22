@@ -175,25 +175,9 @@
 
     <body>
 
-
-
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p><label for="id_instrument">Instrument:</label> <select name="instrument" required id="id_instrument">
-            {% for instrument in form.instrument.field.queryset %}
-
-                <option value="{{ instrument.id }}">{{ instrument.name }}</option>
-            {% endfor %}
-
-        </select></p>
-        <p><label for="id_music_file">Music file:</label> <input type="file" name="music_file" required id="id_music_file"></p>
-        <button type="submit">제출</button>
-    </form>
-
-
     <div class="card bg-light" style="height: 100%;display: inline;">
-        <article class="card-body mx-auto" style="max-width: 400px;margin-top: 100px;">
-            <h4 class="card-title mt-3 text-center">Create Music</h4>
+        <article class="card-body mx-auto" style="max-width: 400px;background-color: whitesmoke">
+            <h4 class="card-title mt-3 text-center">Create SUB_Music</h4>
             <p class="text-center">Get started with your Talent!</p>
             <p class="divider-text">
                 <span class="bg-light"></span>
@@ -202,39 +186,18 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group input-group">
-                    <label for="id_genre">Genre:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <select name="genre" required id="id_genre" class="form-control">
-                        {% for genre in form.genre.field.queryset %}
-                            <option value="{{ genre.pk }}" selected >{{ genre.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div> <!-- form-group// -->
-                <div class="form-group input-group">
-                    <label for="id_instrument">Instrument:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <label for="id_instrument">Instrument:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <select name="instrument" required id="id_instrument" class="form-control">
                         {% for instrument in form.instrument.field.queryset %}
-                            <option value="{{ instrument.pk }}" selected>{{ instrument }}</option>
+                            <option value="{{ instrument.id }}">{{ instrument.name }}</option>
                         {% endfor %}
                     </select>
-                </div> <!-- form-group end.// -->
-                <div class="form-group input-group">
-
-                    <label for="id_title">Title :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input type="text" name="title" maxlength="30" required id="id_title">
                 </div> <!-- form-group// -->
-
-
                 <div class="form-group input-group">
-                    <label for="id_album_jacket"style="float: left">Albumjacket:&nbsp;</label>
+                    <label for="id_music_file">Music file:&emsp;&nbsp;&nbsp;</label>
                     <input type="text" id="fileName" class="file_input_textbox" style="float: left" readonly="readonly">
-                    <input type="file" class="file_input_hidden"  name="album_jacket" accept="image/*" id="id_album_jacket" onchange="javascript: document.getElementById('fileName').value = this.value" />
+                    <input type="file" class="file_input_hidden"  name="music_file" id="id_music_file" onchange="javascript: document.getElementById('fileName').value = this.value" />
 
-                </div> <!-- form-group// -->
-
-                <div class="form-group input-group">
-                    <label for="id_seed_file">Seedfile :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input type="text" id="fileName2" class="file_input_textbox" style="float: left" readonly="readonly">
-                    <input type="file" class="file_input_hidden" name="seed_file" required id="id_seed_file" onchange="javascript: document.getElementById('fileName2').value = this.value" />
                 </div> <!-- form-group// -->
 
                 <center>
@@ -251,5 +214,5 @@
     <!--container end.//-->
 
     </body>
-    {% endblock %}
-    </html>
+{% endblock %}
+</html>
