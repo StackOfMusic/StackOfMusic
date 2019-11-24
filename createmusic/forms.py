@@ -24,6 +24,7 @@ class CreateMusicForm(forms.ModelForm):
     def save(self, commit=True):
         self.instance.owner = self.owner
         self.instance.music_option = 1
+        self.instance.update_status = 0
         return super(CreateMusicForm, self).save(commit=commit)
 
 
@@ -46,4 +47,5 @@ class CreateSubMusicForm(forms.ModelForm):
         self.instance.contributor = self.contributor
         self.instance.music_id = self.music
         self.instance.status = 1
+        self.instance.update_status = 0
         return super(CreateSubMusicForm, self).save(commit=commit)
