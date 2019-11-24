@@ -123,18 +123,14 @@
                     $("#ownermusic").attr("src", working_music['seed_file']);
 
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
-                        //기존 방식으로 폼으로 묶어버렸는데 크롬이 시벌빡치게 자동완성해버리는 코드
-                        {#var content = "<form method=\"post\" id=\"music_file_upload_form\" action=\"{% url 'create_music:music_update' working_music_id %}\" enctype=\"multipart/form-data\"><td>" + working_music['owner'].username +"</td>" + "<td><audio id=\"submusic" + i + " \"controls >" + "<source id=\"submusic"+ i + "\" src=\"" + working_music["sub_musics"][i].music_file + "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" ></td><td></td>";#}
 
-                        //폼 안묶은 코드
                         var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" + "<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n" +
                             "<td><button class=\"update-btn btn btn-lg btn-default\"  data-pk = \" "+ working_music['sub_musics'][i].id +"\">update</button>\n" +
-                            "<button class = \"delete-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button></td></tr>";
+                            "<button class = \"delete-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button>\n" +
+                            "<button class = \"piano-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">convert piano</button>\n" +
+                            "<button class = \"drum-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">convert drum</button></td></tr>";
                         document.getElementById("musics").innerHTML += content;
 
-
-                        //폼으로는 묶이는데 먼가 부족스트련
-                        {#$("#tr"+i).wrap('<form method="post" id="music_file_upload_form" action="{% url 'create_music:music_update' working_music_id %}" enctype="multipart/form-data"></form>');#}
                     }
                 },
                 error: function (error) {
@@ -417,7 +413,6 @@
                                 method: 'post',
                                 data: {
                                     data: data_pk,
-                                    {#csrfmiddlewaretoken: {% csrf_token %}#}
                                 },
                                 success(data){
                                     alert(data['message']);
@@ -428,7 +423,6 @@
 
                     $(function () {
                         $('body').on('click', '.delete-btn', function () {
-                            alert('z');
                             var data_pk = $(this).attr('data-pk');
                             $.ajax({
                                 headers: {'X-CSRFToken' : token},
@@ -442,6 +436,40 @@
                                 }
                             })
                         });
+                    });
+
+                    $(function() {
+                        $('body').on('click', '.piano-btn', function () {
+                            var data_pk = $(this).attr('data-pk');
+                            $.ajax({
+                                headers: {'X-CSRFToken': token},
+                                url: '{% url 'create_music:voice_to_piano' working_music_id %}',
+                                method: 'post',
+                                data: {
+                                    data: data_pk
+                                },
+                                success: function (data) {
+                                    console.log(data['message'])
+                                }
+                            })
+                        })
+                    });
+
+                    $(function () {
+                        $('body').on('click', '.drum-btn', function(){
+                            var data_pk = $(this).attr('data-pk');
+                            $.ajax({
+                                headers: {'X-CSRFToken': token},
+                                url: '{% url 'create_music:voice_to_drum' working_music_id %}',
+                                method: 'post',
+                                data: {
+                                    data: data_pk,
+                                },
+                                success: function (data) {
+                                    console.log(data['message'])
+                                }
+                            })
+                        })
                     });
 
                 </script>

@@ -1,14 +1,18 @@
 import re
 import os
 from pydub import AudioSegment
+import StackOfMusic.settings
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency')
+PIANO_RAW_PATH = os.path.join(PIANO_PATH, 'piano-raw')
+
 
 def edit_source(instrument, note, length):
     filename = "{}.wav".format(note)
-    print(filename)
-    path = "/home/junseok/jslee/capstone1/reconstruct_piano/detect_frequency/piano-raw"
 
     music_elem_size = 400 * length
-    fullpath = os.path.join(path, filename)
+    fullpath = os.path.join(PIANO_RAW_PATH, filename)
     # Open file
     song = AudioSegment.from_wav(fullpath)
 
