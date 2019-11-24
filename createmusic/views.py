@@ -10,6 +10,8 @@ from rest_framework import mixins, generics
 from music.models import Music, SubMusic
 from .forms import CreateMusicForm, CreateSubMusicForm
 from .serializer import WorkingMusicRetrieveSerializer
+from reconstruct_piano.detect_frequency.edit_music import s3_file_download
+from reconstruct_piano.detect_frequency.detect_freq import detect_freq
 
 login_url = reverse_lazy('accounts:accounts_login')
 
@@ -53,26 +55,18 @@ class WorkingMusicRetrieveView(mixins.RetrieveModelMixin, generics.GenericAPIVie
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
-    def setup(self, request, *args, **kwargs):
-        super(WorkingMusicRetrieveView, self).setup(request, *args, **kwargs)
-        self.woking_music_id = self.kwargs.get('working_music_id')
-
 
 class WorkingMusicRetrieveTemplateView(TemplateView):
     template_name = 'createmusic/working_music_detail.html'
     pk_url_kwarg = 'working_music_id'
 
     def get(self, request, *args, **kwargs):
-        # working_music_id = self.kwargs.get(self.pk_url_kwarg)
-        # if request.user == Music.objects.get(id=working_music_id).owner:
-        #     pass
         return super(WorkingMusicRetrieveTemplateView, self).get(request, *args, *kwargs)
 
     def get_context_data(self, **kwargs):
         working_music_id = self.kwargs.get(self.pk_url_kwarg)
         context = super(WorkingMusicRetrieveTemplateView, self).get_context_data(**kwargs)
         context['working_music_id'] = working_music_id
-        # context['music_option'] = Music.m
         return context
 
     def post(self, request, *args, **kwargs):
@@ -136,6 +130,9 @@ class MusicMergeView(View):
     def post(self, request, *args, **kwargs):
         submusic_pk = request.POST.get('data')
         music_pk = self.kwargs.get(self.pk_url_kwarg)
+        if Music.objects.get(id=music_pk).owner == self.request.user:
+            message = '권한이 없습니다.'
+            return JsonResponse(status=403, data={'message': message})
 
         submusic = get_object_or_404(SubMusic, pk=submusic_pk)
         submusic.status = 0
@@ -144,7 +141,7 @@ class MusicMergeView(View):
         return JsonResponse(status=200, data={'message': message})
 
     def get(self, request, *args, **kwrags):
-        message = '잘못 된 접근입니다'
+        message = '잘못된 접근입니다'
         return JsonResponse(status=405, data={'message': message})
 
 
@@ -156,6 +153,10 @@ class SubMusicDeleteView(View):
         submusic_pk = request.POST.get('data')
         music_pk = self.kwargs.get(self.pk_url_kwargs)
 
+        if Music.objects.get(id=music_pk).owner == self.request.user:
+            message = '권한이 없습니다.'
+            return JsonResponse(status=403, data={'message': message})
+
         sub_music = get_object_or_404(SubMusic, pk=submusic_pk)
         sub_music.delete()
 
@@ -163,7 +164,7 @@ class SubMusicDeleteView(View):
         return JsonResponse(status=200, data={'message': message})
 
     def get(self, request, *args, **kwargs):
-        message = '잘못 된 접근입니다.'
+        message = '잘못된 접근입니다.'
         return JsonResponse(status=405, data={'message': message})
 
 
@@ -195,3 +196,42 @@ class MusicStatusChangeView(UpdateView):
         Music.objects.get(id=working_music_id).music_option = int(form.data['music_option'])
         self.object = form.save()
         return HttpResponseRedirect(reverse_lazy('create_music:working_music_list'))
+
+
+class VoiceToPianoView(View):
+
+    def post(self, request, *args, **kwargs):
+        pk = request.POST.get('data')
+        if SubMusic.objects.get(id=pk).contributor == request.user:
+            s3_file_download(pk)
+            detect_freq(pk)
+            message = '변환중 입니다.'
+            return JsonResponse(status=200, data={'message': message})
+        message = '권한이 없습니다.'
+        return JsonResponse(status=405, data={'message': message})
+
+    def get(self, request, *args, **kwargs):
+        message = "잘못된 접근입니다."
+        return JsonResponse(status=405, data={'message': message})
+
+
+class VoiceToDrumView(View):
+
+    def post(self, request, *args, **kwargs):
+        pk = request.POST.get('data')
+        if SubMusic.objects.get(id=pk).contributor == request.user:
+            s3_file_download.delay(pk)
+            message = '변환중 입니다.'
+            return JsonResponse(status=200, data={'message': message})
+        message = '권한이 없습니다.'
+        return JsonResponse(status=405, data={'message': message})
+
+    def get(self, request, *args, **kwargs):
+        message = "잘못된 접근입니다."
+        return JsonResponse(status=405, data={'message': message})
+
+
+class MusicConvertCheckView(View):
+
+    def get(self, request, *args, **kwargs):
+        pass

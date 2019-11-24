@@ -79,17 +79,20 @@
             <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
                 <p style=" color: #f2f2f2; background: #ff4a4a; font-size: 20px; line-height: 20px; font-weight: 700; margin: 0 5px 24px; float: left; padding: 10px; margin: 0 5px 24px; font-family: 'Libre Baskerville', serif;">HOT Musics</p>
                 <br><br><br>
+
                 {% for hot_music in hot_music_list %}
                     <button class="my-transparent-button" onclick="location.href='{% url 'completed_music_detail' hot_music.id %}'" style="float: left">
                         <img class="card-img-top" id="{{ hot_music.title }}" src="{{ hot_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
                         <a href="{% url 'completed_music_detail' hot_music.id %}">
                             <div class="card-body">
                                 <h6 class="card-title" style="color: white">{{ hot_music.title }}</h6>
+
                             </div>
                         </a>
                     </button>
                 {% endfor %}
 
+            </div>
         </div>
 
     </section>

@@ -32,8 +32,8 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-      - "15673:15672"
-      - "5673:5672"
+      - "15672:15672"
+      - "5672:5672"
     volumes:
       - /home/chaemoon/docker/rabbitmq_data:/var/lib/rabbitmq
     environment:
@@ -57,7 +57,7 @@ services:
     command: tail -f /dev/null
     container_name: worker
     volumes:
-      - /home/chaemoon/docker/db_data/conf.d/silver_bullet:/etc/mysql/conf.d/silver_bullet
+      - /home/chaemoon/docker/db_data/conf.d:/etc/mysql/conf.d
     links:
       - db:db.docker
       - redis:redis.docker

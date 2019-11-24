@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import HomeView, CompletedMusicRetrieveView, CompletedMusicDetailTemplateView, LikeMusicAPIView, LikeMusicUpdateAPI
+from .views import HomeView, CompletedMusicRetrieveView, CompletedMusicDetailTemplateView, LikeMusicAPIView, \
+    LikeMusicUpdateAPI
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -29,7 +30,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('create/', include('createmusic.urls', namespace='create_music')),
     path('instrument/search/', include('instrument.urls', namespace='instrument_search')),
-    # path('', include('example.urls', namespace='example')),
     path('s3direct/', include('s3direct.urls')),
 ]
 

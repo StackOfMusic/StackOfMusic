@@ -4,6 +4,7 @@ from .views import CreateMusicView, WorkingMusicListView, WorkingMusicDeleteView
     WorkingMusicRetrieveTemplateView, MusicMergeView, SubMusicCreateView, MusicStatusChangeView, SubMusicDeleteView, \
     VoiceToDrumView, VoiceToPianoView, LoopStationView
 
+
 app_name = 'create_music'
 
 
@@ -19,4 +20,6 @@ urlpatterns = [
     path('list/<int:working_music_id>/MusicUpdate', MusicMergeView.as_view(), name='music_update'),
     path('list/<int:working_music_id>/SubMusicDelete', SubMusicDeleteView.as_view(), name='submusic_delete'),
     path('list/<int:working_music_id>/MusicStatusUpdate', MusicStatusChangeView.as_view(), name='music_status_change'),
+    path('list/<int:working_music_id>/VoiceToPiano', VoiceToPianoView.as_view(), name='voice_to_piano'),
+    path('list/<int:working_music_id>/VoiceToDrum', VoiceToDrumView.as_view(), name='voice_to_drum'),
 ]
