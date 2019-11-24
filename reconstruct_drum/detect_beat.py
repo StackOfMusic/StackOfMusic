@@ -11,7 +11,7 @@ def divide_sound(fullpath, hit_point):
     song = AudioSegment.from_wav(fullpath)
 
     result_index = 0
-    segment_len = 400
+    segment_len = 200
     song_len = len(song)
 
     for point in hit_point:
@@ -21,21 +21,25 @@ def divide_sound(fullpath, hit_point):
         else:
             music_elements = song[elements:song_len]
 
-        result_name = '/home/junseok/jslee/beat_trans_machine_learning/librosa_test/music_seg/{}.wav'.format(result_index)
+        result_name = '/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/music_seg/{}.wav'.format(result_index)
         result_index = result_index + 1
         music_elements.export(result_name, format='wav')
 
     return song_len
 
 def detect_freq():
-    chunk = 16384
+    chunk = 8192
     drum_list = []
     count = 0;
 
-    PATH = "/home/junseok/jslee/beat_trans_machine_learning/librosa_test/music_seg"
+    PATH = "/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/music_seg"
 
     for path, dirs, files in os.walk(PATH):
         sorted_files = sorted(files, key=lambda x: int(x.split('.')[0]))
+        bass_next = 0
+        snare_next = 1
+        hi_hat_next = 2
+        sound_buff = 0
         for filename in sorted_files:
             fullpath = os.path.join(path, filename)
             freq_list = []
@@ -94,9 +98,9 @@ def detect_freq():
             hi_hat_cnt = 0
 
             for freq in freq_list:
-                if freq > 40 and freq < 130:
+                if freq > 40 and freq < 120:
                     snare_cnt += 1
-                elif freq > 130 and freq < 200:
+                elif freq > 120 and freq < 200:
                     bass_cnt += 1
                 elif freq > 4000 and freq < 7000:
                     hi_hat_cnt += 1
@@ -104,22 +108,58 @@ def detect_freq():
                     pass
             
             max_val = max([bass_cnt, snare_cnt, hi_hat_cnt])
-            if bass_cnt == max_val:
-                drum_list.append(0)
-            elif snare_cnt == max_val:
-                drum_list.append(1)
+            if max_val != 0:
+                if bass_cnt == max_val:
+                    drum_list.append(0)
+                    if sound_buff == 0:
+                        bass_next = 0
+                    elif sound_buff == 1:
+                        snare_next = 0
+                    elif sound_buff == 2:
+                        hi_hat_next = 0
+                    else:
+                        pass
+                    sound_buff = 0
+                elif snare_cnt == max_val:
+                    drum_list.append(1)
+                    if sound_buff == 0:
+                        bass_next = 1
+                    elif sound_buff == 1:
+                        snare_next = 1
+                    elif sound_buff == 2:
+                        hi_hat_next = 1
+                    else:
+                        pass
+                    sound_buff = 1
+                else:
+                    drum_list.append(2)
+                    if sound_buff == 0:
+                        bass_next = 2
+                    elif sound_buff == 1:
+                        snare_next = 2
+                    elif sound_buff == 2:
+                        hi_hat_next = 2
+                    else:
+                        pass
+                    sound_buff = 2
             else:
-                drum_list.append(2)
-
+                if sound_buff == 0:
+                    drum_list.append(bass_next)
+                elif sound_buff == 1:
+                    drum_list.append(snare_next)
+                elif sound_buff == 2:
+                    drum_list.append(hi_hat_next)
+                else:
+                    pass
             os.remove(fullpath)
 
     return drum_list
 
 def reconstruct_beat(sound_list, hit_point, song_len):
-    segment_len = 400
+    segment_len = 200
     half_len = segment_len / 2
     sample_sound = []
-    path = "/home/junseok/jslee/beat_trans_machine_learning/librosa_test/drum_sample"
+    path = "/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/drum_sample"
     fullpath = os.path.join(path, 'bass_sample.wav')
     sample = AudioSegment.from_wav(fullpath)
     sample_sound.append(sample[2000 - (segment_len/2):2000 + (segment_len/2)])
@@ -135,6 +175,7 @@ def reconstruct_beat(sound_list, hit_point, song_len):
     if hit_point[0] - half_len >= 0:
         start_gap = hit_point[0] - half_len
         new_sound = AudioSegment.silent(duration = start_gap)
+        new_sound = new_sound + sample_sound[sound_list[0]]
     else:
         start_gap = 0
         new_sound = sample_sound[sound_list[0]]
@@ -148,7 +189,7 @@ def reconstruct_beat(sound_list, hit_point, song_len):
     return new_sound
    
 def detect_beat():
-    path = "/home/junseok/jslee/beat_trans_machine_learning/librosa_test/data"
+    path = "/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/data"
     filename = "drum6.wav"
 
     fullpath = os.path.join(path, filename)
