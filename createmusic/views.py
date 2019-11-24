@@ -2,7 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404, HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, ListView, DeleteView, TemplateView, UpdateView, View, RedirectView
+from django.views.generic import CreateView, ListView, DeleteView, TemplateView, UpdateView, View, RedirectView, \
+    DetailView
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins, generics
 
@@ -110,6 +111,22 @@ class SubMusicCreateView(CreateView):
 
     def get(self, request, *args, **kwargs):
         return super(SubMusicCreateView, self).get(request, *args, **kwargs)
+
+
+class LoopStationView(DetailView):
+    template_name = 'createmusic/loopstation.html'
+    pk_url_kwarg = 'working_music_id'
+
+    def get_queryset(self):
+        working_music_id = self.kwargs.get(self.pk_url_kwarg)
+        queryset = Music.objects.filter(pk=working_music_id)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        working_music_id = self.kwargs.get(self.pk_url_kwarg)
+        context = super(LoopStationView, self).get_context_data(**kwargs)
+        context['sub_musics'] = Music.objects.get(pk=working_music_id).sub_musics.all()
+        return context
 
 
 class MusicMergeView(View):
