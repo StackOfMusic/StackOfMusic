@@ -13,7 +13,6 @@ class Genre(models.Model):
 class Music(models.Model):
     genre = models.ForeignKey('music.Genre', on_delete=models.CASCADE, related_name='music')
     owner = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='music_owner')
-    # contributor = models.ManyToManyField('accounts.User', related_name='music_contributor')
     title = models.CharField(max_length=30)
     album_jacket = models.ImageField(blank=True, upload_to='img')
     seed_file = models.FileField(upload_to='audiofile')
@@ -27,6 +26,13 @@ class Music(models.Model):
         (MUSIC_NOT_COMPLETED, '미완성')
     )
     music_option = models.SmallIntegerField(choices=MUSIC_OPTION)
+    BEFORE_UPDATE, UPDATING, AFTER_UPDATE = 0, 1, 2
+    UPDATE_STATUS = (
+        (BEFORE_UPDATE, '업데이트 전'),
+        (UPDATING, '업데이트 중'),
+        (AFTER_UPDATE, '업데이트 후'),
+    )
+    update_status = models.SmallIntegerField(choices=UPDATE_STATUS)
 
     def __str__(self):
         return self.title
@@ -57,7 +63,13 @@ class SubMusic(models.Model):
         (PENDING, '대기'),
     )
     status = models.SmallIntegerField(choices=STATUS)
-
+    BEFORE_UPDATE, UPDATING, AFTER_UPDATE = 0, 1, 2
+    UPDATE_STATUS = (
+        (BEFORE_UPDATE, '업데이트 전'),
+        (UPDATING, '업데이트 중'),
+        (AFTER_UPDATE, '업데이트 후'),
+    )
+    update_status = models.SmallIntegerField(choices=UPDATE_STATUS)
 
 # Music.objects.prefetch_related('sub_musics').filter(instrument_id__in=[], sub_musics__instrument_id__in=[])
 # class CompletedMusic(models.Model):
