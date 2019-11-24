@@ -37,10 +37,10 @@
 
 </head>
 <body>
+{#background-image: url({% static 'img/mu.jpg' %})#}
+<section style="background-color: black; background-position: center; background-size: 1700px" >
 
-<section style="background-image: url({% static 'img/mu.jpg' %}); background-position: center; background-size: 1700px" >
-
-    <nav class="navbar navbar-expand navbar-primary navbar-dark">
+    <nav class="navbar navbar-expand navbar-primary navbar-dark" style="background-color: black">
         <ul class="navbar-nav">
             {% if user.is_authenticated %}
 
@@ -66,24 +66,24 @@
                     <span class="site-heading-lower  mb-3" style="color: white; border-color: #fbfbff;text-shadow: -10px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><b><b>Stack Of Music</b></b></span>
                 </h1>
                 <section>
-                    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background-color: white" id="mainNav">
+                    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background: linear-gradient(to right, red, purple);height: 50px" id="mainNav">
                         <div class="container">
                             <div class="collapse navbar-collapse" id="navbarResponsive">
                                 <ul class="navbar-nav mx-auto">
                                     <li class="nav-item active px-lg-4">
-                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href={% url 'home' %}><b>Home</b>
+                                        <a class="nav-link text-uppercase text-expanded" style="color: white;font-size: 20px;" href={% url 'home' %}><b>Home</b>
                                             <span class="sr-only">(current)</span>
                                         </a>
                                     </li>
                                     <li class="nav-item px-lg-4">
-                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;"
+                                        <a class="nav-link text-uppercase text-expanded" style="color: white;font-size: 20px;"
                                            href="{% url 'create_music:working_music_list' %}"><b>Music</b></a>
                                     </li>
                                     <li class="nav-item px-lg-4">
-                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="{% url 'instrument_search:instrument_search' %}"><b>Instrument</b></a>
+                                        <a class="nav-link text-uppercase text-expanded" style="color: white;font-size: 20px;" href="{% url 'instrument_search:instrument_search' %}"><b>Instrument</b></a>
                                     </li>
                                     <li class="nav-item px-lg-4">
-                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="{% url 'accounts:account_list' user.id %}"><b>Mypage</b></a>
+                                        <a class="nav-link text-uppercase text-expanded" style="color: white;font-size: 20px;" href="{% url 'accounts:account_list' user.id %}"><b>Mypage</b></a>
                                     </li>
                                 </ul>
                             </div>
@@ -116,24 +116,24 @@
                     <span class="site-heading-lower  mb-3" style="color: white; border-color: #fbfbff;text-shadow: -10px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><b><b>Stack Of Music</b></b></span>
                 </h1>
                 <section>
-                    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background-color: white" id="mainNav">
+                    <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" style="background: linear-gradient(to right, red, purple);height: 50px" id="mainNav">
                         <div class="container">
                             <div class="collapse navbar-collapse" id="navbarResponsive">
                                 <ul class="navbar-nav mx-auto">
                                     <li class="nav-item active px-lg-4">
-                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href={% url 'home' %}><b>Home</b>
+                                        <a class="nav-link text-uppercase text-expanded" style="color: white;font-size: 20px;" href={% url 'home' %}><b>Home</b>
                                             <span class="sr-only">(current)</span>
                                         </a>
                                     </li>
                                     <li class="nav-item px-lg-4">
-                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;"
+                                        <a class="nav-link text-uppercase text-expanded" style="color: white;font-size: 20px;"
                                            href="{% url 'create_music:working_music_list' %}"><b>Music</b></a>
                                     </li>
                                     <li class="nav-item px-lg-4">
-                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="{% url 'instrument_search:instrument_search' %}"><b>Instrument</b></a>
+                                        <a class="nav-link text-uppercase text-expanded" style="color: white;font-size: 20px;" href="{% url 'instrument_search:instrument_search' %}"><b>Instrument</b></a>
                                     </li>
                                     <li class="nav-item px-lg-4">
-                                        <a class="nav-link text-uppercase text-expanded" style="color: #dc3545;font-size: 20px;" href="{% url 'accounts:accounts_login'%}"><b>Mypage</b></a>
+                                        <a class="nav-link text-uppercase text-expanded" style="color: white;font-size: 20px;" href="{% url 'accounts:accounts_login'%}"><b>Mypage</b></a>
                                     </li>
                                 </ul>
                             </div>

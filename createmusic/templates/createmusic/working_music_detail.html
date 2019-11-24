@@ -85,8 +85,9 @@
     {% endblock %}
 </head>
 
-<body>
 {% block content %}
+    <body style="background-color: black;">
+
     <script type="text/javascript">
 
         var working_music = {};
@@ -98,16 +99,16 @@
                     working_music = data;
                     console.log(working_music);
                     var titleContainer = document.getElementById("mytitle");
-                    var title = document.getElementById("mytitle2");
+                    //var title = document.getElementById("mytitle2");
                     var ownerContainer = document.getElementById("myowner");
                     var dateContainer = document.getElementById("mydate");
                     var genreContainer = document.getElementById("mygenre");
-
+                    var instrumentContainer = document.getElementById("ownerinstrument");
                     var ownername = document.getElementById("ownername");
 
 
-
-                    title.append(working_music['title']);
+                    instrumentContainer.append(working_music['instrument'].name);
+                    //title.append(working_music['title']);
                     dateContainer.append(working_music['create_date']);
                     titleContainer.append(working_music['title']);
                     ownerContainer.append(working_music['owner'].username);
@@ -117,14 +118,16 @@
                     $('#music_image').attr("src", working_music['album_jacket']);
                     $('#music').attr("src", working_music['seed_file']);
 
-                    $("#music2").attr("src", working_music['seed_file']);
+                    //$("#music2").attr("src", working_music['seed_file']);
 
                     ownername.append(working_music['owner'].username);
                     $("#ownermusic").attr("src", working_music['seed_file']);
 
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
 
-                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" + "<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n" +
+                        //폼 안묶은 코드
+                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" +"<td>"+working_music["sub_musics"][i].instrument.name+"</td>"+"<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n" +
+
                             "<td><button class=\"update-btn btn btn-lg btn-default\"  data-pk = \" "+ working_music['sub_musics'][i].id +"\">update</button>\n" +
                             "<button class = \"delete-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button>\n" +
                             "<button class = \"piano-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">convert piano</button>\n" +
@@ -142,9 +145,11 @@
         function play() {
             var origin =document.getElementById("ownercheck");
             var submusics = new Array(20);
+
+            var sink100 = $('#sink100').val();
+
             for (var i = 0; i < working_music["sub_musics"].length; i++) {
                 submusics[i] = document.getElementById("subcheck"+i);
-                alert(submusics[i]);
                 if($(submusics[i]).prop("checked")==true){
                     var first = $("#submusic"+i).attr('src');
                     var audio = new Audio(first);
@@ -155,32 +160,31 @@
                         audio.currentTime=0;
                         audio.play(); }, timeout*1000);
                 }
-
             }
-            var secondmusic = document.getElementById("check2");
             if($(origin).prop("checked")==true){
                 var ori = $('#ownermusic').attr('src');
                 var audio = new Audio(ori);
                 var x = document.getElementById("ownermusic").duration;
-
                 var timeout = x - (x%5);
-                alert(timeout);
                 audio.play();
                 setInterval(function(){
                     audio.currentTime=0;
                     audio.play(); }, timeout*1000);
-
             }
+            var secondmusic = document.getElementById("check2");
+
             if($(secondmusic).prop("checked")==true) {
                 var second = $("#music3").attr('src');
                 var audio = new Audio(second);
                 var x = document.getElementById("music3").duration;
-
                 var timeout = x - (x%5);
-                audio.play();
-                setInterval(function(){
-                    audio.currentTime=0;
-                    audio.play(); }, timeout*1000);
+
+                setTimeout(function(){
+                    audio.play();
+                    setInterval(function(){
+                        audio.currentTime=0;
+                        audio.play(); }, timeout*1000);
+                }, sink100*1000);
             }
 
         }
@@ -295,13 +299,16 @@
     <form method="post" id="music_file_upload_form" action="{% url 'create_music:music_update' working_music_id %}" enctype="multipart/form-data">
 
     </form>
-
     <img id="working_music_img" src="" alt="">
-    <div class="container">
+
+    <div class="container" style="background-color: whitesmoke;border-radius: 20px;margin-bottom: 30px;">
         <div class="row well">
             <div class="col-md-12">
                 <div class="panel">
+                    <br>
                     <img id="music_image" src="" alt="" style="height:250px;width: 250px;float: left">
+                    <button class="btn btn-lg black" onclick="location.href='{% url 'create_music:loopstaion'  working_music_id %}'" style="width: 200px;font-size:20px;color:whitesmoke;float: right;background: linear-gradient(to right, purple, red);">LoopStation!!</button>
+
                     <div class="row user-left-part">
                         <div class="col-md-9 col-sm-9 col-xs-12 pull-right profile-right-section" style="height: 300px;">
                             <div class="row profile-right-section-row">
@@ -375,6 +382,7 @@
 
                         <tr>
                             <th>Owner</th>
+                            <th>Instrument</th>
                             <th>Sub_Musics</th>
                             <th>Select</th>
                             <th>Action</th>
@@ -382,8 +390,11 @@
                         </thead>
                         <tbody id="musics">
                         <tr>
-                            <td style="text-align: center;valign:middle;">
-                                <div id="ownername" style="float: left;"></div>
+                            <td>
+                                <div id="ownername"></div>
+                            </td>
+                            <td>
+                                <div id="ownerinstrument" style=""></div>
                             </td>
                             <td>
                                 <audio id="ownermusic" controls>
@@ -475,6 +486,7 @@
                 </script>
                 <div>
                     <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Try Your Music with SUB Musics</div>
+                    <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;float: right">Play</button>
 
                     <p>
                         <audio id="music3" controls style="float: left;margin-left: 250px;">
@@ -482,33 +494,32 @@
                         </audio>
                     </p>&emsp;
                     <input id="audioFileChooser" type="file" style="width: 250px;" onchange="readFile(this.files);">
-                    <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle3">SUB</button>
-                    <input type="checkbox" id="check2" class="hidden" style="display: none;float: right;" >
+                    <input type="checkbox" id="check2" class="hidden" style="float: left;" >
+                    <input type="text" id="sink100" style="width: 100px;float: left" name="test_name" value="">
+
                     <br><br><br>
-                    <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Play a part of a Music</div>
-
-                    <div style="margin-left: 300px;float: left;margin-right: 30px;">
-                        <input type="text" id="start" name="test_name" value="">
-                        <input type="text" id="end" name="test_name" value="">
-                        <button type="button" class="btn-dark" id="cutcut" onclick="cutcut()"></button>
-                    </div>
-                    <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;float: left">Play</button>
+                    {#                    <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Play a part of a Music</div>#}
+                    {##}
+                    {#                    <div style="margin-left: 300px;float: left;margin-right: 30px;">#}
+                    {#                        <input type="text" id="start" name="test_name" value="">#}
+                    {#                        <input type="text" id="end" name="test_name" value="">#}
+                    {#                        <button type="button" class="btn-dark" id="cutcut" onclick="cutcut()"></button>#}
+                    {#                    </div>#}
                 </div>
-                <br><br>
                 <div style="float: left; width: 100%;margin-left: 250px;">
-
-
+                    <br>
                     <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
                         {% csrf_token %}
-{#                        <th><label for="id_music_option">Music option:</label></th><td>#}
-{#                        <select name="music_option" required id="id_music_option">#}
-{#                            <option value="" selected>select</option>#}
-{#                            <option value="0">완성</option>#}
-{#                            <option value="1">미완성</option>#}
-{#                        </select></td>#}
-                        <button class="btn btn-lg btn-default" type="submit" style="width: 700px;font-size:70px;margin-left: -60px;">Complete Music</button>
+                        {#                        <th><label for="id_music_option">Music option:</label></th><td>#}
+                        {#                        <select name="music_option" required id="id_music_option">#}
+                        {#                            <option value="" selected>select</option>#}
+                        {#                            <option value="0">완성</option>#}
+                        {#                            <option value="1">미완성</option>#}
+                        {#                        </select></td>#}
+                        <button class="btn btn-lg btn-default" type="submit" style="width: 500px;font-size:50px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>
 
                     </form>
+                    <br><br>
                 </div>
             </div>
         </div>
@@ -536,47 +547,49 @@
             });
         }
     </script>
+    {##}
+    {#    <div class="audio-controls">#}
+    {#        <button type="button" id="sound" onclick="gogo()" class="static">#}
+    {#            <img src="https://image.flaticon.com/icons/png/128/117/117999.png" class="play">#}
+    {#            <img src="https://image.flaticon.com/icons/png/128/52/52285.png" class="pause hide">#}
+    {#        </button>#}
+    {#    </div>#}
+    {#    <div class="audio-progress">#}
+    {#        <div id="progress"></div>#}
+    {#        <div class="time">#}
+    {#            <span id="timer">0:00 </span>#}
+    {#            <span id="duration">0:00</span>#}
+    {#        </div>#}
+    {#    </div>#}
+    {##}
+    {#    <script>#}
+    {##}
+    {#        $(function () {#}
+    {#            $('.btn-radio').siblings('.img-radio').css('opacity', '0.5');#}
+    {#            $('.btn-radio').click(function(e) {#}
+    {#                if ($(this).siblings('input').prop("checked")==true) {#}
+    {#                    $(this).removeClass('active')#}
+    {#                        .siblings('input').prop('checked', false)#}
+    {#                        .siblings('.img-radio').css('opacity', '0.5');#}
+    {#                }#}
+    {#                else if ($(this).siblings('input').prop("checked")==false) {#}
+    {#                    $(this).addClass('active')#}
+    {#                        .siblings('input').prop('checked', true)#}
+    {#                        .siblings('.img-radio').css('opacity', '1');#}
+    {#                }#}
+    {#            });#}
+    {#        });#}
+    {#    </script>#}
+    {#    <div class="col-xs-4" style="float: left">#}
+    {#        <img src="" style="width: 200px;margin-left: 100px;" id="image" class="img-responsive img-radio">#}
+    {#        <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle2"></button>#}
+    {#        <input type="checkbox" id="check" class="hidden" style="display: none" >#}
+    {#        <audio id="music2" controls style="margin-top:20px;margin-left: 10px;">#}
+    {#            <source id="audio-source" src="" type="audio/mp3"/>#}
+    {#        </audio>#}
+    {#    </div>#}
 
-    <div class="audio-controls">
-        <button type="button" id="sound" onclick="gogo()" class="static">
-            <img src="https://image.flaticon.com/icons/png/128/117/117999.png" class="play">
-            <img src="https://image.flaticon.com/icons/png/128/52/52285.png" class="pause hide">
-        </button>
-    </div>
-    <div class="audio-progress">
-        <div id="progress"></div>
-        <div class="time">
-            <span id="timer">0:00 </span>
-            <span id="duration">0:00</span>
-        </div>
-    </div>
-
-    <script>
-
-        $(function () {
-            $('.btn-radio').siblings('.img-radio').css('opacity', '0.5');
-            $('.btn-radio').click(function(e) {
-                if ($(this).siblings('input').prop("checked")==true) {
-                    $(this).removeClass('active')
-                        .siblings('input').prop('checked', false)
-                        .siblings('.img-radio').css('opacity', '0.5');
-                }
-                else if ($(this).siblings('input').prop("checked")==false) {
-                    $(this).addClass('active')
-                        .siblings('input').prop('checked', true)
-                        .siblings('.img-radio').css('opacity', '1');
-                }
-            });
-        });
-    </script>
-    <div class="col-xs-4" style="float: left">
-        <img src="" style="width: 200px;margin-left: 100px;" id="image" class="img-responsive img-radio">
-        <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle2"></button>
-        <input type="checkbox" id="check" class="hidden" style="display: none" >
-        <audio id="music2" controls style="margin-top:20px;margin-left: 10px;">
-            <source id="audio-source" src="" type="audio/mp3"/>
-        </audio>
-    </div>
 {% endblock %}
+
 </body>
 </html>
