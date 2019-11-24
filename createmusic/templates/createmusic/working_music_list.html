@@ -22,7 +22,7 @@
                 width: 20%;
                 overflow: hidden;
                 float: left;
-                background-color: white;
+                background-color: black;
                 box-sizing: border-box;
             }
             section.right {
@@ -103,26 +103,33 @@
             });
         </script>
 
-        <section style="background-color: white;height: 300px;">
-            <center>
-                <button class="btn btn-lg btn-default" onclick="location.href='{% url 'create_music:create_music' %}'" style="width: 1000px;font-size:70px;">Create Music</button>
-            </center>
-            <br><br><br>
+        <section style="background-color: black;height: 600px;">
+            <br><br>
+
             <div class="container" style="margin-left: 350px;">
-                <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
+                <div class="card" style="width:200px;background-color: black;border: none;text-align: left;display: inline">
                     {% for working_music in working_music_list %}
                         <button class="my-transparent-button" onclick="location.href='{% url 'create_music:working_music_detail' working_music.id %}'" style="float: left">
                             <img class="card-img-top" id="{{ working_music.title }}" src="{{ working_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
                             <a href="{% url 'completed_music_detail' working_music.id %}">
                                 <div class="card-body">
-                                    <h6 class="card-title" style="color: black">{{ working_music.title }}</h6>
+                                    <h6 class="card-title" style="color: white">{{ working_music.title }}</h6>
                                 </div>
                             </a>
                         </button>
                     {% endfor %}
                 </div>
             </div>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
 
+            <center>
+                <button class="btn btn-lg btn-default" onclick="location.href='{% url 'create_music:create_music' %}'" style="width: 1000px;font-size:70px;background-color: #6c757d;margin-top: 30px;color: whitesmoke">Create Music</button>
+            </center>
         </section>
         {% comment %}
                 {% for working_music in working_music_list %}

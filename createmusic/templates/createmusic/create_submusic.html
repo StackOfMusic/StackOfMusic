@@ -173,10 +173,12 @@
 
     </head>
 
-    <body>
+    <body style="background-color: #2e353d">
+    <br>
 
     <div class="card bg-light" style="height: 100%;display: inline;">
-        <article class="card-body mx-auto" style="max-width: 400px;background-color: whitesmoke">
+        <br><br>
+        <article class="card-body mx-auto" style="max-width: 400px;background-color: whitesmoke;border-radius: 20px;">
             <h4 class="card-title mt-3 text-center">Create SUB_Music</h4>
             <p class="text-center">Get started with your Talent!</p>
             <p class="divider-text">
@@ -193,6 +195,12 @@
                         {% endfor %}
                     </select>
                 </div> <!-- form-group// -->
+                <div class="form-group input-group">
+
+                    <label for="id_sink">Sink :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input type="text" name="sink" maxlength="30" required id="id_sink">
+                </div> <!-- form-group// -->
+
                 <div class="form-group input-group">
                     <label for="id_music_file">Music file:&emsp;&nbsp;&nbsp;</label>
                     <input type="text" id="fileName" class="file_input_textbox" style="float: left" readonly="readonly">
