@@ -64,12 +64,13 @@
 {% block content %}
 
     <!------ Include the above in your HEAD tag ---------->
-
+    <body style="background-color: black">
     <div class="container">
         <div class="row" style="width: 1500px;">
             <div id="custom-search-input">
+            <br>
                 <form method="get">
-                    <label for="id_search_word">Search Word:</label>
+                    <b><label for="id_search_word" style="color: whitesmoke">Search Word:</label></b>
                     <br><center>
                     <input type="text" name="search_word" maxlength="100" id="id_search_word" class="form-control input-lg" placeholder="Music Title" style="height: 50px;width:1200px;float: left"/>
                 </center>
@@ -77,29 +78,17 @@
                                 <button class="btn btn-info btn-lg" type="submit">
                                     <i class="fa fa-search"></i>
                                 </button>
-                            </span>
+                    </span>
+
                     <div class="container">
                         <div class="row" style="padding: 50px;">
-                            <div style="width: 200px;">
-                                <input type="checkbox" name="instruments" value="1" id="id_instruments_0" style="float: left">
-                                <label for="id_instruments_0" style="float: left;">꽹과리</label>
-                            </div>
-                            <div style="width: 200px;">
-                                <input type="checkbox" name="instruments" value="2" id="id_instruments_1" style="float: left">
-                                <label for="id_instruments_1" style="float: left">드럼</label>
-                            </div>
-                            <div style="width: 200px;">
-                                <input type="checkbox" name="instruments" value="3" id="id_instruments_2" style="float: left">
-                                <label for="id_instruments_2" style="float: left">피아노</label>
-                            </div>
-                            <div style="width: 200px;">
-                                <input type="checkbox" name="instruments" value="4" id="id_instruments_3" style="float: left">
-                                <label for="id_instruments_3" style="float: left">베이스</label>
-                            </div>
-                            <div style="width: 200px;">
-                                <input type="checkbox" name="instruments" value="5" id="id_instruments_4" style="float: left">
-                                <label for="id_instruments_4" style="float: left">일렉기타</label>
-                            </div>
+                            {% for instrument in form.instruments %}
+                                <div style="width: 200px;">
+                                    <input type="checkbox" name="instruments" value="{{ forloop.counter }}" id="{{ forloop.counter }}" style="float: left">
+                                    <label style="color: whitesmoke" for="{{ forloop.counter }}">{{ instrument }}</label>
+                                </div>
+                            {% endfor %}
+
                         </div>
                     </div>
                 </form>
@@ -113,8 +102,8 @@
             {% endfor %}
         </div>
         {% endcomment %}
-        <div class="container">
-            <table class="table table-striped custab">
+        <div class="container" >
+            <table class="table table-striped custab" style="background-color: whitesmoke;margin-left: 30px;border-radius: 5px;">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -138,25 +127,19 @@
 
             </table>
         </div>
+        <br>
+{#        <div>#}
+{#            {{ form.search_word }}#}
+{#        </div>#}
+{#        <br>#}
+{#        <div>#}
+{#            {% for instrument in form.instruments %}#}
+{#                <li>{{ instrument }}</li>#}
+{#            {% endfor %}#}
+{#        </div>#}
 
 
 
     </div>
-
-    {% comment %}
-    <div>
-        <form method="get">
-            {{ form.as_p }}
-            <button>검색</button>
-        </form>
-    </div>
-    <br>
-    <div id="result_list">
-        {% for music in music_list %}
-            <li><a href="{{ music.get_absolute_url }}">{{ music.title }}</a></li>
-        {% endfor %}
-    </div>
-    {% endcomment %}
-
-
+    </body>
 {% endblock %}
