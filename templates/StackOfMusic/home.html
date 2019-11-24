@@ -35,7 +35,7 @@
             width: 20%;
             overflow: hidden;
             float: left;
-            background-color: white;
+            background-color: black;
             box-sizing: border-box;
         }
         section.right {
@@ -56,29 +56,47 @@
 
 <body>
 {% block content %}
-    <section style="background-color: white;height: 300px;">
-
+    <section style="    background-color: black;height: 800px;">
+<br>
         <div class="container" style="margin-left: 350px;">
-            <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
+            <div class="card" style="width:200px;background-color: white;border: none;display: inline">
+                <p style=" color: #f2f2f2; background: #ff4a4a; font-size: 20px; line-height: 20px; font-weight: 700; margin: 0 5px 24px; float: left; padding: 10px; margin: 0 5px 24px; font-family: 'Libre Baskerville', serif;">Today's Musics</p>
+                <br><br><br>
+
                 {% for completed_music in completed_music_list %}
-                    <button class="my-transparent-button" onclick="location.href='{% url 'completed_music_detail' completed_music.id %}'" style="float: left">
+                    <button class="my-transparent-button" onclick="location.href='{% url 'completed_music_detail' completed_music.id %}'" style="float: left;">
                         <img class="card-img-top" id="{{ completed_music.title }}" src="{{ completed_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
                         <a href="{% url 'completed_music_detail' completed_music.id %}">
                             <div class="card-body">
-                                <h6 class="card-title" style="color: black">{{ completed_music.title }}</h6>
+                                <h6 class="card-title" style="color: white">{{ completed_music.title }}</h6>
                             </div>
                         </a>
                     </button>
                 {% endfor %}
             </div>
+            <br><br><br><br>
+            <div style="height: 200px;"></div>
+            <div class="card" style="width:200px;background-color: white;border: none;text-align: left;display: inline">
+                <p style=" color: #f2f2f2; background: #ff4a4a; font-size: 20px; line-height: 20px; font-weight: 700; margin: 0 5px 24px; float: left; padding: 10px; margin: 0 5px 24px; font-family: 'Libre Baskerville', serif;">HOT Musics</p>
+                <br><br><br>
+                {% for hot_music in hot_music_list %}
+                    <button class="my-transparent-button" onclick="location.href='{% url 'completed_music_detail' hot_music.id %}'" style="float: left">
+                        <img class="card-img-top" id="{{ hot_music.title }}" src="{{ hot_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
+                        <a href="{% url 'completed_music_detail' hot_music.id %}">
+                            <div class="card-body">
+                                <h6 class="card-title" style="color: white">{{ hot_music.title }}</h6>
+                            </div>
+                        </a>
+                    </button>
+                {% endfor %}
 
         </div>
 
     </section>
 
-    <section style="background-color: white;height: 600px;">
+    <section style="background-color: black;height: 600px;">
 
-        <div id="demo" class="carousel slide" data-ride="carousel">
+        <div id="demo" class="carousel slide" data-ride="carousel" style="">
             <ol class="carousel-indicators">
                 <li data-target="#carousel-with-lb" data-slide-to="0" class="active secondary-color"></li>
                 <li data-target="#carousel-with-lb" data-slide-to="1" class="secondary-color"></li>
@@ -131,141 +149,7 @@
 
     </section>
 
-    <section style="background-color: white;">
-        <!--Carousel Wrapper-->
-        <div id="carousel-with-lb" class="carousel slide carousel-multi-item" data-ride="carousel">
 
-            <!--Controls-->
-            <div class="controls-top">
-                <a class="btn-floating btn-secondary" href="#carousel-with-lb" data-slide="prev"><i
-                        class="fas fa-chevron-left"></i></a>
-                <a class="btn-floating btn-secondary" href="#carousel-with-lb" data-slide="next"><i
-                        class="fas fa-chevron-right"></i></a>
-            </div>
-            <!--/.Controls-->
-
-            <!--Indicators-->
-            <ol class="carousel-indicators">
-                <li data-target="#carousel-with-lb" data-slide-to="0" class="active secondary-color"></li>
-                <li data-target="#carousel-with-lb" data-slide-to="1" class="secondary-color"></li>
-                <li data-target="#carousel-with-lb" data-slide-to="2" class="secondary-color"></li>
-            </ol>
-            <!--/.Indicators-->
-
-            <!--Slides and lightbox-->
-
-            <div class="carousel-inner mdb-lightbox" role="listbox">
-                <div id="mdb-lightbox-ui"></div>
-                <!--First slide-->
-                <div class=" carousel-item active text-center" style="margin-left: 150px">
-
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(2).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(2).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(4).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(6).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(6).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(10).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(10).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(12).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(12).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(14).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(14).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-
-                </div>
-                <!--/.First slide-->
-
-                <!--Second slide-->
-                <div class="carousel-item text-center" style="margin-left: 150px">
-
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(22).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(22).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(25).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(25).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(29).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(29).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(31).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(31).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(32).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(32).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-                    <figure class="col-md-4 d-md-inline-block" style="float: left; width:250px;height: 400px;">
-                        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(33).jpg"
-                           data-size="1600x1067">
-                            <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(33).jpg"
-                                 class="img-fluid">
-                        </a>
-                    </figure>
-
-                </div>
-                <!--/.Second slide-->
-            </div>
-        </div>
-        <!--/.Slides-->
-
-        </div>
-        <!--/.Carousel Wrapper-->
-    </section>
     {#{% include '../templates/StackOfMusic/footer.html' %}#}
 
 {% endblock %}
