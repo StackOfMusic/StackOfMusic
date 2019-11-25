@@ -4,8 +4,8 @@ from pydub import AudioSegment
 import StackOfMusic.settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency')
-PIANO_RAW_PATH = os.path.join(PIANO_PATH, 'piano-raw')
+PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency/')
+PIANO_RAW_PATH = os.path.join(PIANO_PATH, 'piano-raw/')
 
 
 def edit_source(instrument, note, length):
@@ -301,4 +301,5 @@ def recons_music(freq_data, instrument):
     for sound in sound_list:
         note = sound[0] * 100 + sound[1]
         reconstruct_music = reconstruct_music + edit_source(0, note, 1)
-    reconstruct_music.export('new_music.wav', format='wav')
+    reconstruct_music.export(PIANO_PATH + 'new_music.wav', format='wav')
+
