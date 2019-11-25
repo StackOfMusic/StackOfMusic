@@ -30,6 +30,8 @@ class CreateMusicForm(forms.ModelForm):
 
 class CreateSubMusicForm(forms.ModelForm):
 
+    sink = forms.IntegerField()
+
     class Meta:
         model = SubMusic
         fields = (
