@@ -1,7 +1,22 @@
 {% extends 'StackOfMusic/base.html' %}
 
 {% block content %}
-    {% for working_music in working_music_list%}
-        <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music }}</a></li>
-    {% endfor %}
+    <section style="background-color: black;height: 700px;">
+        <br><br>
+        <center>
+            <div style="margin-left: 250px;">
+                {% for working_music in working_music_list%}
+                    <button class="my-transparent-button" onclick="location.href='{% url 'create_music:working_music_detail' working_music.id %}'" style="float: left;">
+                        <img class="card-img-top" id="{{ working_music.title }}" src="{{ working_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
+                        <a href="{% url 'create_music:working_music_detail' working_music.id %}">
+                            <div class="card-body">
+                                <h6 class="card-title" style="color: white">{{ working_music }}</h6>
+                            </div>
+                        </a>
+                    </button>
+                {% endfor %}
+            </div>
+        </center>
+    </section>
+
 {% endblock %}

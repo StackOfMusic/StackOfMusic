@@ -6,6 +6,12 @@ import math
 import wave
 import numpy as np
 from pydub import AudioSegment
+from music.models import SubMusic
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DRUM_PATH = os.path.join(BASE_DIR, 'reconstruct_drum/')
+MUSIC_SEG_PATH = os.path.join(DRUM_PATH, 'music_seg/')
+
 
 def divide_sound(fullpath, hit_point):
     song = AudioSegment.from_wav(fullpath)
@@ -21,25 +27,23 @@ def divide_sound(fullpath, hit_point):
         else:
             music_elements = song[elements:song_len]
 
-        result_name = '/home/junseok/jslee/beat_trans_machine_learning/librosa_test/music_seg/{}.wav'.format(result_index)
+        result_name = MUSIC_SEG_PATH + '{}.wav'.format(result_index)
         result_index = result_index + 1
         music_elements.export(result_name, format='wav')
 
     return song_len
 
+
 def detect_freq():
     chunk = 16384
     drum_list = []
-    count = 0;
+    count = 0
 
-    PATH = "/home/junseok/jslee/beat_trans_machine_learning/librosa_test/music_seg"
-
-    for path, dirs, files in os.walk(PATH):
+    for path, dirs, files in os.walk(MUSIC_SEG_PATH):
         sorted_files = sorted(files, key=lambda x: int(x.split('.')[0]))
         for filename in sorted_files:
             fullpath = os.path.join(path, filename)
             freq_list = []
-            print("file start!!!!!!!!!")
             # open up a wave
             wf = wave.open(fullpath, 'rb')
             swidth = wf.getsampwidth()
@@ -61,8 +65,7 @@ def detect_freq():
                 # write data out to the audio stream
                 stream.write(data)
                 # unpack the data and times by the hamming window
-                indata = np.array(wave.struct.unpack("%dh"%(len(data)/swidth), \
-                                                     data))*window
+                indata = np.array(wave.struct.unpack("%dh"%(len(data)/swidth), data))*window
                 # Take the fft and square each value
                 fftData=abs(np.fft.rfft(indata))**2
                 # find the maximum
@@ -75,12 +78,10 @@ def detect_freq():
                     thefreq = (which+x1)*RATE/chunk
                     if thefreq == thefreq:
                         freq_list.append(thefreq)
-                    print ('count: {} The freq is {} Hz.'.format(count, thefreq))
                 else:
                     thefreq = which*RATE/chunk
                     if thefreq == thefreq:
                         freq_list.append(thefreq)
-                    print ('count: {} The freq is {} Hz.'.format(count, thefreq))
                 # read some more data
                 data = wf.readframes(chunk)
             count += 1
@@ -115,11 +116,12 @@ def detect_freq():
 
     return drum_list
 
+
 def reconstruct_beat(sound_list, hit_point, song_len):
     segment_len = 400
     half_len = segment_len / 2
     sample_sound = []
-    path = "/home/junseok/jslee/beat_trans_machine_learning/librosa_test/drum_sample"
+    path = os.path.join(DRUM_PATH, 'drum_sample')
     fullpath = os.path.join(path, 'bass_sample.wav')
     sample = AudioSegment.from_wav(fullpath)
     sample_sound.append(sample[2000 - (segment_len/2):2000 + (segment_len/2)])
@@ -146,12 +148,14 @@ def reconstruct_beat(sound_list, hit_point, song_len):
             new_sound = new_sound + sample_sound[sound_list[i]]
 
     return new_sound
-   
-def detect_beat():
-    path = "/home/junseok/jslee/beat_trans_machine_learning/librosa_test/data"
-    filename = "drum6.wav"
+
+
+def detect_beat(pk):
+    path = os.path.join(DRUM_PATH, 'data')
+    filename = SubMusic.objects.get(id=pk).music_file
 
     fullpath = os.path.join(path, filename)
+
     y, sr = librosa.load(fullpath)
     tempo, beats = librosa.beat.beat_track(y = y, sr = sr)
     frame2time_raw = librosa.frames_to_time(beats, sr = sr)
@@ -159,7 +163,6 @@ def detect_beat():
     frame2time = []
     for x in np.nditer(frame2time_raw):
         frame2time.append(round(x * 1000))
-    print(frame2time)
 
     segment_len = round((60 / tempo) * 1000)
     song_len = divide_sound(fullpath, frame2time)
@@ -169,8 +172,5 @@ def detect_beat():
     new_sound.export('new_music.wav', format='wav')
 
 
-
-    
-
-if __name__ == "__main__":
-    detect_beat()
+# if __name__ == "__main__":
+#     detect_beat(pk=pk)

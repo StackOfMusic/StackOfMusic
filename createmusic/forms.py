@@ -24,16 +24,20 @@ class CreateMusicForm(forms.ModelForm):
     def save(self, commit=True):
         self.instance.owner = self.owner
         self.instance.music_option = 1
+        self.instance.update_status = 0
         return super(CreateMusicForm, self).save(commit=commit)
 
 
 class CreateSubMusicForm(forms.ModelForm):
+
+    sink = forms.IntegerField()
 
     class Meta:
         model = SubMusic
         fields = (
             'instrument',
             'music_file',
+            'convert_music_file',
         )
 
     def __init__(self, music_contributor, working_music_id, *args, **kwargs):
@@ -41,9 +45,11 @@ class CreateSubMusicForm(forms.ModelForm):
         self.music = working_music_id
         super(CreateSubMusicForm, self).__init__(*args, **kwargs)
         self.fields['instrument'].queryset = Instrument.objects.all()
+        self.fields['convert_music_file'].required = False
 
     def save(self, commit=True):
         self.instance.contributor = self.contributor
         self.instance.music_id = self.music
         self.instance.status = 1
+        self.instance.update_status = 0
         return super(CreateSubMusicForm, self).save(commit=commit)
