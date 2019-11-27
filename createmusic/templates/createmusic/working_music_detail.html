@@ -5,9 +5,6 @@
     {% block extra_scripts %}
         <script src="https://unpkg.com/siriwave/dist/siriwave.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/howler@2.1.2/dist/howler.min.js"></script>
-        <script src="../../../static/js/howler.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script type="text/javascript">
             $(function () {
@@ -194,9 +191,6 @@
         });
 
     </script>
-    <script src="../../../static/js/howler.js/src/howler.core.js"></script>
-    <script src="../../../static/js/howler.js/examples/player/siriwave.js"></script>
-    <script src="../../../static/js/howler.js/examples/player/player.js"></script>
     <style>
 
 
@@ -261,31 +255,6 @@
             sound._sprite.mysprite = [start,end];
             sound.play('mysprite');
         }
-        var sound = new Howl({
-            src: ['../../../static/js/howler.js/tests/audio/sound1.mp3'],
-            volume: 0.5,
-            onplay: function() {
-                audioPlayed = true;
-                var time = Math.round(sound.duration());
-                $('#duration').html(utils.formatTime(time));
-                // Start upating the progress of the track.
-                requestAnimationFrame(utils.updateTimeTracker.bind(this));
-
-                $('img.play').addClass('hide');
-                $('img.pause').removeClass('hide');
-            },
-            onpause: function() {
-                $('img.play').removeClass('hide');
-                $('img.pause').addClass('hide');
-            },
-            onend: function() {
-                console.log('ENDED ...');
-                $('img.play').removeClass('hide');
-                $('img.pause').addClass('hide');
-                $('#sound').toggleClass('playing');
-            }
-        });
-
         function gogo() {
             $('#sound').toggleClass('playing');
 
