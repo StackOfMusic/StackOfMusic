@@ -9,8 +9,9 @@ from pydub import AudioSegment
 from music.models import SubMusic
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DRUM_PATH = os.path.join(BASE_DIR, 'reconstruct_drum')
-MUSIC_SEG_PATH = os.path.join(DRUM_PATH, 'music_seg')
+DRUM_PATH = os.path.join(BASE_DIR, 'reconstruct_drum/')
+MUSIC_SEG_PATH = os.path.join(DRUM_PATH, 'music_seg/')
+
 
 def divide_sound(fullpath, hit_point):
     song = AudioSegment.from_wav(fullpath)
@@ -26,7 +27,7 @@ def divide_sound(fullpath, hit_point):
         else:
             music_elements = song[elements:song_len]
 
-        result_name = '/home/junseok/jslee/beat_trans_machine_learning/librosa_test/music_seg/{}.wav'.format(result_index)
+        result_name = MUSIC_SEG_PATH + '{}.wav'.format(result_index)
         result_index = result_index + 1
         music_elements.export(result_name, format='wav')
 
