@@ -203,7 +203,6 @@ class VoiceToPianoView(View):
     def post(self,  request, *args, **kwargs):
         pk = request.POST.get('data')
         if SubMusic.objects.get(id=pk).contributor == request.user:
-            s3_file_download(pk)
             submusic = get_object_or_404(SubMusic, pk=pk)
             submusic.update_status = 1
             submusic.save()
@@ -237,4 +236,4 @@ class VoiceToDrumView(View):
 class MusicConvertCheckView(View):
 
     def get(self, request, *args, **kwargs):
-        pass
+        pk = request.POST.get('data')
