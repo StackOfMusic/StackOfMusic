@@ -35,6 +35,8 @@ def s3_file_download(pk):
 
 def divide_music(pk):
 
+    s3_file_download(pk)
+
     music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
 
     music_name = music_name[10:]

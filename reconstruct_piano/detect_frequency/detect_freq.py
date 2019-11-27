@@ -83,8 +83,4 @@ def detect_freq(pk):
             stream.close()
             p.terminate()
             os.remove(fullpath)
-    recons_music(frequency_list, 0)
-
-
-if __name__ == '__main__':
-    detect_freq()
+    recons_music(frequency_list, 0, pk)

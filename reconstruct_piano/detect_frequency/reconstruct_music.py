@@ -1,7 +1,12 @@
 import re
+from django.shortcuts import get_object_or_404
+from django.core.files.base import File
+from django.core.files.storage import default_storage
+from StackOfMusic import settings
+from music.models import SubMusic
 import os
 from pydub import AudioSegment
-import StackOfMusic.settings
+from music.models import SubMusic
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency/')
@@ -20,7 +25,7 @@ def edit_source(instrument, note, length):
     return music_source
 
 
-def recons_music(freq_data, instrument):
+def recons_music(freq_data, instrument, pk):
 
     #instrument = 0 : piano
     reconstruct_music = AudioSegment.empty()
@@ -301,5 +306,20 @@ def recons_music(freq_data, instrument):
     for sound in sound_list:
         note = sound[0] * 100 + sound[1]
         reconstruct_music = reconstruct_music + edit_source(0, note, 1)
-    reconstruct_music.export(PIANO_PATH + 'new_music.wav', format='wav')
 
+    music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
+    music_name = os.path.splitext(music_name)[0]
+    music_name = music_name[10:]
+    reconstruct_music.export(PIANO_PATH + 'new_' + music_name + '.wav', format='wav')
+    file_save(pk, music_name)
+
+
+def file_save(pk, music_name):
+
+    submusic_path = os.path.join(PIANO_PATH, 'new_' + music_name + '.wav')
+    url = 'https://' + settings.AWS_S3_CUSTOM_DOMAIN + '/' + settings.STATICFILES_LOCATION + '/' + 'audiofile/'
+    f = open(submusic_path)
+    submusic = get_object_or_404(SubMusic, pk=pk)
+    submusic.update_status = 2
+    submusic.convert_music_file.save(music_name, File(f))
+    submusic.save()
