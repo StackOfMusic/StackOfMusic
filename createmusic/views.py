@@ -123,14 +123,14 @@ class LoopStationView(DetailView):
         return context
 
 
-class MusicMergeView(View):
+class SubMusicMergeView(View):
 
     pk_url_kwarg = 'working_music_id'
 
     def post(self, request, *args, **kwargs):
         submusic_pk = request.POST.get('data')
         music_pk = self.kwargs.get(self.pk_url_kwarg)
-        if Music.objects.get(id=music_pk).owner == self.request.user:
+        if Music.objects.get(id=music_pk).owner != self.request.user:
             message = '권한이 없습니다.'
             return JsonResponse(status=403, data={'message': message})
 
@@ -153,7 +153,7 @@ class SubMusicDeleteView(View):
         submusic_pk = request.POST.get('data')
         music_pk = self.kwargs.get(self.pk_url_kwargs)
 
-        if Music.objects.get(id=music_pk).owner == self.request.user:
+        if  Music.objects.get(id=music_pk).owner != self.request.user:
             message = '권한이 없습니다.'
             return JsonResponse(status=403, data={'message': message})
 
@@ -200,10 +200,13 @@ class MusicStatusChangeView(UpdateView):
 
 class VoiceToPianoView(View):
 
-    def post(self, request, *args, **kwargs):
+    def post(self,  request, *args, **kwargs):
         pk = request.POST.get('data')
         if SubMusic.objects.get(id=pk).contributor == request.user:
             s3_file_download(pk)
+            submusic = get_object_or_404(SubMusic, pk=pk)
+            submusic.update_status = 1
+            submusic.save()
             detect_freq(pk)
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
@@ -220,7 +223,7 @@ class VoiceToDrumView(View):
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('data')
         if SubMusic.objects.get(id=pk).contributor == request.user:
-            s3_file_download.delay(pk)
+            s3_file_download(pk)
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
         message = '권한이 없습니다.'
