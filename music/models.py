@@ -56,6 +56,7 @@ class SubMusic(models.Model):
     contributor = models.ForeignKey('accounts.User', related_name='sub_music', on_delete=models.CASCADE)
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='sub_music')
     music_file = models.FileField(upload_to='audiofile')
+    convert_music_file = models.FileField(upload_to='audiofile')
     create_date = models.DateTimeField(auto_now_add=True)
     ACCEPT, PENDING = 0, 1
     STATUS = (
