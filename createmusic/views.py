@@ -206,7 +206,7 @@ class VoiceToPianoView(View):
             submusic = get_object_or_404(SubMusic, pk=pk)
             submusic.update_status = 1
             submusic.save()
-            detect_freq(pk)
+            detect_freq.delay(pk)
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
         message = '권한이 없습니다.'
@@ -222,7 +222,7 @@ class VoiceToDrumView(View):
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('data')
         if SubMusic.objects.get(id=pk).contributor == request.user:
-            s3_file_download(pk)
+            
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
         message = '권한이 없습니다.'
