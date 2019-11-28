@@ -3,13 +3,12 @@ import os
 import boto
 import wget
 from celery import Celery
+from django.shortcuts import get_object_or_404
 from pydub import AudioSegment
 
 from StackOfMusic import settings
 from music.models import SubMusic
 from reconstruct_piano.m4a2wav.convert import m4a2wave
-
-from django.shortcuts import get_object_or_404
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StackOfMusic.settings')
 app = Celery('StackOfMusic')
@@ -24,6 +23,7 @@ MUSIC_ELEMENT_PATH = os.path.join(PIANO_PATH, 'music_element/')
 MUSIC_SOURCE_PATH = os.path.join(PIANO_PATH, 'audiofile/')
 
 
+@app.task
 def s3_file_download(pk):
     connect = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     media_file_location = settings.STATICFILES_LOCATION
@@ -33,6 +33,7 @@ def s3_file_download(pk):
     wget.download(url, MUSIC_SOURCE_PATH)
 
 
+@app.task
 def divide_music(pk):
 
     s3_file_download(pk)
