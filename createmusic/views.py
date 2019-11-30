@@ -1,17 +1,16 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, Http404, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, Http404, JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, ListView, DeleteView, TemplateView, UpdateView, View, RedirectView, \
-    DetailView
-from django.shortcuts import get_object_or_404
+from django.views.generic import CreateView, ListView, DeleteView, TemplateView, UpdateView, View, DetailView
 from rest_framework import mixins, generics
 
 from music.models import Music, SubMusic
+from reconstruct_drum.detect_beat import detect_beat
+from reconstruct_piano.detect_frequency.detect_freq import detect_freq
 from .forms import CreateMusicForm, CreateSubMusicForm
 from .serializer import WorkingMusicRetrieveSerializer
-from reconstruct_piano.detect_frequency.edit_music import s3_file_download
-from reconstruct_piano.detect_frequency.detect_freq import detect_freq
 
 login_url = reverse_lazy('accounts:accounts_login')
 
@@ -123,14 +122,14 @@ class LoopStationView(DetailView):
         return context
 
 
-class MusicMergeView(View):
+class SubMusicMergeView(View):
 
     pk_url_kwarg = 'working_music_id'
 
     def post(self, request, *args, **kwargs):
         submusic_pk = request.POST.get('data')
         music_pk = self.kwargs.get(self.pk_url_kwarg)
-        if Music.objects.get(id=music_pk).owner == self.request.user:
+        if Music.objects.get(id=music_pk).owner != self.request.user:
             message = '권한이 없습니다.'
             return JsonResponse(status=403, data={'message': message})
 
@@ -153,7 +152,7 @@ class SubMusicDeleteView(View):
         submusic_pk = request.POST.get('data')
         music_pk = self.kwargs.get(self.pk_url_kwargs)
 
-        if Music.objects.get(id=music_pk).owner == self.request.user:
+        if  Music.objects.get(id=music_pk).owner != self.request.user:
             message = '권한이 없습니다.'
             return JsonResponse(status=403, data={'message': message})
 
@@ -200,10 +199,12 @@ class MusicStatusChangeView(UpdateView):
 
 class VoiceToPianoView(View):
 
-    def post(self, request, *args, **kwargs):
+    def post(self,  request, *args, **kwargs):
         pk = request.POST.get('data')
         if SubMusic.objects.get(id=pk).contributor == request.user:
-            s3_file_download(pk)
+            submusic = get_object_or_404(SubMusic, pk=pk)
+            submusic.update_status = 1
+            submusic.save()
             detect_freq(pk)
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
@@ -220,7 +221,10 @@ class VoiceToDrumView(View):
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('data')
         if SubMusic.objects.get(id=pk).contributor == request.user:
-            s3_file_download.delay(pk)
+            submusic=get_object_or_404(SubMusic, pk=pk)
+            submusic.update_status = 1
+            submusic.save()
+            detect_beat(pk)
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
         message = '권한이 없습니다.'
@@ -233,5 +237,15 @@ class VoiceToDrumView(View):
 
 class MusicConvertCheckView(View):
 
+    def post(self, request, *args, **kwargs):
+        pk = request.POST.get('data')
+        if get_object_or_404(SubMusic, pk=pk).update_status == 1:
+            message = '변환중 입니다.'
+            return JsonResponse(status=200, data={'message': message})
+        elif get_object_or_404(SubMusic, pk=pk).update_status == 2:
+            message = '변환이 완료되었습니다.'
+            return JsonResponse(status=200, data={'message': message})
+
     def get(self, request, *args, **kwargs):
-        pass
+        return self.post(request, *args, **kwargs)
+

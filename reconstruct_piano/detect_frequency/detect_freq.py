@@ -1,10 +1,12 @@
-# Read in a WAV and find the freq's
 import os
-import pyaudio
 import wave
+
 import numpy as np
-from reconstruct_piano.detect_frequency.reconstruct_music import recons_music
+import pyaudio
+from celery import Celery
+
 from reconstruct_piano.detect_frequency.edit_music import divide_music
+from reconstruct_piano.detect_frequency.reconstruct_music import recons_music
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency')
@@ -12,6 +14,14 @@ PIANO_RAW_PATH = os.path.join(PIANO_PATH, 'piano-raw')
 MUSIC_ELEMENT_PATH = os.path.join(PIANO_PATH, 'music_element')
 
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StackOfMusic.settings')
+app = Celery('StackOfMusic')
+
+app.config_from_object('django.conf:settings')
+app.autodiscover_tasks()
+
+
+@app.task
 def detect_freq(pk):
     divide_music(pk=pk)
 
@@ -73,8 +83,4 @@ def detect_freq(pk):
             stream.close()
             p.terminate()
             os.remove(fullpath)
-    recons_music(frequency_list, 0)
-
-
-if __name__ == '__main__':
-    detect_freq()
+    recons_music(frequency_list, 0, pk)

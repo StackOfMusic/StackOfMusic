@@ -2,6 +2,11 @@ from django.db import models
 from django.urls import reverse
 from accounts.models import User
 
+from StackOfMusic import settings
+from django.core.files.storage import FileSystemStorage
+
+private_storage = FileSystemStorage(location=settings.STATIC_URL + settings.STATICFILES_LOCATION + '/')
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=5)
@@ -56,6 +61,7 @@ class SubMusic(models.Model):
     contributor = models.ForeignKey('accounts.User', related_name='sub_music', on_delete=models.CASCADE)
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='sub_music')
     music_file = models.FileField(upload_to='audiofile')
+    convert_music_file = models.FileField(upload_to=private_storage)
     create_date = models.DateTimeField(auto_now_add=True)
     ACCEPT, PENDING = 0, 1
     STATUS = (

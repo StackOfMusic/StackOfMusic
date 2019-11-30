@@ -5,14 +5,10 @@
     {% block extra_scripts %}
         <script src="https://unpkg.com/siriwave/dist/siriwave.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/howler@2.1.2/dist/howler.min.js"></script>
-        <script src="../../../static/js/howler.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script type="text/javascript">
             $(function () {
                 $('#upload-btn').click(function () {
-                    {#var file = $('#file-upload-form').serialize();#}
                     var form = $('#file-upload-form')[0];
                     var formData = new FormData(form);
 
@@ -206,9 +202,6 @@
         });
 
     </script>
-    <script src="../../../static/js/howler.js/src/howler.core.js"></script>
-    <script src="../../../static/js/howler.js/examples/player/siriwave.js"></script>
-    <script src="../../../static/js/howler.js/examples/player/player.js"></script>
     <style>
 
 
@@ -273,31 +266,6 @@
             sound._sprite.mysprite = [start,end];
             sound.play('mysprite');
         }
-        var sound = new Howl({
-            src: ['../../../static/js/howler.js/tests/audio/sound1.mp3'],
-            volume: 0.5,
-            onplay: function() {
-                audioPlayed = true;
-                var time = Math.round(sound.duration());
-                $('#duration').html(utils.formatTime(time));
-                // Start upating the progress of the track.
-                requestAnimationFrame(utils.updateTimeTracker.bind(this));
-
-                $('img.play').addClass('hide');
-                $('img.pause').removeClass('hide');
-            },
-            onpause: function() {
-                $('img.play').removeClass('hide');
-                $('img.pause').addClass('hide');
-            },
-            onend: function() {
-                console.log('ENDED ...');
-                $('img.play').removeClass('hide');
-                $('img.pause').addClass('hide');
-                $('#sound').toggleClass('playing');
-            }
-        });
-
         function gogo() {
             $('#sound').toggleClass('playing');
 
@@ -369,17 +337,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {#                                <div class="container">#}
-                                {#                                    <div class="post-comments">#}
-                                {#                                        <form>#}
-                                {#                                            <div class="form-group">#}
-                                {#                                                <label for="comment">Your Comment</label>#}
-                                {#                                                <textarea name="comment" class="form-control" rows="3"></textarea>#}
-                                {#                                            </div>#}
-                                {#                                            <button type="submit" class="btn btn-default">Send</button>#}
-                                {#                                        </form>#}
-                                {#                                    </div>#}
-                                <!-- post-comments -->
                             </div>
                         </div>
                     </div>
@@ -439,6 +396,7 @@
                                 },
                                 success(data){
                                     alert(data['message']);
+                                    window.location.reload();
                                 }
                             })
                         });
@@ -456,6 +414,7 @@
                                 },
                                 success(data){
                                     alert(data['message']);
+                                    window.location.reload();
                                 }
                             })
                         });
@@ -472,12 +431,27 @@
                                     data: data_pk
                                 },
                                 success: function (data) {
-                                    console.log(data['message'])
+                                    setInterval(function () {
+                                        $.ajax({
+                                            headers: {'X-CSRFToken': token},
+                                            method: 'post',
+                                            url: '{% url 'create_music:convert_check_status' working_music_id %}',
+                                            data: {
+                                                data: data_pk
+                                            },
+                                            success: function (data) {
+                                                alert(data['message']);
+                                                window.location.reload();
+                                            },
+                                            error: function (error_data) {
+
+                                            }
+                                        });
+                                    }, 10000);
                                 }
                             })
-                        })
+                        });
                     });
-
                     $(function () {
                         $('body').on('click', '.drum-btn', function(){
                             var data_pk = $(this).attr('data-pk');
@@ -510,13 +484,6 @@
                     <input type="text" id="sink100" style="width: 100px;float: left" name="test_name" value="">
 
                     <br><br><br>
-                    {#                    <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Play a part of a Music</div>#}
-                    {##}
-                    {#                    <div style="margin-left: 300px;float: left;margin-right: 30px;">#}
-                    {#                        <input type="text" id="start" name="test_name" value="">#}
-                    {#                        <input type="text" id="end" name="test_name" value="">#}
-                    {#                        <button type="button" class="btn-dark" id="cutcut" onclick="cutcut()"></button>#}
-                    {#                    </div>#}
                 </div>
                 <div style="float: left; width: 100%;margin-left: 250px;">
                     <br>
@@ -529,6 +496,7 @@
                             <option value="1">미완성</option>
                         </select></td><br><br>
                         <button class="btn btn-lg btn-default" type="submit" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>
+
 
                     </form>
                     <br><br>
