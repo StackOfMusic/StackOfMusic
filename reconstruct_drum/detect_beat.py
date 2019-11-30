@@ -7,12 +7,15 @@ import wave
 import numpy as np
 from pydub import AudioSegment
 
-def divide_sound(fullpath, hit_point):
+def divide_sound(fullpath, hit_point, PK):
     song = AudioSegment.from_wav(fullpath)
 
     result_index = 0
     segment_len = 200
     song_len = len(song)
+
+    save_dir = '/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/music_seg/'
+    save_dir = save_dir + PK
 
     for point in hit_point:
         elements = point - segment_len/2
@@ -21,13 +24,13 @@ def divide_sound(fullpath, hit_point):
         else:
             music_elements = song[elements:song_len]
 
-        result_name = '/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/music_seg/{}.wav'.format(result_index)
-        result_index = result_index + 1
+        result_name = save_dir + '{}.wav'.format(result_index)
+        result_index += 1
         music_elements.export(result_name, format='wav')
 
     return song_len
 
-def detect_freq():
+def detect_freq(PK):
     chunk = 8192
     drum_list = []
     count = 0;
@@ -35,12 +38,17 @@ def detect_freq():
     PATH = "/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/music_seg"
 
     for path, dirs, files in os.walk(PATH):
-        sorted_files = sorted(files, key=lambda x: int(x.split('.')[0]))
+        handled_files = []
+        for single_file in files:
+            if PK in single_file:
+                handled_files.append(single_file.replace(PK, ''))
+        sorted_files = sorted(handled_files, key=lambda x: int(x.split('.')[0]))
         bass_next = 0
         snare_next = 1
         hi_hat_next = 2
         sound_buff = 0
         for filename in sorted_files:
+            filename = PK + filename
             fullpath = os.path.join(path, filename)
             freq_list = []
             print("file start!!!!!!!!!")
@@ -191,6 +199,8 @@ def reconstruct_beat(sound_list, hit_point, song_len):
 def detect_beat():
     path = "/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/data"
     filename = "drum6.wav"
+    #PK is the string to distinguish process#################
+    PK = 'test'
 
     fullpath = os.path.join(path, filename)
     y, sr = librosa.load(fullpath)
@@ -203,8 +213,8 @@ def detect_beat():
     print(frame2time)
 
     segment_len = round((60 / tempo) * 1000)
-    song_len = divide_sound(fullpath, frame2time)
-    sound_list = detect_freq()
+    song_len = divide_sound(fullpath, frame2time, PK)
+    sound_list = detect_freq(PK)
     new_sound = reconstruct_beat(sound_list, frame2time, song_len)
 
     new_sound.export('new_music.wav', format='wav')
