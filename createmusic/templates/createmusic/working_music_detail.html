@@ -120,14 +120,26 @@
                     $("#ownermusic").attr("src", working_music['seed_file']);
 
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
-
+                        if(working_music["sub_musics"][i].update_status==2){
+                            working_music["sub_musics"][i].music_file = working_music["sub_musics"][i].music_file.replace('static/', '');
+                        }
                         //폼 안묶은 코드
-                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" +"<td>"+working_music["sub_musics"][i].instrument.name+"</td>"+"<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n" +
+                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" +"<td>"+working_music["sub_musics"][i].instrument.name+"</td>"+"<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n"
+                        if(working_music["sub_musics"][i].status == 1){
+                            if(working_music["sub_musics"][i].update_status == 0) {
+                                content = content + "<button class=\"update-btn btn btn-default\" data-pk = \" " + working_music['sub_musics'][i].id + "\">update</button>\n" +
+                                    "<button class = \"delete-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">delete</button>\n</td>"
+                                content = content + "<td><button class = \"piano-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">convert piano</button>\n" +
+                                    "<button class = \"drum-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">convert drum</button></td></tr>";
+                            }
+                            else{
+                                content = content + "<button class=\"update-btn btn btn-default\"  data-pk = \" "+ working_music['sub_musics'][i].id +"\">update</button>\n" +
+                                    "<button class = \"delete-btn btn btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button>\n</td>"
 
-                            "<td><button class=\"update-btn btn btn-lg btn-default\"  data-pk = \" "+ working_music['sub_musics'][i].id +"\">update</button>\n" +
-                            "<button class = \"delete-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button>\n" +
-                            "<button class = \"piano-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">convert piano</button>\n" +
-                            "<button class = \"drum-btn btn btn-lg btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">convert drum</button></td></tr>";
+                            }
+                        }
+
+
                         document.getElementById("musics").innerHTML += content;
 
                     }
@@ -482,8 +494,9 @@
                             <option value="" selected>select</option>
                             <option value="0">완성</option>
                             <option value="1">미완성</option>
-                        </select></td>
-                        <button class="btn btn-lg btn-default" type="submit" style="width: 500px;font-size:50px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>
+                        </select></td><br><br>
+                        <button class="btn btn-lg btn-default" type="submit" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>
+
 
                     </form>
                     <br><br>
