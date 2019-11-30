@@ -62,7 +62,7 @@
     {% endblock %}
 </head>
 {% block content %}
-<body style="background-color: black;height: 1100px;">
+    <body style="background-color: black;height: 1100px;">
 
     <script type="text/javascript">
 
@@ -86,7 +86,7 @@
                     titleContainer.append(completd_music['title']);
                     ownerContainer.append(completd_music['owner'].username);
                     genreContainer.append(completd_music['genre'].name);
-                    total_like.append(completd_music['total_like_user']+"명이 좋아합니당");
+                    total_like.append(completd_music['total_like_user']+"people like");
 
                     $('#total_likes').attr("value",)
 
@@ -103,12 +103,11 @@
 
         $(function () {
             $('#completed_music_img').attr("src", completd_music['album_jacket']);
-
         });
     </script>
     <img id="completed_music_img" src="" alt="">
     <div class="container" style="background-color: whitesmoke;height: 700px;border-radius: 20px;">
-    <br>
+        <br>
         <div class="row well">
             <div class="col-md-12">
                 <div class="panel">
@@ -122,6 +121,7 @@
                                             <h1><div id="mytitle" style="float: left;color: black"></div></h1>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="col-md-12">
                                     <div class="row">
@@ -159,13 +159,16 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                    </div>
+
+                                    <div style="float: right;">
+                                        <div id="total_likes" style="color: black;float: right;width: 100px;"></div><br>
+                                        <button type="button" onclick="music_like();" style="border: none;border-radius: 10px;" ><img src="../../static/img/like.png" style="width: 30px;height: 30px;float: right;" alt=""> </button>
+
+                                        <div id="like-count" style="color: black;float: right;" ></div>
                                     </div>
                                 </div>
-                                <div id="total_likes" style="width: 100%;color: black"></div>
-                                <a href="javascript:void(0);" onclick="music_like();">
-                                    <button type="button" class="button button-like"><i class="fa fa-heart"></i> </button>
-                                </a>
-                                <div id="like-count" style="color: black" ></div>
                                 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
                                 <script type="text/javascript">
                                     var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
@@ -185,7 +188,22 @@
                                             type: "post",
                                         }).done(function (data) {
                                             console.log(data);
-                                            document.getElementById('like-count').innerHTML = data['total_music_like'] + '명이 좋아요 하였습니다!';
+
+                                            if($('#like-count').hasClass("like")){
+                                                $('#like-count').removeClass("like");
+                                                document.getElementById('like-count').innerHTML = '취소..';
+                                                var replace_total_likes = document.getElementById('total_likes');
+                                                $('#total_likes').html("");
+                                                replace_total_likes.append(data['total_music_like'] + 'people like');
+                                            }
+                                            else{
+                                                $('#like-count').addClass("like");
+                                                document.getElementById('like-count').innerHTML = '좋아요!';
+                                                var replace_total_likes = document.getElementById('total_likes');
+                                                $('#total_likes').html("");
+                                                replace_total_likes.append(data['total_music_like'] + 'people like');
+
+                                            }
                                             var count = $('#like-count').attr("value", data['total_music_like']);
                                         });
                                     }
