@@ -9,7 +9,6 @@
         <script type="text/javascript">
             $(function () {
                 $('#upload-btn').click(function () {
-                    {#var file = $('#file-upload-form').serialize();#}
                     var form = $('#file-upload-form')[0];
                     var formData = new FormData(form);
 
@@ -420,11 +419,27 @@
                                     data: data_pk
                                 },
                                 success: function (data) {
+                                    setInterval(function () {
+                                        $.ajax({
+                                            headers: {'X-CSRFToken': token},
+                                            method: 'post',
+                                            url: '{% url 'create_music:convert_check_status' working_music_id %}',
+                                            data: {
+                                                data: data_pk
+                                            },
+                                            success: function (data) {
+                                                alert(data['message']);
+                                                window.location.reload();
+                                            },
+                                            error: function (error_data) {
+
+                                            }
+                                        });
+                                    }, 10000);
                                 }
                             })
-                        })
+                        });
                     });
-
                     $(function () {
                         $('body').on('click', '.drum-btn', function(){
                             var data_pk = $(this).attr('data-pk');
@@ -457,24 +472,17 @@
                     <input type="text" id="sink100" style="width: 100px;float: left" name="test_name" value="">
 
                     <br><br><br>
-                    {#                    <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Play a part of a Music</div>#}
-                    {##}
-                    {#                    <div style="margin-left: 300px;float: left;margin-right: 30px;">#}
-                    {#                        <input type="text" id="start" name="test_name" value="">#}
-                    {#                        <input type="text" id="end" name="test_name" value="">#}
-                    {#                        <button type="button" class="btn-dark" id="cutcut" onclick="cutcut()"></button>#}
-                    {#                    </div>#}
                 </div>
                 <div style="float: left; width: 100%;margin-left: 250px;">
                     <br>
                     <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
                         {% csrf_token %}
-                        {#                        <th><label for="id_music_option">Music option:</label></th><td>#}
-                        {#                        <select name="music_option" required id="id_music_option">#}
-                        {#                            <option value="" selected>select</option>#}
-                        {#                            <option value="0">완성</option>#}
-                        {#                            <option value="1">미완성</option>#}
-                        {#                        </select></td>#}
+                        <th><label for="id_music_option">Music option:</label></th><td>
+                        <select name="music_option" required id="id_music_option">
+                            <option value="" selected>select</option>
+                            <option value="0">완성</option>
+                            <option value="1">미완성</option>
+                        </select></td>
                         <button class="btn btn-lg btn-default" type="submit" style="width: 500px;font-size:50px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>
 
                     </form>
