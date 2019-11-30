@@ -2,6 +2,7 @@ import os
 
 import boto
 import wget
+import requests
 from celery import Celery
 from django.shortcuts import get_object_or_404
 from pydub import AudioSegment
@@ -20,20 +21,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency/')
 PIANO_RAW_PATH = os.path.join(PIANO_PATH, 'piano-raw/')
 MUSIC_ELEMENT_PATH = os.path.join(PIANO_PATH, 'music_element/')
-MUSIC_SOURCE_PATH = os.path.join(PIANO_PATH, 'audiofile/')
+MUSIC_SOURCE_PATH = os.path.join(PIANO_PATH, 'audiofile')
 
 
-@app.task
 def s3_file_download(pk):
     connect = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     media_file_location = settings.STATICFILES_LOCATION
 
     music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
+
     url = 'https://' + settings.AWS_S3_CUSTOM_DOMAIN + '/' + media_file_location + '/' + music_name
-    wget.download(url, MUSIC_SOURCE_PATH)
+    music_name = music_name[10:]
+    # wget.download(url, MUSIC_SOURCE_PATH)
+    request = requests.get(url, stream=True)
+    if request.status_code == 200:
+        with open(music_name, 'wb') as f:
+            for chunk in request.iter_content(1024):
+                f.write(chunk)
 
 
-@app.task
 def divide_music(pk):
 
     s3_file_download(pk)
@@ -45,7 +51,8 @@ def divide_music(pk):
     music_name = os.path.splitext(music_name)[0]
     music_name = music_name + '.wav'
 
-    song = AudioSegment.from_wav(MUSIC_SOURCE_PATH + '/' + music_name)
+    # song = AudioSegment.from_wav(MUSIC_SOURCE_PATH + '/' + music_name)
+    song = AudioSegment.from_wav(settings.BASE_DIR + '/' + music_name)
 
     start_postion = 2000
     elements = 0 + 2000

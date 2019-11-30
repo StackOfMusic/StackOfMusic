@@ -1,16 +1,22 @@
 import os
-import argparse
-
+from StackOfMusic import settings
+from celery import Celery
 from pydub import AudioSegment
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency')
 CONVERT_PATH = os.path.join(PIANO_PATH, 'audiofile')
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StackOfMusic.settings')
+app = Celery('StackOfMusic')
+
+app.config_from_object('django.conf:settings')
+app.autodiscover_tasks()
+
 
 def m4a2wave(music_name):
     formats_to_convert = ['.m4a']
-    for (dirpath, dirnames, filenames) in os.walk(CONVERT_PATH):
+    for (dirpath, dirnames, filenames) in os.walk(settings.BASE_DIR):
         for filename in filenames:
             if filename == music_name:
                 if filename.endswith(tuple(formats_to_convert)):

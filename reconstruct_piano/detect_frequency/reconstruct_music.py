@@ -20,7 +20,6 @@ app.config_from_object('django.conf:settings')
 app.autodiscover_tasks()
 
 
-@app.task
 def edit_source(instrument, note, length):
     filename = "{}.wav".format(note)
 
@@ -33,7 +32,6 @@ def edit_source(instrument, note, length):
     return music_source
 
 
-@app.task
 def recons_music(freq_data, instrument, pk):
 
     #instrument = 0 : piano
@@ -326,16 +324,12 @@ def recons_music(freq_data, instrument, pk):
 def file_save(pk, music_name):
 
     submusic_path = os.path.join(PIANO_PATH, 'new_' + music_name + '.wav')
-    url = 'https://' + settings.AWS_S3_CUSTOM_DOMAIN + '/' + settings.STATICFILES_LOCATION + '/' + 'audiofile/'
     with open(submusic_path, 'rb') as f:
         contents = f.read()
 
     submusic = get_object_or_404(SubMusic, pk=pk)
     submusic.update_status = 2
-    # submusic.convert_music_file.name = settings.STATICFILES_LOCATION + '/' + 'audiofile/' + 'new_' + music_name + '.wav'
-    submusic.convert_music_file.name = 'audiofile/' + 'new' + music_name + '.wav'
-    # submusic.convert_music_file.name =  'new_' + music_name + '.wav'
-
+    submusic.convert_music_file.name = 'new_' + music_name + '.wav'
     s3 = boto3.resource(
         's3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
@@ -345,19 +339,5 @@ def file_save(pk, music_name):
 
     submusic.update_status = 2
     submusic.save()
-    os.remove(AUDIO_FILE_PATH + music_name + '.wav')
+    os.remove(settings.BASE_DIR + '/' + music_name + '.wav')
     os.remove(submusic_path)
-
-    # bucket_name = 'new' + settings.AWS_STORAGE_BUCKET_NAME
-    # conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID,
-    #                        settings.AWS_SECRET_ACCESS_KEY)
-    #
-    # bucket = conn.create_bucket(bucket_name, location=boto.s3.connection.Location.DEFAULT)
-    #
-    # def percent_cb(complete, total):
-    #     sys.stdout.write('.')
-    #     sys.stdout.flush()
-    #
-    # k = Key(bucket)
-    # k.key = 'audiofile/' + 'new_' + music_name + '.wav'
-    # k.set_contents_from_filename(submusic_path, cb=percent_cb, num_cb=10)

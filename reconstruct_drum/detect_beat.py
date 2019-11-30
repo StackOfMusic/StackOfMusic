@@ -1,19 +1,28 @@
-import re
 import os
-import pyaudio
-import librosa
-import math
 import wave
+
+import boto
+import boto3
+import librosa
 import numpy as np
+import pyaudio
+import wget
+from django.shortcuts import get_object_or_404
 from pydub import AudioSegment
+
+from StackOfMusic import settings
 from music.models import SubMusic
+from reconstruct_piano.detect_frequency.edit_music import s3_file_download
+from reconstruct_piano.detect_frequency.reconstruct_music import file_save
+from reconstruct_piano.m4a2wav.convert import m4a2wave
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRUM_PATH = os.path.join(BASE_DIR, 'reconstruct_drum/')
 MUSIC_SEG_PATH = os.path.join(DRUM_PATH, 'music_seg/')
 
 
-def divide_sound(fullpath, hit_point):
+def divide_sound(fullpath, hit_point, pk):
+
     song = AudioSegment.from_wav(fullpath)
 
     result_index = 0
@@ -151,9 +160,18 @@ def reconstruct_beat(sound_list, hit_point, song_len):
 
 
 def detect_beat(pk):
-    path = os.path.join(DRUM_PATH, 'data')
-    filename = SubMusic.objects.get(id=pk).music_file
 
+    s3_file_download(pk)
+    music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
+
+    music_name = music_name[10:]
+    m4a2wave(music_name)
+    music_name = os.path.splitext(music_name)[0]
+    music_name = music_name + '.wav'
+
+    path = settings.BASE_DIR
+
+    filename = music_name
     fullpath = os.path.join(path, filename)
 
     y, sr = librosa.load(fullpath)
@@ -165,12 +183,30 @@ def detect_beat(pk):
         frame2time.append(round(x * 1000))
 
     segment_len = round((60 / tempo) * 1000)
-    song_len = divide_sound(fullpath, frame2time)
+    song_len = divide_sound(fullpath, frame2time, pk)
     sound_list = detect_freq()
     new_sound = reconstruct_beat(sound_list, frame2time, song_len)
 
-    new_sound.export('new_music.wav', format='wav')
+    new_sound.export('new_' + music_name, format='wav')
+    drum_file_save(pk, music_name)
 
 
-# if __name__ == "__main__":
-#     detect_beat(pk=pk)
+def drum_file_save(pk, music_name):
+
+    submusic_path = os.path.join(settings.BASE_DIR, 'new_' + music_name)
+    with open(submusic_path, 'rb') as f:
+        contents = f.read()
+
+    submusic = get_object_or_404(SubMusic, pk=pk)
+    submusic.update_status = 2
+    submusic.convert_music_file.name = 'audiofile/' + 'new_' + music_name
+    s3 = boto3.resource(
+        's3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    )
+    bucket = s3.Bucket('stackofmusic')
+    bucket.put_object(Key=submusic.convert_music_file.name, Body=contents)
+
+    submusic.update_status = 2
+    submusic.save()
+    os.remove(submusic_path)
