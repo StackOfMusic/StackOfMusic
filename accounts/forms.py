@@ -6,6 +6,8 @@ from bank.models import Bank
 
 
 class CreateUserForm(UserCreationForm):
+    bank = forms.ModelChoiceField(queryset=None, empty_label='---------')
+
     class Meta:
         model = User
         fields = (
@@ -16,12 +18,11 @@ class CreateUserForm(UserCreationForm):
             'sex',
             'age',
             'bank_account_number',
-            'bank',
         )
 
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
-        self.queryset = forms.ModelChoiceField(queryset=Bank.objects.all())
+        self.fields['bank'].queryset = Bank.objects.all()
 
 
 class UserAuthenticationForm(AuthenticationForm):

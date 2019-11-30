@@ -1,13 +1,37 @@
-import re
 import os
-import pyaudio
-import librosa
-import math
 import wave
+
+import boto3
+import librosa
 import numpy as np
+import pyaudio
+from celery import Celery
+from django.shortcuts import get_object_or_404
 from pydub import AudioSegment
 
+<<<<<<< HEAD
 def divide_sound(fullpath, hit_point, PK):
+=======
+from StackOfMusic import settings
+from music.models import SubMusic
+from reconstruct_piano.detect_frequency.edit_music import s3_file_download
+from reconstruct_piano.m4a2wav.convert import m4a2wave
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DRUM_PATH = os.path.join(BASE_DIR, 'reconstruct_drum/')
+MUSIC_SEG_PATH = os.path.join(DRUM_PATH, 'music_seg/')
+
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StackOfMusic.settings')
+app = Celery('StackOfMusic')
+
+app.config_from_object('django.conf:settings')
+app.autodiscover_tasks()
+
+
+def divide_sound(fullpath, hit_point, pk):
+
+>>>>>>> 28664ba351b26ec29e7b254ea35d0a042756359d
     song = AudioSegment.from_wav(fullpath)
 
     result_index = 0
@@ -24,12 +48,18 @@ def divide_sound(fullpath, hit_point, PK):
         else:
             music_elements = song[elements:song_len]
 
+<<<<<<< HEAD
         result_name = save_dir + '{}.wav'.format(result_index)
         result_index += 1
+=======
+        result_name = MUSIC_SEG_PATH + '{}.wav'.format(result_index)
+        result_index = result_index + 1
+>>>>>>> 28664ba351b26ec29e7b254ea35d0a042756359d
         music_elements.export(result_name, format='wav')
 
     return song_len
 
+<<<<<<< HEAD
 def detect_freq(PK):
     chunk = 8192
     drum_list = []
@@ -47,11 +77,20 @@ def detect_freq(PK):
         snare_next = 1
         hi_hat_next = 2
         sound_buff = 0
+=======
+
+def detect_freq():
+    chunk = 16384
+    drum_list = []
+    count = 0
+
+    for path, dirs, files in os.walk(MUSIC_SEG_PATH):
+        sorted_files = sorted(files, key=lambda x: int(x.split('.')[0]))
+>>>>>>> 28664ba351b26ec29e7b254ea35d0a042756359d
         for filename in sorted_files:
             filename = PK + filename
             fullpath = os.path.join(path, filename)
             freq_list = []
-            print("file start!!!!!!!!!")
             # open up a wave
             wf = wave.open(fullpath, 'rb')
             swidth = wf.getsampwidth()
@@ -73,8 +112,7 @@ def detect_freq(PK):
                 # write data out to the audio stream
                 stream.write(data)
                 # unpack the data and times by the hamming window
-                indata = np.array(wave.struct.unpack("%dh"%(len(data)/swidth), \
-                                                     data))*window
+                indata = np.array(wave.struct.unpack("%dh"%(len(data)/swidth), data))*window
                 # Take the fft and square each value
                 fftData=abs(np.fft.rfft(indata))**2
                 # find the maximum
@@ -87,12 +125,10 @@ def detect_freq(PK):
                     thefreq = (which+x1)*RATE/chunk
                     if thefreq == thefreq:
                         freq_list.append(thefreq)
-                    print ('count: {} The freq is {} Hz.'.format(count, thefreq))
                 else:
                     thefreq = which*RATE/chunk
                     if thefreq == thefreq:
                         freq_list.append(thefreq)
-                    print ('count: {} The freq is {} Hz.'.format(count, thefreq))
                 # read some more data
                 data = wf.readframes(chunk)
             count += 1
@@ -163,11 +199,16 @@ def detect_freq(PK):
 
     return drum_list
 
+
 def reconstruct_beat(sound_list, hit_point, song_len):
     segment_len = 200
     half_len = segment_len / 2
     sample_sound = []
+<<<<<<< HEAD
     path = "/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/drum_sample"
+=======
+    path = os.path.join(DRUM_PATH, 'drum_sample')
+>>>>>>> 28664ba351b26ec29e7b254ea35d0a042756359d
     fullpath = os.path.join(path, 'bass_sample.wav')
     sample = AudioSegment.from_wav(fullpath)
     sample_sound.append(sample[2000 - (segment_len/2):2000 + (segment_len/2)])
@@ -195,14 +236,33 @@ def reconstruct_beat(sound_list, hit_point, song_len):
             new_sound = new_sound + sample_sound[sound_list[i]]
 
     return new_sound
+<<<<<<< HEAD
    
 def detect_beat():
     path = "/home/junseok/jslee/capstone1/StackOfMusic/reconstruct_drum/data"
     filename = "drum6.wav"
     #PK is the string to distinguish process#################
     PK = 'test'
+=======
+>>>>>>> 28664ba351b26ec29e7b254ea35d0a042756359d
 
+
+@app.task
+def detect_beat(pk):
+
+    s3_file_download(pk)
+    music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
+
+    music_name = music_name[10:]
+    m4a2wave(music_name)
+    music_name = os.path.splitext(music_name)[0]
+    music_name = music_name + '.wav'
+
+    path = settings.BASE_DIR
+
+    filename = music_name
     fullpath = os.path.join(path, filename)
+
     y, sr = librosa.load(fullpath)
     tempo, beats = librosa.beat.beat_track(y = y, sr = sr)
     frame2time_raw = librosa.frames_to_time(beats, sr = sr)
@@ -210,18 +270,37 @@ def detect_beat():
     frame2time = []
     for x in np.nditer(frame2time_raw):
         frame2time.append(round(x * 1000))
-    print(frame2time)
 
     segment_len = round((60 / tempo) * 1000)
+<<<<<<< HEAD
     song_len = divide_sound(fullpath, frame2time, PK)
     sound_list = detect_freq(PK)
+=======
+    song_len = divide_sound(fullpath, frame2time, pk)
+    sound_list = detect_freq()
+>>>>>>> 28664ba351b26ec29e7b254ea35d0a042756359d
     new_sound = reconstruct_beat(sound_list, frame2time, song_len)
 
-    new_sound.export('new_music.wav', format='wav')
+    new_sound.export('new_' + music_name, format='wav')
+    drum_file_save(pk, music_name)
 
 
+def drum_file_save(pk, music_name):
 
-    
+    submusic_path = os.path.join(settings.BASE_DIR, 'new_' + music_name)
+    with open(submusic_path, 'rb') as f:
+        contents = f.read()
 
-if __name__ == "__main__":
-    detect_beat()
+    submusic = get_object_or_404(SubMusic, pk=pk)
+    submusic.update_status = 2
+    submusic.convert_music_file.name = 'audiofile/' + 'new_' + music_name
+    s3 = boto3.resource(
+        's3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    )
+    bucket = s3.Bucket('stackofmusic')
+    bucket.put_object(Key=submusic.convert_music_file.name, Body=contents)
+
+    submusic.update_status = 2
+    submusic.save()
+    os.remove(submusic_path)

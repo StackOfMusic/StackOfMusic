@@ -1,5 +1,4 @@
 
-d]
 *$py.class
 
 # C extensions
@@ -121,3 +120,8 @@ config/
 log/
 *.pyc
 000*
+
+media/*
+myvenv
+static/
+example/

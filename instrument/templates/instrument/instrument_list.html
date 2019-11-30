@@ -1,0 +1,138 @@
+{% extends 'StackOfMusic/base.html' %}
+
+{% block extra_scripts %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block extra_style %}
+    <style>
+
+        .boxes {
+            margin-left: -40px;
+            padding: 50px;
+            background: white;
+        }
+
+        /*Checkboxes styles*/
+        input[type="checkbox"] { display: none; }
+
+        input[type="checkbox"] + label {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 20px;
+            font: 18px/20px 'Open Sans', Arial, sans-serif;
+            color: black;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        input[type="checkbox"] + label:last-child { margin-bottom: 0; }
+
+        input[type="checkbox"] + label:before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #6cc0e5;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: .6;
+            -webkit-transition: all .12s, border-color .08s;
+            transition: all .12s, border-color .08s;
+        }
+
+        input[type="checkbox"]:checked + label:before {
+            width: 10px;
+            top: -5px;
+            left: 5px;
+            border-radius: 0;
+            opacity: 1;
+            border-top-color: transparent;
+            border-left-color: transparent;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+    </style>
+{% endblock %}
+{% block content %}
+
+    <!------ Include the above in your HEAD tag ---------->
+    <body style="background-color: black">
+    <div class="container">
+        <div class="row" style="width: 1500px;">
+            <div id="custom-search-input">
+            <br>
+                <form method="get">
+                    <b><label for="id_search_word" style="color: whitesmoke">Search Word:</label></b>
+                    <br><center>
+                    <input type="text" name="search_word" maxlength="100" id="id_search_word" class="form-control input-lg" placeholder="Music Title" style="height: 50px;width:1200px;float: left"/>
+                </center>
+                    <span class="input-group-btn" style="display: inline;float: right">
+                                <button class="btn btn-info btn-lg" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                    </span>
+
+                    <div class="container">
+                        <div class="row" style="padding: 50px;">
+                            {% for instrument in form.instruments %}
+                                <div style="width: 200px;">
+                                    <input type="checkbox" name="instruments" value="{{ forloop.counter }}" id="{{ forloop.counter }}" style="float: left">
+                                    <label style="color: whitesmoke" for="{{ forloop.counter }}">{{ instrument }}</label>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        {% comment %}
+        <div id="result_list" style="width: 100px;">
+            {% for music in music_list %}
+                {{ music.title }}
+            {% endfor %}
+        </div>
+        {% endcomment %}
+        <div class="container" >
+            <table class="table table-striped custab" style="background-color: whitesmoke;margin-left: 30px;border-radius: 5px;">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Owner</th>
+                    <th>Genre</th>
+                </tr>
+                </thead>
+                {% for music in music_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            {{ music.title }}
+                        </td>
+                        <td>
+                            {{ music.owner }}
+                        </td>
+                        <td>{{ music.genre }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+        <br>
+
+
+
+
+    </div>
+    </body>
+
+{% endblock %}

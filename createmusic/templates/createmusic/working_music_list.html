@@ -1,17 +1,167 @@
+{% extends 'StackOfMusic/base.html' %}
 <!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <a href="{% url 'create_music:create_music' %}">만들기</a>
-    <br>
-    {% for working_music in working_music_list %}
-        <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
-    {% endfor %}
-</body>
+    {% block content %}
+
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Mypage</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <style>
+            section {
+                width: 100%;
+
+            }
+            section.left {
+                width: 20%;
+                overflow: hidden;
+                float: left;
+                background-color: black;
+                box-sizing: border-box;
+            }
+            section.right {
+                width: 20%;
+                float: right;
+                box-sizing: border-box;
+                background-color: #39ace7;
+            }
+            .btn-radio {
+                width: 100%;
+            }
+            .img-radio {
+                opacity: 0.5;
+                margin-bottom: 5px;
+            }
+
+            .space-20 {
+                margin-top: 20px;
+            }
+
+        </style>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+        <script src="https://unpkg.com/wavesurfer.js"></script>
+        <script src="../../../static/js/wavesurfer.js"></script>
+        <section class="links">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.1.10/wavesurfer.min.js"></script>
+        </section>
+
+
+        <script src="https://unpkg.com/siriwave/dist/siriwave.js"></script>
+
+        </head>
+        <body>
+
+
+
+        <script>
+            var wavesurfer = WaveSurfer.create({
+                container: '#waveform',
+                waveColor: 'grey',
+                backend: 'MediaElement',
+                mediaType:'audio',
+                progressColor: 'red',
+                normalize: true,
+                barWidth: 2
+            });
+
+
+            wavesurfer.load('');
+            wavesurfer.on('ready', function () {
+                wavesurfer.play();
+            });
+        </script>
+
+
+
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <!------ Include the above in your HEAD tag ---------->
+
+        <script>
+            $(function () {
+                $('.btn-radio').click(function(e) {
+                    if ($(this).siblings('input').prop("checked")==true) {
+                        $(this).removeClass('active')
+                            .siblings('input').prop('checked', false)
+                            .siblings('.img-radio').css('opacity', '0.5');
+                    }
+                    else if ($(this).siblings('input').prop("checked")==false) {
+                        $(this).addClass('active')
+                            .siblings('input').prop('checked', true)
+                            .siblings('.img-radio').css('opacity', '1');
+                    }
+                });
+            });
+        </script>
+
+        <section style="background-color: black;height: 600px;">
+            <br><br>
+
+            <div class="container" style="margin-left: 350px;">
+                <div class="card" style="width:200px;background-color: black;border: none;text-align: left;display: inline">
+                    {% for working_music in working_music_list %}
+                        <button class="my-transparent-button" onclick="location.href='{% url 'create_music:working_music_detail' working_music.id %}'" style="float: left">
+                            <img class="card-img-top" id="{{ working_music.title }}" src="{{ working_music.album_jacket.url }}" alt="Card image" style="width:200px;height: 200px;">
+                            <a href="{% url 'completed_music_detail' working_music.id %}">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: white">{{ working_music.title }}</h6>
+                                </div>
+                            </a>
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+
+            <center>
+                <button class="btn btn-lg btn-default" onclick="location.href='{% url 'create_music:create_music' %}'" style="width: 1000px;font-size:70px;background-color: #6c757d;margin-top: 30px;color: whitesmoke">Create Music</button>
+            </center>
+        </section>
+        {% comment %}
+                {% for working_music in working_music_list %}
+                    <li><a href="{% url 'create_music:working_music_detail' working_music.id %}">{{ working_music.title }}</a></li>
+                {% endfor %}
+            </div>
+        </section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-md-offset-3">
+                    <form class="form-horizontal well" role="form">
+                        <div class="row">
+                            {% for working_music in working_music_list %}
+                                <div class="col-xs-4" style="float: left">
+                                    <img src="{{ working_music.album_jacket.url }}" style="width: 200px;margin-left: 100px;" class="img-responsive img-radio">
+                                    <button type="button" class="btn btn-primary btn-radio" style="width: 100px;">{{ working_music.title }}</button>
+                                    <input type="checkbox" id="{{ working_music.id }}" class="hidden" style="display: none" >
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+            {% endcomment %}
+
+        </body>
+    {% endblock %}
+
 </html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,64 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - .:/code
+      - ./config/nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn StackOfMusic.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/code
+    expose:
+      - "8000"
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - /home/chaemoon/docker/redis.conf:/usr/local/etc/redis/redis.conf
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - /home/chaemoon/docker/rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=chaemoon
+      - RABBITMQ_DEFAULT_PASS=chaemoon
+      - RABBITMQ_DEFAULT_VHOST=default
+
+  db:
+    image: mysql:latest
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    container_name: db
+    ports:
+      - "3306:3306"
+    volumes:
+      - /home/chaemoon/docker/db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=1
+
+  worker:
+    image: dockerkrane:latest
+    command: tail -f /dev/null
+    container_name: worker
+    volumes:
+      - /home/chaemoon/docker/db_data/conf.d:/etc/mysql/conf.d
+    links:
+      - db:db.docker
+      - redis:redis.docker
+      - rabbitmq:rabbitmq.docker
