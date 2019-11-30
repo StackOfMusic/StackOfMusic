@@ -1,8 +1,16 @@
 from rest_framework import serializers
 
-from music.models import Music
-from music.models import Genre
+from music.models import Music, Comment, Genre
 from accounts.models import User
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = (
+            'comment_text',
+            'pub_data',
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,6 +32,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class CompletedMusicSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     genre = GenreSerializer()
+    # comment = CommentSerializer()
     # contributor = UserSrializer()
     total_like_user = serializers.IntegerField(source='total_likes_user')
 

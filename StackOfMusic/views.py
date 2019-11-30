@@ -3,13 +3,14 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView
 from rest_framework import mixins, generics, permissions
 from rest_framework.authentication import SessionAuthentication, \
     BasicAuthentication
 
+from StackOfMusic.forms import CreateCommentForm
 from accounts.models import User
-from music.models import Music
+from music.models import Music, Comment
 from .serializer import CompletedMusicSerializer, LikeMusicSerializer
 
 login_url = reverse_lazy('accounts:accounts_login')
@@ -94,6 +95,21 @@ class LikeMusicAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
             user.liked_music.add(complete_music)
 
         return super(LikeMusicAPIView, self).update(request, *args, **kwargs)
+
+
+class CreateCommentView(CreateView):
+    model = Comment
+    form_class = CreateCommentForm
+    pk_url_kwarg = 'completed_music_id'
+
+    def get_success_url(self):
+        completed_music_id = self.kwargs.get[self.pk_url_kwarg]
+        return reverse_lazy('completed_music_detail', kwargs={'completed_music_id': completed_music_id})
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateCommentView, self).get_context_data(**kwargs)
+        context['completed_music_id'] = self.kwargs.get(self.pk_url_kwarg)
+        return context
 
 
 @csrf_exempt

@@ -205,7 +205,7 @@ class VoiceToPianoView(View):
             submusic = get_object_or_404(SubMusic, pk=pk)
             submusic.update_status = 1
             submusic.save()
-            detect_freq(pk)
+            detect_freq.delay(pk)
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
         message = '권한이 없습니다.'
@@ -224,28 +224,26 @@ class VoiceToDrumView(View):
             submusic=get_object_or_404(SubMusic, pk=pk)
             submusic.update_status = 1
             submusic.save()
-            detect_beat(pk)
-            message = '변환중 입니다.'
-            return JsonResponse(status=200, data={'message': message})
+            detect_beat.delay(pk)
+            return JsonResponse(status=200, data={'message': pk})
         message = '권한이 없습니다.'
-        return JsonResponse(status=405, data={'message': message})
+        return JsonResponse(status=403, data={'message': message})
 
     def get(self, request, *args, **kwargs):
         message = "잘못된 접근입니다."
-        return JsonResponse(status=405, data={'message': message})
+        return JsonResponse(status=403, data={'message': message})
 
 
 class MusicConvertCheckView(View):
 
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('data')
-        if get_object_or_404(SubMusic, pk=pk).update_status == 1:
-            message = '변환중 입니다.'
-            return JsonResponse(status=200, data={'message': message})
-        elif get_object_or_404(SubMusic, pk=pk).update_status == 2:
+        status = get_object_or_404(SubMusic, pk=pk).update_status
+        if status == 1:
+            return JsonResponse(status=200, data={'message': pk})
+        elif status == 2:
             message = '변환이 완료되었습니다.'
             return JsonResponse(status=200, data={'message': message})
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
-

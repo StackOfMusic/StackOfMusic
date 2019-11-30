@@ -120,6 +120,7 @@
                     $("#ownermusic").attr("src", working_music['seed_file']);
 
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
+
                         if(working_music["sub_musics"][i].update_status==2){
                             working_music["sub_musics"][i].music_file = working_music["sub_musics"][i].music_file.replace('static/', '');
                         }
@@ -138,7 +139,6 @@
 
                             }
                         }
-
 
                         document.getElementById("musics").innerHTML += content;
 
@@ -440,14 +440,21 @@
                                                 data: data_pk
                                             },
                                             success: function (data) {
-                                                alert(data['message']);
-                                                window.location.reload();
+                                                pk = data['message'];
+                                                if(data['message'] == 1){
+
+                                                } else if(data['message'] == 2){
+                                                    alert('변환 되었습니다!');
+                                                    console.log(pk);
+                                                    window.location.reload();
+
+                                                }
                                             },
                                             error: function (error_data) {
 
                                             }
                                         });
-                                    }, 10000);
+                                    }, 3000);
                                 }
                             })
                         });
