@@ -1,24 +1,29 @@
 import os
 import wave
 
-import boto
 import boto3
 import librosa
 import numpy as np
 import pyaudio
-import wget
+from celery import Celery
 from django.shortcuts import get_object_or_404
 from pydub import AudioSegment
 
 from StackOfMusic import settings
 from music.models import SubMusic
 from reconstruct_piano.detect_frequency.edit_music import s3_file_download
-from reconstruct_piano.detect_frequency.reconstruct_music import file_save
 from reconstruct_piano.m4a2wav.convert import m4a2wave
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRUM_PATH = os.path.join(BASE_DIR, 'reconstruct_drum/')
 MUSIC_SEG_PATH = os.path.join(DRUM_PATH, 'music_seg/')
+
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StackOfMusic.settings')
+app = Celery('StackOfMusic')
+
+app.config_from_object('django.conf:settings')
+app.autodiscover_tasks()
 
 
 def divide_sound(fullpath, hit_point, pk):
@@ -159,6 +164,7 @@ def reconstruct_beat(sound_list, hit_point, song_len):
     return new_sound
 
 
+@app.task
 def detect_beat(pk):
 
     s3_file_download(pk)
