@@ -170,7 +170,7 @@ def detect_beat(pk):
     s3_file_download(pk)
     music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
 
-    music_name = music_name[10:]
+    music_name = music_name.replace('audiofile/', '')
     m4a2wave(music_name)
     music_name = os.path.splitext(music_name)[0]
     music_name = music_name + '.wav'

@@ -44,6 +44,7 @@ class CompletedMusicSerializer(serializers.ModelSerializer):
             'genre',
             'title',
             'seed_file',
+            'completed_music',
             'album_jacket',
             'owner',
             'create_date',

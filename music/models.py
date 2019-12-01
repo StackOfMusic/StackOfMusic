@@ -5,6 +5,7 @@ from django.urls import reverse
 from StackOfMusic import settings
 from accounts.models import User
 
+
 # class CustomFileField(models.FileField):
 #     attr_class = FieldFile
 #     interval = 0
@@ -12,7 +13,6 @@ from accounts.models import User
 #     def pre_save(self, model_instance, add):
 #         file = super().pre_save(model_instance, add)
 #         if file and not file._committed:
-#             # Commit the file to storage prior to saving the model
 #             file.save(file.name, file.file, save=False)
 #         return file
 #
@@ -36,6 +36,7 @@ class Music(models.Model):
     title = models.CharField(max_length=30)
     album_jacket = models.ImageField(blank=True, upload_to='img')
     seed_file = models.FileField(upload_to='audiofile')
+    completed_music = models.FileField(upload_to='audiofile', blank=True, null=True)
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='music', blank=True, null=True)
     create_date = models.DateTimeField(auto_now_add=True)
     liked_music = models.ManyToManyField('accounts.User', blank=True, related_name='music')

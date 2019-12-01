@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import CreateMusicView, WorkingMusicListView, WorkingMusicDeleteView, WorkingMusicRetrieveView, \
     WorkingMusicRetrieveTemplateView, SubMusicMergeView, SubMusicCreateView, MusicStatusChangeView, SubMusicDeleteView, \
-    VoiceToDrumView, VoiceToPianoView, LoopStationView, MusicConvertCheckView
+    VoiceToDrumView, VoiceToPianoView, LoopStationView, MusicConvertCheckView, MusicCompletedView
 
 
 app_name = 'create_music'
@@ -23,4 +23,5 @@ urlpatterns = [
     path('list/<int:working_music_id>/VoiceToPiano', VoiceToPianoView.as_view(), name='voice_to_piano'),
     path('list/<int:working_music_id>/VoiceToDrum', VoiceToDrumView.as_view(), name='voice_to_drum'),
     path('list/<int:working_music_id>/CheckStatus', MusicConvertCheckView.as_view(), name='convert_check_status'),
+    path('list/<int:working_music_id>/CompleteMusic', MusicCompletedView.as_view(), name='complete_music'),
 ]

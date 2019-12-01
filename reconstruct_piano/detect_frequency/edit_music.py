@@ -24,18 +24,27 @@ MUSIC_ELEMENT_PATH = os.path.join(PIANO_PATH, 'music_element/')
 MUSIC_SOURCE_PATH = os.path.join(PIANO_PATH, 'audiofile')
 
 
-def s3_file_download(pk):
-    connect = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    media_file_location = settings.STATICFILES_LOCATION
-
-    music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
-
-    url = 'https://' + settings.AWS_S3_CUSTOM_DOMAIN + '/' + media_file_location + '/' + music_name
-    music_name = music_name[10:]
-    # wget.download(url, MUSIC_SOURCE_PATH)
+def convert_s3_file_download(pk):
+    sub_music_name = get_object_or_404(SubMusic, pk=pk).convert_music_file.name
+    url = 'https://' + settings.AWS_S3_CUSTOM_DOMAIN + '/' + sub_music_name
+    sub_music_name = sub_music_name.replace('audiofile/', '')
     request = requests.get(url, stream=True)
     if request.status_code == 200:
-        with open(music_name, 'wb') as f:
+        with open(sub_music_name, 'wb') as f:
+            for chunk in request.iter_content(1024):
+                f.write(chunk)
+
+
+def s3_file_download(pk):
+    media_file_location = settings.STATICFILES_LOCATION
+
+    sub_music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
+
+    url = 'https://' + settings.AWS_S3_CUSTOM_DOMAIN + '/' + media_file_location + '/' + sub_music_name
+    sub_music_name = sub_music_name.replace('audiofile/', '')
+    request = requests.get(url, stream=True)
+    if request.status_code == 200:
+        with open(sub_music_name, 'wb') as f:
             for chunk in request.iter_content(1024):
                 f.write(chunk)
 
@@ -46,8 +55,10 @@ def divide_music(pk):
 
     music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
 
-    music_name = music_name[10:]
-    m4a2wave(music_name)
+    music_name = music_name.relpace('audiofile/', '')
+    ext = os.path.splitext(music_name)[1]
+    if ext[1] != '.wav':
+        m4a2wave(music_name)
     music_name = os.path.splitext(music_name)[0]
     music_name = music_name + '.wav'
 
