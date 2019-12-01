@@ -134,19 +134,17 @@
                             if(working_music["sub_musics"][i].update_status == 0) {
                                 content = content + "<button class=\"update-btn btn btn-default\" data-pk = \" " + working_music['sub_musics'][i].id + "\">update</button>\n" +
                                     "<button class = \"delete-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">delete</button>\n</td>";
-                                content = content + "<td><button class = \"piano-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">convert piano</button>\n" +
-                                    "<button class = \"drum-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">convert drum</button></td></tr>";
+                                content = content + "<td><button class = \"piano-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">piano</button>\n" +
+                                    "<button class = \"drum-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">drum</button></td></tr>";
                             }
                             else{
                                 content = content + "<button class=\"update-btn btn btn-default\"  data-pk = \" "+ working_music['sub_musics'][i].id +"\">update</button>\n" +
-                                    "<button class = \"delete-btn btn btn-default\" data-pk = \""+ working_music['sub_musics'][i].id + "\">delete</button>\n</td>"
-
+                                    "<button class = \"delete-btn btn btn-default\" data-pk = \""+ working_music['sub_musics'][i].id +"\">delete</button>\n</td>"
                             }
                         }
-
                         document.getElementById("musics").innerHTML += content;
+
                     }
-                    alert(working_music["sub_musics"].length);
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
                         submusics[i] = document.getElementById("subcheck" + i);
                         subsub[i] = document.getElementById("submusic"+i);
@@ -366,7 +364,6 @@
                 <div class="container">
                     <table class="table table-striped custab" style="text-align: center">
                         <thead>
-
                         <tr>
                             <th>Owner</th>
                             <th>Instrument</th>
@@ -518,7 +515,6 @@
                             })
                         })
                     });
-
                 </script>
                 <div>
                     <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Try Your Music with SUB Musics</div>
@@ -539,25 +535,24 @@
                 </div>
                 <div style="float: left; width: 100%;margin-left: 250px;">
                     <br>
-                    <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
-                        {% csrf_token %}
-                        <th><label for="id_music_option">Music option:</label></th><td>
-                        <select name="music_option" required id="id_music_option">
-                            <option value="" selected>select</option>
-                            <option value="0">완성</option>
-                            <option value="1">미완성</option>
-                        </select></td><br><br>
-                        <button class="btn btn-lg btn-default" type="submit" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>
+{#                    <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">#}
+{#                        {% csrf_token %}#}
+{#                        <th><label for="id_music_option">Music option:</label></th><td>#}
+{#                        <select name="music_option" required id="id_music_option">#}
+{#                            <option value="" selected>select</option>#}
+{#                            <option value="0">완성</option>#}
+{#                            <option value="1">미완성</option>#}
+{#                        </select></td><br><br>#}
+{#                        <button class="btn btn-lg btn-default" type="submit" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>#}
+{#                    </form>#}
 
+                    <button onclick="location.href='{% url 'create_music:complete_music' working_music_id %}'" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>
 
-                    </form>
                     <br><br>
                 </div>
             </div>
         </div>
     </div>
-
-    <button onclick="location.href='{% url 'create_music:complete_music' working_music_id %}'">합치기</button>
 
     <script>
         function readFile(files) {
