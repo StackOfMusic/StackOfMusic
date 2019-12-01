@@ -131,7 +131,7 @@ def detect_freq():
     return drum_list
 
 
-def reconstruct_beat(sound_list, hit_point, song_len):
+def reconstruct_beat(sound_list, hit_point, time_gap, beat_num):
     segment_len = 400
     half_len = segment_len / 2
     sample_sound = []
@@ -145,21 +145,39 @@ def reconstruct_beat(sound_list, hit_point, song_len):
     fullpath = os.path.join(path, 'hi_hat_sample.wav')
     sample = AudioSegment.from_wav(fullpath)
     sample_sound.append(sample[2000 - (segment_len/2):2000 + (segment_len/2)])
-  
-    start_gap = 0
-    new_sound = AudioSegment.empty()
-    if hit_point[0] - half_len >= 0:
-        start_gap = hit_point[0] - half_len
-        new_sound = AudioSegment.silent(duration = start_gap)
-    else:
-        start_gap = 0
-        new_sound = sample_sound[sound_list[0]]
+
+    new_sound = sample_sound[sound_list[0]]
+
+    beat_count = 1
+    bass_cnt = 0
+    snare_cnt = 0
+    hihat_cnt = 0
     for i in range(1, len(sound_list)):
-        temp_gap = hit_point[i] - half_len - hit_point[i-1] - half_len
-        if temp_gap > 0:
-            new_sound = new_sound + AudioSegment.silent(duration = temp_gap) + sample_sound[sound_list[i]]
+        new_sound = new_sound + AudioSegment.silent(duration = time_gap - half_len)
+        new_sound = new_sound + sample_sound[sound_list[i]]
+        if sound_list[i] == 0:
+            bass_cnt += 1
+        elif sound_list[i] == 1:
+            snare_cnt += 1
         else:
-            new_sound = new_sound + sample_sound[sound_list[i]]
+            hihat_cnt += 1
+        beat_count += 1
+
+    max_cnt = max(bass_cnt, snare_cnt, hihat_cnt)
+    max_sound = 0
+    if max_cnt == bass_cnt:
+        max_sound = 0
+    elif max_cnt == snare_cnt:
+        max_sound = 1
+    else:
+        max_sound = 2
+
+    while beat_count < beat_num:
+        new_sound = new_sound + AudioSegment.silent(duration = time_gap - half_len)
+        new_sound = new_sound + sample_sound[max_sound]
+        beat_count += 1
+
+    new_sound = new_sound + AudioSegment.silent(duration = time_gap - half_len)
 
     return new_sound
 
@@ -188,10 +206,20 @@ def detect_beat(pk):
     for x in np.nditer(frame2time_raw):
         frame2time.append(round(x * 1000))
 
+    beat_len = len(frame2time)
+    beat_num = 1
+    stop = False
+
+    while stop == False:
+        if beat_num < beat_len:
+            beat_num = beat_num * 2
+        else:
+            stop = True
+
     segment_len = round((60 / tempo) * 1000)
     song_len = divide_sound(fullpath, frame2time, pk)
     sound_list = detect_freq()
-    new_sound = reconstruct_beat(sound_list, frame2time, song_len)
+    new_sound = reconstruct_beat(sound_list, frame2time, segment_len, beat_num)
 
     new_sound.export('new_' + music_name, format='wav')
     drum_file_save(pk, music_name)

@@ -150,7 +150,7 @@
         });
         function second2(obj){
             document.getElementById('comments').style.display="none";
-            document.getElementById('comments2').style.display = "block"
+            document.getElementById('comments2').style.display = "block";
             document.getElementById('comments2').innerHTML = content2;
             $(obj).addClass("active");
             $('#page1').removeClass("active");
@@ -161,7 +161,7 @@
         }
         function first1(obj){
             document.getElementById('comments').style.display="block";
-            document.getElementById('comments2').style.display = "none"
+            document.getElementById('comments2').style.display = "none";
             document.getElementById('comments2').innerHTML = content;
             $(obj).addClass("active");
             $('#page2').removeClass("active");
@@ -302,7 +302,6 @@
                                                 <a id="page5" href="javascript:void(0);">5</a>
                                                 <a href="#">6</a>
                                                 <a href="#">&raquo;</a>
-
                                             </div>
                                         </center>
                                         <form action="{% url 'create_comment' completed_music_id %}" method="post">
@@ -316,7 +315,6 @@
                                         </form>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>

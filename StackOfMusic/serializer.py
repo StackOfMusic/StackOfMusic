@@ -50,6 +50,7 @@ class CompletedMusicSerializer(serializers.ModelSerializer):
             'create_date',
             'total_like_user',
             'comment',
+            'music_option',
         )
 
 
