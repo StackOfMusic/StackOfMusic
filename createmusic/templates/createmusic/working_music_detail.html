@@ -87,6 +87,8 @@
     <script type="text/javascript">
 
         var working_music = {};
+        var submusics = new Array(20);
+        var subsub = new Array(20);
         $(function () {
             $.ajax({
                 method: 'GET',
@@ -143,7 +145,11 @@
                         }
 
                         document.getElementById("musics").innerHTML += content;
-
+                    }
+                    alert(working_music["sub_musics"].length);
+                    for (var i = 0; i < working_music["sub_musics"].length; i++) {
+                        submusics[i] = document.getElementById("subcheck" + i);
+                        subsub[i] = document.getElementById("submusic"+i);
                     }
                 },
                 error: function (error) {
@@ -151,24 +157,34 @@
                 },
                 xhrFields: {withCredentials: true,}
             })
+
         });
+
+        function stop() {
+            for (var i = 0; i < working_music["sub_musics"].length; i++) {
+                if($(submusics[i]).prop("checked")==true) {
+                    subsub[i].pause();
+                }
+            }
+        }
         function play() {
             var origin =document.getElementById("ownercheck");
-            var submusics = new Array(20);
-
+            var origin_length = $('#ownermusic')[0].duration;
+            alert(origin_length);
             var sink100 = $('#sink100').val();
-
+            var audio = new Array(20);
             for (var i = 0; i < working_music["sub_musics"].length; i++) {
-                submusics[i] = document.getElementById("subcheck"+i);
+                {#submusics[i] = document.getElementById("subcheck"+i);#}
                 if($(submusics[i]).prop("checked")==true){
-                    var first = $("#submusic"+i).attr('src');
-                    var audio = new Audio(first);
+                    {#var first = $("#submusic"+i).attr('src');#}
+                    {#audio[i] = new Audio(first);#}
+                    {#console.log(audio[i]);#}
+                    subsub[i].play();
                     var x = document.getElementById("submusic"+i).duration;
                     var timeout = x - (x%5);
-                    audio.play();
                     setInterval(function(){
-                        audio.currentTime=0;
-                        audio.play(); }, timeout*1000);
+                        subsub[i].currentTime=0;
+                        subsub[i].play(); }, timeout*1000);
                 }
             }
             if($(origin).prop("checked")==true){
@@ -506,7 +522,9 @@
                 </script>
                 <div>
                     <div style="text-align: center;font-family: 'Lucida Grande', Arial;margin-bottom: 20px;margin-top: 20px;font-size: 30px;background-color: whitesmoke"> Try Your Music with SUB Musics</div>
-                    <button type="button" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;float: right">Play</button>
+                    <button type="button" id="stopit" onclick="stop()" class="btn-dark" style="width: 100px;height: 50px;float: right">Stop</button>
+
+                    <button type="button" id="playit" onclick="play()" class="btn-dark" style="width: 100px;height: 50px;float: right">Play</button>
 
                     <p>
                         <audio id="music3" controls style="float: left;margin-left: 250px;">
