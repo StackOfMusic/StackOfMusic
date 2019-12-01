@@ -146,7 +146,6 @@
 
                         document.getElementById("musics").innerHTML += content;
                     }
-                    alert(working_music["sub_musics"].length);
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
                         submusics[i] = document.getElementById("subcheck" + i);
                         subsub[i] = document.getElementById("submusic"+i);
@@ -170,7 +169,6 @@
         function play() {
             var origin =document.getElementById("ownercheck");
             var origin_length = $('#ownermusic')[0].duration;
-            alert(origin_length);
             var sink100 = $('#sink100').val();
             var audio = new Array(20);
             for (var i = 0; i < working_music["sub_musics"].length; i++) {
@@ -180,18 +178,25 @@
                     {#audio[i] = new Audio(first);#}
                     {#console.log(audio[i]);#}
                     subsub[i].play();
-                    var x = document.getElementById("submusic"+i).duration;
-                    var timeout = x - (x%5);
+                    var timeout = document.getElementById("submusic"+i).duration;
+                    console.log(timeout);
+                    console.log(subsub[i].currentTime);
                     setInterval(function(){
-                        subsub[i].currentTime=0;
-                        subsub[i].play(); }, timeout*1000);
+                        for (var i = 0; i < working_music["sub_musics"].length; i++) {
+                            if($(submusics[i]).prop("checked")==true) {
+
+                                subsub[i].currentTime = 0;
+                                subsub[i].play();
+                            }
+                        } }, origin_length*1000);
                 }
             }
             if($(origin).prop("checked")==true){
                 var ori = $('#ownermusic').attr('src');
-                var audio = new Audio(ori);
-                var x = document.getElementById("ownermusic").duration;
-                var timeout = x - (x%5);
+                var audio = document.getElementById("ownermusic");
+
+
+                var timeout = document.getElementById("ownermusic").duration;
                 audio.play();
                 setInterval(function(){
                     audio.currentTime=0;
@@ -531,7 +536,7 @@
                             <source id="audio-source" src="" type="audio/mp4"/>
                         </audio>
                     </p>&emsp;
-                    <input id="audioFileChooser" type="file" style="width: 250px;" onchange="readFile(this.files);">
+                    <input id="audioFileChooser" type="file" style="width: 200px;" onchange="readFile(this.files);">
                     <input type="checkbox" id="check2" class="hidden" style="float: left;" >
                     <input type="text" id="sink100" style="width: 100px;float: left" name="test_name" value="">
 
@@ -539,25 +544,14 @@
                 </div>
                 <div style="float: left; width: 100%;margin-left: 250px;">
                     <br>
-                    <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">
-                        {% csrf_token %}
-                        <th><label for="id_music_option">Music option:</label></th><td>
-                        <select name="music_option" required id="id_music_option">
-                            <option value="" selected>select</option>
-                            <option value="0">완성</option>
-                            <option value="1">미완성</option>
-                        </select></td><br><br>
-                        <button class="btn btn-lg btn-default" type="submit" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>
+                    <button class="btn btn-lg btn-default" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;" onclick="location.href='{% url 'create_music:complete_music' working_music_id %}'">합치기</button>
 
-
-                    </form>
                     <br><br>
                 </div>
             </div>
         </div>
     </div>
 
-    <button onclick="location.href='{% url 'create_music:complete_music' working_music_id %}'">합치기</button>
 
     <script>
         function readFile(files) {
