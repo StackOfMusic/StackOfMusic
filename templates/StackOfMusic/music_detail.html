@@ -105,9 +105,11 @@
                     genreContainer.append(completd_music['genre'].name);
                     total_like.append(completd_music['total_like_user']+"people like");
 
-                    $('#total_likes').attr("value",);
+                    $('#total_likes').attr("value",)
+                    if(completd_music["completed_music"]){
+                        completd_music["completed_music"] = completd_music["completed_music"].replace('static/', '');
+                    }
 
-                    completd_music["completed_music"] = completd_music["completed_music"].replace('static/', '');
 
 
                     $('#music_image').attr("src", completd_music['album_jacket']);
@@ -136,7 +138,7 @@
                         '        </div>'
                     content2 +='            </table>\n' +
                         '        </div>'
-
+                    console.log(content);
                     document.getElementById('comments').innerHTML += content;
 
 
