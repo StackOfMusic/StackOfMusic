@@ -1,9 +1,24 @@
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.urls import reverse
-from accounts.models import User
 
 from StackOfMusic import settings
-from django.core.files.storage import FileSystemStorage
+from accounts.models import User
+
+
+# class CustomFileField(models.FileField):
+#     attr_class = FieldFile
+#     interval = 0
+#
+#     def pre_save(self, model_instance, add):
+#         file = super().pre_save(model_instance, add)
+#         if file and not file._committed:
+#             file.save(file.name, file.file, save=False)
+#         return file
+#
+#     def set_interval(self, interval):
+#         self.interval = interval
+
 
 private_storage = FileSystemStorage(location=settings.STATIC_URL + settings.STATICFILES_LOCATION + '/')
 
@@ -21,6 +36,7 @@ class Music(models.Model):
     title = models.CharField(max_length=30)
     album_jacket = models.ImageField(blank=True, upload_to='img')
     seed_file = models.FileField(upload_to='audiofile')
+    completed_music = models.FileField(upload_to='audiofile', blank=True, null=True)
     instrument = models.ForeignKey('instrument.Instrument', on_delete=models.CASCADE, related_name='music', blank=True, null=True)
     create_date = models.DateTimeField(auto_now_add=True)
     liked_music = models.ManyToManyField('accounts.User', blank=True, related_name='music')
@@ -77,5 +93,13 @@ class SubMusic(models.Model):
     )
     update_status = models.SmallIntegerField(choices=UPDATE_STATUS)
 
+
+class Comment(models.Model):
+    music = models.ForeignKey('music.Music', on_delete=models.CASCADE, related_name='comment')
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='comment')
+    comment_text = models.TextField()
+
+    def __str__(self):
+        return self.comment_text
 # Music.objects.prefetch_related('sub_musics').filter(instrument_id__in=[], sub_musics__instrument_id__in=[])
 # class CompletedMusic(models.Model):

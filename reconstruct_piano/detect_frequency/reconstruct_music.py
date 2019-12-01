@@ -316,7 +316,7 @@ def recons_music(freq_data, instrument, pk):
 
     music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
     music_name = os.path.splitext(music_name)[0]
-    music_name = music_name[10:]
+    music_name = music_name.replace('audiofile/', '')
     reconstruct_music.export(PIANO_PATH + 'new_' + music_name + '.wav', format='wav')
     file_save(pk, music_name)
 

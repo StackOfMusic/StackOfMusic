@@ -122,15 +122,18 @@
                     $("#ownermusic").attr("src", working_music['seed_file']);
 
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
-                        if(working_music["sub_musics"][i].update_status==2){
-                            working_music["sub_musics"][i].music_file = working_music["sub_musics"][i].music_file.replace('static/', '');
+
+                        if(working_music["sub_musics"][i].update_status == 2){
+                            working_music["sub_musics"][i].convert_music_file = working_music["sub_musics"][i].convert_music_file.replace('static/', '');
+                            var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" +"<td>"+working_music["sub_musics"][i].instrument.name+"</td>"+"<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].convert_music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n"
                         }
-                        //폼 안묶은 코드
-                        var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" +"<td>"+working_music["sub_musics"][i].instrument.name+"</td>"+"<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n"
+                        else{
+                            var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" +"<td>"+working_music["sub_musics"][i].instrument.name+"</td>"+"<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n"
+                        }
                         if(working_music["sub_musics"][i].status == 1){
                             if(working_music["sub_musics"][i].update_status == 0) {
                                 content = content + "<button class=\"update-btn btn btn-default\" data-pk = \" " + working_music['sub_musics'][i].id + "\">update</button>\n" +
-                                    "<button class = \"delete-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">delete</button>\n</td>"
+                                    "<button class = \"delete-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">delete</button>\n</td>";
                                 content = content + "<td><button class = \"piano-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">convert piano</button>\n" +
                                     "<button class = \"drum-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">convert drum</button></td></tr>";
                             }
@@ -140,7 +143,6 @@
 
                             }
                         }
-
 
                         document.getElementById("musics").innerHTML += content;
                     }
@@ -446,7 +448,7 @@
                                 data: {
                                     data: data_pk
                                 },
-                                success: function (data) {
+                                success: function () {
                                     setInterval(function () {
                                         $.ajax({
                                             headers: {'X-CSRFToken': token},
@@ -456,14 +458,22 @@
                                                 data: data_pk
                                             },
                                             success: function (data) {
-                                                alert(data['message']);
-                                                window.location.reload();
+                                                pk = data['message'];
+                                                alert(pk);
+                                                if(1 == pk){
+                                                    alert('변환중');
+                                                } else if(2 == pk){
+                                                    alert('변환 되었습니다!');
+                                                    console.log(pk);
+                                                    window.location.reload();
+
+                                                }
                                             },
                                             error: function (error_data) {
 
                                             }
                                         });
-                                    }, 10000);
+                                    }, 1000);
                                 }
                             })
                         });
@@ -479,7 +489,31 @@
                                     data: data_pk,
                                 },
                                 success: function (data) {
-                                    console.log(data['message'])
+                                    setInterval(function () {
+                                        $.ajax({
+                                            headers: {'X-CSRFToken': token},
+                                            method: 'post',
+                                            url: '{% url 'create_music:convert_check_status' working_music_id %}',
+                                            data: {
+                                                data: data_pk
+                                            },
+                                            success: function (data) {
+                                                pk = data['message'];
+                                                alert(pk);
+                                                if(1 == pk){
+                                                    alert('변환중');
+                                                } else if(2 == pk){
+                                                    alert('변환 되었습니다!');
+                                                    console.log(pk);
+                                                    window.location.reload();
+
+                                                }
+                                            },
+                                            error: function (error_data) {
+
+                                            }
+                                        });
+                                    }, 1000);
                                 }
                             })
                         })
@@ -523,6 +557,8 @@
         </div>
     </div>
 
+    <button onclick="location.href='{% url 'create_music:complete_music' working_music_id %}'">합치기</button>
+
     <script>
         function readFile(files) {
             var fileReader = new FileReader();
@@ -545,47 +581,6 @@
             });
         }
     </script>
-    {##}
-    {#    <div class="audio-controls">#}
-    {#        <button type="button" id="sound" onclick="gogo()" class="static">#}
-    {#            <img src="https://image.flaticon.com/icons/png/128/117/117999.png" class="play">#}
-    {#            <img src="https://image.flaticon.com/icons/png/128/52/52285.png" class="pause hide">#}
-    {#        </button>#}
-    {#    </div>#}
-    {#    <div class="audio-progress">#}
-    {#        <div id="progress"></div>#}
-    {#        <div class="time">#}
-    {#            <span id="timer">0:00 </span>#}
-    {#            <span id="duration">0:00</span>#}
-    {#        </div>#}
-    {#    </div>#}
-    {##}
-    {#    <script>#}
-    {##}
-    {#        $(function () {#}
-    {#            $('.btn-radio').siblings('.img-radio').css('opacity', '0.5');#}
-    {#            $('.btn-radio').click(function(e) {#}
-    {#                if ($(this).siblings('input').prop("checked")==true) {#}
-    {#                    $(this).removeClass('active')#}
-    {#                        .siblings('input').prop('checked', false)#}
-    {#                        .siblings('.img-radio').css('opacity', '0.5');#}
-    {#                }#}
-    {#                else if ($(this).siblings('input').prop("checked")==false) {#}
-    {#                    $(this).addClass('active')#}
-    {#                        .siblings('input').prop('checked', true)#}
-    {#                        .siblings('.img-radio').css('opacity', '1');#}
-    {#                }#}
-    {#            });#}
-    {#        });#}
-    {#    </script>#}
-    {#    <div class="col-xs-4" style="float: left">#}
-    {#        <img src="" style="width: 200px;margin-left: 100px;" id="image" class="img-responsive img-radio">#}
-    {#        <button type="button" class="btn btn-primary btn-radio" style="width: 100px;" id="mytitle2"></button>#}
-    {#        <input type="checkbox" id="check" class="hidden" style="display: none" >#}
-    {#        <audio id="music2" controls style="margin-top:20px;margin-left: 10px;">#}
-    {#            <source id="audio-source" src="" type="audio/mp3"/>#}
-    {#        </audio>#}
-    {#    </div>#}
 
 {% endblock %}
 
