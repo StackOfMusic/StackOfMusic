@@ -1,4 +1,3 @@
-
 {% extends 'StackOfMusic/base.html' %}
 <!doctype html>
 <html lang="ko">
@@ -16,6 +15,23 @@
     {% endblock %}
     {% block extra_style %}
         <style>
+            .pagination {
+                display: inline-block;
+            }
+
+            .pagination a {
+                color: black;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+
+            .pagination a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            .pagination a:hover:not(.active) {background-color: #ddd;}
             rcorners1 {
                 border-radius: 25px;
                 background: #73AD21;
@@ -62,10 +78,11 @@
     {% endblock %}
 </head>
 {% block content %}
-<body style="background-color: black;height: 1100px;">
+    <body style="background-color: black;height: 1100px;">
 
     <script type="text/javascript">
-
+        var content2 = '';
+        var content = ''
         var completd_music = {};
         var wave = WaveSurfer;
         $(function () {
@@ -86,12 +103,43 @@
                     titleContainer.append(completd_music['title']);
                     ownerContainer.append(completd_music['owner'].username);
                     genreContainer.append(completd_music['genre'].name);
-                    total_like.append(completd_music['total_like_user']+"명이 좋아합니당");
+                    total_like.append(completd_music['total_like_user']+"people like");
 
-                    $('#total_likes').attr("value",)
+                    $('#total_likes').attr("value",);
+
+                    completd_music["completed_music"] = completd_music["completed_music"].replace('static/', '');
+
 
                     $('#music_image').attr("src", completd_music['album_jacket']);
-                    $('#music').attr("src", completd_music['seed_file']);
+                    $('#music').attr("src", completd_music['completed_music']);
+                    var origin_content = '<div class="container" >\n' +
+                        '            <table class="table table-striped custab" style="background-color: whitesmoke;margin-left: 30px;width:650px;table-layout:fixed;border-radius: 5px;">\n' +
+                        '                <thead>\n' +
+                        '                <tr>\n' +
+                        '                    <th>Username</th>\n' +
+                        '                    <th>Comments</th>\n' +
+                        '                </tr>\n' +
+                        '                </thead>';
+                    content = origin_content ;
+                    content2 = origin_content;
+                    for (var i = 0; i < completd_music["comment"].length; i++) {
+                        if(i<5){
+                            content += "<tr><td style=\"width: 50px; height: auto; word-break:break-all;table-layout:fixed;\" >"+ completd_music.comment[i].user.username+ "</td><td style=\"width: 500px; height: auto; word-break:break-all;table-layout:fixed;\">" +completd_music.comment[i].comment_text + "</td></tr>"
+                        }
+                        else{
+                            content2 = origin_content += "<tr><td style=\"width: 50px; height: auto; word-break:break-all;table-layout:fixed;\" >!!"+ completd_music.comment[i].user.username+ "</td><td style=\"width: 500px; height: auto; word-break:break-all;table-layout:fixed;display=none;\">" +completd_music.comment[i].comment_text + "</td></tr>"
+
+                        }
+
+                    }
+                    content +='            </table>\n' +
+                        '        </div>'
+                    content2 +='            </table>\n' +
+                        '        </div>'
+
+                    document.getElementById('comments').innerHTML += content;
+
+
                 },
                 error: function (error) {
                     console.log(error + 'data를 불러올수없습니다.');
@@ -100,15 +148,36 @@
             })
 
         });
+        function second2(obj){
+            document.getElementById('comments').style.display="none";
+            document.getElementById('comments2').style.display = "block"
+            document.getElementById('comments2').innerHTML = content2;
+            $(obj).addClass("active");
+            $('#page1').removeClass("active");
+            $('#page3').removeClass("active");
+            $('#page4').removeClass("active");
+            $('#page5').removeClass("active");
+
+        }
+        function first1(obj){
+            document.getElementById('comments').style.display="block";
+            document.getElementById('comments2').style.display = "none"
+            document.getElementById('comments2').innerHTML = content;
+            $(obj).addClass("active");
+            $('#page2').removeClass("active");
+            $('#page3').removeClass("active");
+            $('#page4').removeClass("active");
+            $('#page5').removeClass("active");
+
+        }
 
         $(function () {
             $('#completed_music_img').attr("src", completd_music['album_jacket']);
-
         });
     </script>
     <img id="completed_music_img" src="" alt="">
-    <div class="container" style="background-color: whitesmoke;height: 700px;border-radius: 20px;">
-    <br>
+    <div class="container" style="background-color: whitesmoke;height: 80%;border-radius: 20px;">
+        <br>
         <div class="row well">
             <div class="col-md-12">
                 <div class="panel">
@@ -122,6 +191,7 @@
                                             <h1><div id="mytitle" style="float: left;color: black"></div></h1>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="col-md-12">
                                     <div class="row">
@@ -159,13 +229,16 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                    </div>
+
+                                    <div style="float: right;">
+                                        <div id="total_likes" style="color: black;float: right;width: 100px;"></div><br>
+                                        <button type="button" onclick="music_like();" style="border: none;border-radius: 10px;" ><img src="../../static/img/like.png" style="width: 30px;height: 30px;float: right;" alt=""> </button>
+
+                                        <div id="like-count" style="color: black;float: right;" ></div>
                                     </div>
                                 </div>
-                                <div id="total_likes" style="width: 100%;color: black"></div>
-                                <a href="javascript:void(0);" onclick="music_like();">
-                                    <button type="button" class="button button-like"><i class="fa fa-heart"></i> </button>
-                                </a>
-                                <div id="like-count" style="color: black" ></div>
                                 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
                                 <script type="text/javascript">
                                     var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
@@ -185,22 +258,65 @@
                                             type: "post",
                                         }).done(function (data) {
                                             console.log(data);
-                                            document.getElementById('like-count').innerHTML = data['total_music_like'] + '명이 좋아요 하였습니다!';
+
+                                            if($('#like-count').hasClass("like")){
+                                                $('#like-count').removeClass("like");
+                                                document.getElementById('like-count').innerHTML = '취소..';
+                                                var replace_total_likes = document.getElementById('total_likes');
+                                                $('#total_likes').html("");
+                                                replace_total_likes.append(data['total_music_like'] + 'people like');
+                                            }
+                                            else{
+                                                $('#like-count').addClass("like");
+                                                document.getElementById('like-count').innerHTML = '좋아요!';
+                                                var replace_total_likes = document.getElementById('total_likes');
+                                                $('#total_likes').html("");
+                                                replace_total_likes.append(data['total_music_like'] + 'people like');
+
+                                            }
                                             var count = $('#like-count').attr("value", data['total_music_like']);
                                         });
                                     }
                                 </script>
+
+
                                 <div class="container">
                                     <div class="post-comments">
-                                        <form>
-                                            <div class="form-group">
-                                                <label for="comment" style="color: black">Your Comment</label>
-                                                <textarea name="comment" class="form-control" rows="3"></textarea>
+                                        <br>
+                                        <div id="comments" style="margin-left: -50px;height: 300px;">
+
+                                        </div>
+                                        <div id="comments2" style="margin-left: -50px;height: 300px;display: none;">
+
+                                        </div>
+                                        <div id="comments3" style="margin-left: -50px;height: 300px;display: none;">
+
+                                        </div>
+                                        <center>
+                                            <div class="pagination" style="margin-left: 130px;">
+                                                <a href="#">&laquo;</a>
+                                                <a id="page1" class="active" onclick="first1(this)" href="javascript:void(0);">1</a>
+                                                <a id="page2" href="javascript:void(0);" onclick="second2(this)">2</a>
+                                                <a id="page3" href="javascript:void(0);">3</a>
+                                                <a id="page4" href="javascript:void(0);">4</a>
+                                                <a id="page5" href="javascript:void(0);">5</a>
+                                                <a href="#">6</a>
+                                                <a href="#">&raquo;</a>
+
                                             </div>
-                                            <button type="submit" class="btn btn-default" style="color: black">Send</button>
+                                        </center>
+                                        <form action="{% url 'create_comment' completed_music_id %}" method="post">
+                                            {% csrf_token %}
+                                            <div>
+                                                <tr><th><label for="id_comment_text">Comment text:</label></th>
+                                                    <td><textarea style="float: right" name="comment_text" cols="55" rows="2" required id="id_comment_text"></textarea></td></tr>
+                                                </tbody>
+                                            </div><br>
+                                            <button type="submit" class="btn btn-default" style="color: black;float: right">Send</button>
                                         </form>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

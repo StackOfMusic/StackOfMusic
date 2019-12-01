@@ -1,12 +1,12 @@
-# Read in a WAV and find the freq's
 import os
+import wave
+
+import numpy as np
 import pyaudio
 from celery import Celery
 
-import wave
-import numpy as np
-from reconstruct_piano.detect_frequency.reconstruct_music import recons_music
 from reconstruct_piano.detect_frequency.edit_music import divide_music
+from reconstruct_piano.detect_frequency.reconstruct_music import recons_music
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency')

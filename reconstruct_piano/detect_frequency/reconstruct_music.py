@@ -1,16 +1,23 @@
-import re
-from django.shortcuts import get_object_or_404
-from django.core.files.base import File
-from django.core.files.storage import default_storage
-from StackOfMusic import settings
-from music.models import SubMusic
 import os
+
+import boto3
+from celery import Celery
+from django.shortcuts import get_object_or_404
 from pydub import AudioSegment
+
+from StackOfMusic import settings
 from music.models import SubMusic
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIANO_PATH = os.path.join(BASE_DIR, 'detect_frequency/')
+AUDIO_FILE_PATH = os.path.join(PIANO_PATH, 'audiofile/')
 PIANO_RAW_PATH = os.path.join(PIANO_PATH, 'piano-raw/')
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StackOfMusic.settings')
+app = Celery('StackOfMusic')
+
+app.config_from_object('django.conf:settings')
+app.autodiscover_tasks()
 
 
 def edit_source(instrument, note, length):
@@ -309,7 +316,7 @@ def recons_music(freq_data, instrument, pk):
 
     music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
     music_name = os.path.splitext(music_name)[0]
-    music_name = music_name[10:]
+    music_name = music_name.replace('audiofile/', '')
     reconstruct_music.export(PIANO_PATH + 'new_' + music_name + '.wav', format='wav')
     file_save(pk, music_name)
 
@@ -317,9 +324,20 @@ def recons_music(freq_data, instrument, pk):
 def file_save(pk, music_name):
 
     submusic_path = os.path.join(PIANO_PATH, 'new_' + music_name + '.wav')
-    url = 'https://' + settings.AWS_S3_CUSTOM_DOMAIN + '/' + settings.STATICFILES_LOCATION + '/' + 'audiofile/'
-    f = open(submusic_path)
+    with open(submusic_path, 'rb') as f:
+        contents = f.read()
+
     submusic = get_object_or_404(SubMusic, pk=pk)
     submusic.update_status = 2
-    submusic.convert_music_file.save(music_name, File(f))
+    submusic.convert_music_file.name = 'new_' + music_name + '.wav'
+    s3 = boto3.resource(
+        's3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    )
+    bucket = s3.Bucket('stackofmusic')
+    bucket.put_object(Key=submusic.convert_music_file.name, Body=contents)
+
+    submusic.update_status = 2
     submusic.save()
+    os.remove(settings.BASE_DIR + '/' + music_name + '.wav')
+    os.remove(submusic_path)

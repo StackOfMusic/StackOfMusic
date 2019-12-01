@@ -22,8 +22,10 @@ class SubMusicSerializer(serializers.ModelSerializer):
             'instrument',
             'contributor',
             'music_file',
+            'convert_music_file',
             'create_date',
             'status',
+            'update_status',
         )
 
 

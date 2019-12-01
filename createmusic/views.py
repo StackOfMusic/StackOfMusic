@@ -1,17 +1,25 @@
+import os
+
+import boto3
+import requests
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, Http404, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, Http404, JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, ListView, DeleteView, TemplateView, UpdateView, View, RedirectView, \
-    DetailView
-from django.shortcuts import get_object_or_404
+from django.views.generic import CreateView, ListView, DeleteView, \
+    TemplateView, UpdateView, View, DetailView
+from pydub import AudioSegment
 from rest_framework import mixins, generics
 
+from StackOfMusic import settings
 from music.models import Music, SubMusic
+from reconstruct_drum.detect_beat import detect_beat
+from reconstruct_piano.detect_frequency.detect_freq import detect_freq
+from reconstruct_piano.detect_frequency.edit_music import s3_file_download, convert_s3_file_download
+from reconstruct_piano.m4a2wav.convert import m4a2wave
 from .forms import CreateMusicForm, CreateSubMusicForm
 from .serializer import WorkingMusicRetrieveSerializer
-from reconstruct_piano.detect_frequency.edit_music import s3_file_download
-from reconstruct_piano.detect_frequency.detect_freq import detect_freq
 
 login_url = reverse_lazy('accounts:accounts_login')
 
@@ -165,7 +173,7 @@ class SubMusicDeleteView(View):
 
     def get(self, request, *args, **kwargs):
         message = '잘못된 접근입니다.'
-        return JsonResponse(status=405, data={'message': message})
+        return JsonResponse(status=403, data={'message': message})
 
 
 class MusicStatusChangeView(UpdateView):
@@ -206,15 +214,15 @@ class VoiceToPianoView(View):
             submusic = get_object_or_404(SubMusic, pk=pk)
             submusic.update_status = 1
             submusic.save()
-            detect_freq(pk)
+            detect_freq.delay(pk)
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
         message = '권한이 없습니다.'
-        return JsonResponse(status=405, data={'message': message})
+        return JsonResponse(status=403, data={'message': message})
 
     def get(self, request, *args, **kwargs):
         message = "잘못된 접근입니다."
-        return JsonResponse(status=405, data={'message': message})
+        return JsonResponse(status=403, data={'message': message})
 
 
 class VoiceToDrumView(View):
@@ -222,18 +230,115 @@ class VoiceToDrumView(View):
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('data')
         if SubMusic.objects.get(id=pk).contributor == request.user:
-            s3_file_download(pk)
-            message = '변환중 입니다.'
-            return JsonResponse(status=200, data={'message': message})
+            submusic=get_object_or_404(SubMusic, pk=pk)
+            submusic.update_status = 1
+            submusic.save()
+            detect_beat.delay(pk)
+            return JsonResponse(status=200, data={'message': pk})
         message = '권한이 없습니다.'
-        return JsonResponse(status=405, data={'message': message})
+        return JsonResponse(status=403, data={'message': message})
 
     def get(self, request, *args, **kwargs):
         message = "잘못된 접근입니다."
-        return JsonResponse(status=405, data={'message': message})
+        return JsonResponse(status=403, data={'message': message})
 
 
 class MusicConvertCheckView(View):
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         pk = request.POST.get('data')
+        status = get_object_or_404(SubMusic, pk=pk).update_status
+        if status == 1:
+            return JsonResponse(status=200, data={'message': status})
+        elif status == 2:
+            message = '변환이 완료되었습니다.'
+            return JsonResponse(status=200, data={'message': status})
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+class MusicCompletedView(View):
+    pk_url_kwarg = 'working_music_id'
+
+    def post(self, request, *args, **kwargs):
+        submusic_name_list = []
+        file_path = settings.BASE_DIR
+        working_music_id = self.kwargs.get(self.pk_url_kwarg)
+        music_object = get_object_or_404(Music, pk=working_music_id)
+        if music_object.owner == request.user:
+            media_file_location = settings.STATICFILES_LOCATION
+
+            music_name = get_object_or_404(Music, pk=working_music_id).seed_file.name
+            url = 'https://' + settings.AWS_S3_CUSTOM_DOMAIN + '/' + media_file_location + '/' + music_name
+            music_name = music_name.replace('audiofile/', '')
+            submusic_name_list.append(music_name)
+            request = requests.get(url, stream=True)
+            if request.status_code == 200:
+                with open(music_name, 'wb') as f:
+                    for chunk in request.iter_content(1024):
+                        f.write(chunk)
+
+            for i in range(music_object.sub_musics.values_list().__len__()):
+                if music_object.sub_musics.values_list()[i][8] == 2:
+                    convert_s3_file_download(music_object.sub_musics.values_list()[i][0])
+                    convert_name = music_object.sub_musics.values_list()[i][5]
+                    if 'audiofile/' in convert_name:
+                        convert_name = music_object.sub_musics.values_list()[i][5].replace('audiofile/', '')
+                    submusic_name_list.append(convert_name)
+                elif music_object.sub_musics.values_list()[i][8] == 0:
+                    s3_file_download(music_object.sub_musics.values_list()[i][0])
+                    submusic_name_list.append(music_object.sub_musics.values_list()[i][4][10:])
+
+        self.combine_music(file_path, submusic_name_list)
+
+        return HttpResponseRedirect(reverse_lazy('home'))
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def combine_music(self, path, file_list):
+        song_list = []
+        count = 0
+        for filename in file_list:
+            fullpath = os.path.join(path, filename)
+            ext = os.path.splitext(filename)
+            if ext[1] != '.wav':
+                m4a2wave(filename)
+                filename = ext[0] + '.wav'
+                fullpath = os.path.join(path, filename)
+                file_list[count] = filename
+            count = count + 1
+            song_list.append(AudioSegment.from_wav(fullpath))
+
+        combined_song = song_list[0]
+        for i in range(1, len(song_list)):
+            combined_song.overlay(song_list[i])
+
+        result_name = settings.BASE_DIR + "/combined_" + file_list[0]
+
+        combined_song.export(result_name, format='wav')
+        self.combine_music_save('combined_' + file_list[0])
+
+        for filename in file_list:
+            fullpath = os.path.join(path, filename)
+            os.remove(fullpath)
+
+    def combine_music_save(self, complete_file_name):
+        complete_file_path = settings.BASE_DIR + '/' + complete_file_name
+        working_music_id = self.kwargs.get(self.pk_url_kwarg)
+        with open(complete_file_path, 'rb') as f:
+            contents = f.read()
+
+        complete_music = get_object_or_404(Music, pk=working_music_id)
+        complete_music.music_option = 0
+        complete_music.completed_music.name = 'new_' + complete_file_name
+        s3 = boto3.resource(
+            's3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        )
+        bucket = s3.Bucket('stackofmusic')
+        bucket.put_object(Key=complete_music.completed_music.name, Body=contents)
+
+        complete_music.save()
+        os.remove(complete_file_path)
