@@ -4,20 +4,22 @@ from music.models import Music, Comment, Genre
 from accounts.models import User
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = (
-            'comment_text',
-            'pub_data',
-        )
-
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
             'username',
+        )
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Comment
+        fields = (
+            'user',
+            'comment_text',
         )
 
 
@@ -32,7 +34,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class CompletedMusicSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     genre = GenreSerializer()
-    # comment = CommentSerializer()
+    comment = CommentSerializer(many=True)
     # contributor = UserSrializer()
     total_like_user = serializers.IntegerField(source='total_likes_user')
 
@@ -46,6 +48,7 @@ class CompletedMusicSerializer(serializers.ModelSerializer):
             'owner',
             'create_date',
             'total_like_user',
+            'comment',
         )
 
 

@@ -1,9 +1,10 @@
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic.edit import BaseCreateView
 from rest_framework import mixins, generics, permissions
 from rest_framework.authentication import SessionAuthentication, \
     BasicAuthentication
@@ -97,19 +98,25 @@ class LikeMusicAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
         return super(LikeMusicAPIView, self).update(request, *args, **kwargs)
 
 
-class CreateCommentView(CreateView):
+class CreateCommentView(BaseCreateView):
     model = Comment
     form_class = CreateCommentForm
     pk_url_kwarg = 'completed_music_id'
 
     def get_success_url(self):
-        completed_music_id = self.kwargs.get[self.pk_url_kwarg]
+        completed_music_id = self.kwargs.get(self.pk_url_kwarg)
         return reverse_lazy('completed_music_detail', kwargs={'completed_music_id': completed_music_id})
 
     def get_context_data(self, **kwargs):
         context = super(CreateCommentView, self).get_context_data(**kwargs)
         context['completed_music_id'] = self.kwargs.get(self.pk_url_kwarg)
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super(CreateCommentView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['music'] = get_object_or_404(Music, pk=self.kwargs.get(self.pk_url_kwarg))
+        return kwargs
 
 
 @csrf_exempt

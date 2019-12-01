@@ -121,15 +121,14 @@
 
                     for (var i = 0; i < working_music["sub_musics"].length; i++) {
 
-                        if(working_music["sub_musics"][i].update_status==2){
+                        if(working_music["sub_musics"][i].update_status == 2){
                             working_music["sub_musics"][i].music_file = working_music["sub_musics"][i].music_file.replace('static/', '');
                         }
-                        //폼 안묶은 코드
                         var content = "<tr id=\"tr"+ i + "\"><td>" + working_music["sub_musics"][i].contributor.username +"</td>" +"<td>"+working_music["sub_musics"][i].instrument.name+"</td>"+"<td><audio id=\"submusic" + i + "\"src=\""+working_music["sub_musics"][i].music_file +" \"controls>" + "<source id=\"sub"+i+ "\" src=\"" +  "\" type=\"audio/mp4\"/></audio></td>"+"<td><input type=\"checkbox\" id=\"" + "subcheck" + i +"\" style=\"float:left;\" >\n"
                         if(working_music["sub_musics"][i].status == 1){
                             if(working_music["sub_musics"][i].update_status == 0) {
                                 content = content + "<button class=\"update-btn btn btn-default\" data-pk = \" " + working_music['sub_musics'][i].id + "\">update</button>\n" +
-                                    "<button class = \"delete-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">delete</button>\n</td>"
+                                    "<button class = \"delete-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">delete</button>\n</td>";
                                 content = content + "<td><button class = \"piano-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">convert piano</button>\n" +
                                     "<button class = \"drum-btn btn btn-default\" data-pk = \"" + working_music['sub_musics'][i].id + "\">convert drum</button></td></tr>";
                             }
@@ -441,9 +440,9 @@
                                             },
                                             success: function (data) {
                                                 pk = data['message'];
-                                                if(data['message'] == 1){
+                                                if(data['message'] === 1){
 
-                                                } else if(data['message'] == 2){
+                                                } else if(data['message'] === 2){
                                                     alert('변환 되었습니다!');
                                                     console.log(pk);
                                                     window.location.reload();

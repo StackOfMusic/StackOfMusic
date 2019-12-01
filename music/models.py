@@ -1,10 +1,24 @@
-from django.utils.timezone import now
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.urls import reverse
 
 from StackOfMusic import settings
 from accounts.models import User
+
+# class CustomFileField(models.FileField):
+#     attr_class = FieldFile
+#     interval = 0
+#
+#     def pre_save(self, model_instance, add):
+#         file = super().pre_save(model_instance, add)
+#         if file and not file._committed:
+#             # Commit the file to storage prior to saving the model
+#             file.save(file.name, file.file, save=False)
+#         return file
+#
+#     def set_interval(self, interval):
+#         self.interval = interval
+
 
 private_storage = FileSystemStorage(location=settings.STATIC_URL + settings.STATICFILES_LOCATION + '/')
 
