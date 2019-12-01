@@ -164,7 +164,7 @@ class SubMusicDeleteView(View):
 
     def get(self, request, *args, **kwargs):
         message = '잘못된 접근입니다.'
-        return JsonResponse(status=405, data={'message': message})
+        return JsonResponse(status=403, data={'message': message})
 
 
 class MusicStatusChangeView(UpdateView):
