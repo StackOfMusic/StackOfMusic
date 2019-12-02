@@ -71,6 +71,7 @@ def divide_music(pk):
     song_len = len(song)
     element_size = 400
 
+    print(MUSIC_ELEMENT_PATH)
     while elements < song_len:
         if elements + element_size < song_len:
             music_elements = song[elements:elements + element_size]
