@@ -54,8 +54,8 @@ def divide_music(pk):
     s3_file_download(pk)
 
     music_name = get_object_or_404(SubMusic, pk=pk).music_file.name
-
     music_name = music_name.replace('audiofile/', '')
+    print(music_name)
     ext = os.path.splitext(music_name)[1]
     if ext[1] != '.wav':
         m4a2wave(music_name)

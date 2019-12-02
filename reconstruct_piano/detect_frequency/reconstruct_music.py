@@ -38,6 +38,7 @@ def recons_music(freq_data, instrument, pk):
     reconstruct_music = AudioSegment.empty()
     #music_source = edit_source(0)
     sound_list = []
+    print('last')
     #first = 1
 
     for freq in freq_data:
