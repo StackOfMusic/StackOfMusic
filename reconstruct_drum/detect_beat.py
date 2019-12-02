@@ -77,7 +77,7 @@ def detect_freq():
             # play stream and find the frequency of each chunk
             while len(data) == chunk*swidth:
                 # write data out to the audio stream
-                stream.write(data)
+
                 # unpack the data and times by the hamming window
                 indata = np.array(wave.struct.unpack("%dh"%(len(data)/swidth), data))*window
                 # Take the fft and square each value
@@ -100,7 +100,7 @@ def detect_freq():
                 data = wf.readframes(chunk)
             count += 1
             if data:
-                stream.write(data)
+                pass
             stream.close()
             p.terminate()
 
