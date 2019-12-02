@@ -214,7 +214,7 @@ class VoiceToPianoView(View):
             submusic = get_object_or_404(SubMusic, pk=pk)
             submusic.update_status = 1
             submusic.save()
-            detect_freq.delay(pk)
+            detect_freq(pk)
             message = '변환중 입니다.'
             return JsonResponse(status=200, data={'message': message})
         message = '권한이 없습니다.'
@@ -233,7 +233,7 @@ class VoiceToDrumView(View):
             submusic=get_object_or_404(SubMusic, pk=pk)
             submusic.update_status = 1
             submusic.save()
-            detect_beat.delay(pk)
+            detect_beat(pk)
             return JsonResponse(status=200, data={'message': pk})
         message = '권한이 없습니다.'
         return JsonResponse(status=403, data={'message': message})

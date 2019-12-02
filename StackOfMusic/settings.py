@@ -27,7 +27,7 @@ CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.j
 SECRET_KEY = 'h9e@=*_df72)j3pz$20n!vsgi$_gad6ychvdeiyfw9sb)pdze6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.209.15.144']
 

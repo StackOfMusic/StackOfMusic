@@ -89,6 +89,7 @@
         var working_music = {};
         var submusics = new Array(20);
         var subsub = new Array(20);
+        var origin_audio = '';
         $(function () {
             $.ajax({
                 method: 'GET',
@@ -149,6 +150,8 @@
                         submusics[i] = document.getElementById("subcheck" + i);
                         subsub[i] = document.getElementById("submusic"+i);
                     }
+                    origin_audio = document.getElementById("ownermusic");
+
                 },
                 error: function (error) {
                     alert(error + 'data를 불러올수없습니다.');
@@ -164,6 +167,7 @@
                     subsub[i].pause();
                 }
             }
+            origin_audio.pause();
         }
         function play() {
             var origin =document.getElementById("ownercheck");
@@ -192,14 +196,13 @@
             }
             if($(origin).prop("checked")==true){
                 var ori = $('#ownermusic').attr('src');
-                var audio = document.getElementById("ownermusic");
 
 
                 var timeout = document.getElementById("ownermusic").duration;
-                audio.play();
+                origin_audio.play();
                 setInterval(function(){
-                    audio.currentTime=0;
-                    audio.play(); }, timeout*1000);
+                    origin_audio.currentTime=0;
+                    origin_audio.play(); }, timeout*1000);
             }
             var secondmusic = document.getElementById("check2");
 
@@ -542,16 +545,16 @@
                     <br>
                     <button class="btn btn-lg btn-default" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;" onclick="location.href='{% url 'create_music:complete_music' working_music_id %}'">합치기</button>
 
-{#                    <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">#}
-{#                        {% csrf_token %}#}
-{#                        <th><label for="id_music_option">Music option:</label></th><td>#}
-{#                        <select name="music_option" required id="id_music_option">#}
-{#                            <option value="" selected>select</option>#}
-{#                            <option value="0">완성</option>#}
-{#                            <option value="1">미완성</option>#}
-{#                        </select></td><br><br>#}
-{#                        <button class="btn btn-lg btn-default" type="submit" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>#}
-{#                    </form>#}
+                    {#                    <form method="post" action="{% url 'create_music:music_status_change' working_music_id %}">#}
+                    {#                        {% csrf_token %}#}
+                    {#                        <th><label for="id_music_option">Music option:</label></th><td>#}
+                    {#                        <select name="music_option" required id="id_music_option">#}
+                    {#                            <option value="" selected>select</option>#}
+                    {#                            <option value="0">완성</option>#}
+                    {#                            <option value="1">미완성</option>#}
+                    {#                        </select></td><br><br>#}
+                    {#                        <button class="btn btn-lg btn-default" type="submit" style="width: 500px;height:50px;font-size:20px;margin-left: 50px;background-color: gray;border-radius: 30px;">Complete Music</button>#}
+                    {#                    </form>#}
 
 
                     <br><br>
