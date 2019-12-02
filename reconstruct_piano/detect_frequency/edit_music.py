@@ -57,7 +57,7 @@ def divide_music(pk):
     music_name = music_name.replace('audiofile/', '')
     print(music_name)
     ext = os.path.splitext(music_name)[1]
-    if ext[1] != '.wav':
+    if ext != '.wav':
         m4a2wave(music_name)
     music_name = os.path.splitext(music_name)[0]
     music_name = music_name + '.wav'
