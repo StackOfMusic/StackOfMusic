@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!doctype html>
 <html lang="ko">
 <head>
@@ -328,7 +329,7 @@
         <!-- Icon -->
         <div class="fadeIn first">
             <br>
-            <img src="../../../static/img/password.png" style="width:50px" />
+            <img src="{% static 'img/password.png' %}" style="width:50px" />
         </div>
 
         <!-- Login Form -->

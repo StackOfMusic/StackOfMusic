@@ -113,7 +113,7 @@ def detect_freq():
                     snare_cnt += 1
                 elif freq > 130 and freq < 200:
                     bass_cnt += 1
-                elif freq > 4000 and freq < 7000:
+                elif freq > 3000 and freq < 8000:
                     hi_hat_cnt += 1
                 else:
                     pass

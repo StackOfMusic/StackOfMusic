@@ -1,4 +1,5 @@
 {% extends 'StackOfMusic/base.html' %}
+{% load staticfiles %}
 <!doctype html>
 <html lang="ko">
 <head>
@@ -236,7 +237,7 @@
 
                                     <div style="float: right;">
                                         <div id="total_likes" style="color: black;float: right;width: 100px;"></div><br>
-                                        <button type="button" onclick="music_like();" style="border: none;border-radius: 10px;" ><img src="../../static/img/like.png" style="width: 30px;height: 30px;float: right;" alt=""> </button>
+                                        <button type="button" onclick="music_like();" style="border: none;border-radius: 10px;" ><img src="{% static 'img/like.png' %}" style="width: 30px;height: 30px;float: right;" alt=""> </button>
 
                                         <div id="like-count" style="color: black;float: right;" ></div>
                                     </div>
