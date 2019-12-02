@@ -35,6 +35,7 @@ def detect_freq(pk):
             count = 0
             total_hz = 0.0
             # open up a wave
+            print(fullpath)
             wf = wave.open(fullpath, 'rb')
             swidth = wf.getsampwidth()
             RATE = wf.getframerate()

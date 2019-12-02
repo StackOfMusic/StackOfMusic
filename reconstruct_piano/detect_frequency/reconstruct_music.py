@@ -311,7 +311,6 @@ def recons_music(freq_data, instrument, pk):
                 sound_list.append([7,11])
         else :
             pass
-    print('hi! last')
     for sound in sound_list:
         note = sound[0] * 100 + sound[1]
         reconstruct_music = reconstruct_music + edit_source(0, note, 1)
