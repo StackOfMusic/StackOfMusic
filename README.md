@@ -6,7 +6,8 @@ StackOfMusic
 Introduce
 ================================================
 It is a loopstation-based music composition and streaming service that utilizes MIR modules.
-We want everyone to be able to anyone can compose the music!
+
+**We want everyone to be able to anyone can compose the music!**
 
 StackOfMusic Server installation
 ====================================
