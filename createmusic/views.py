@@ -46,7 +46,6 @@ class WorkingMusicListView(ListView):
 
     def get_queryset(self):
         queryset = self.model.objects.filter(music_option=Music.MUSIC_NOT_COMPLETED).order_by('-create_date')[:5]
-        # queryset = self.request.user.music_owner.filter(Q(music_option=Music.MUSIC_NOT_COMPLETED))
         return queryset
 
     @method_decorator(login_required(login_url=login_url))
