@@ -25,7 +25,9 @@ How to install
 
     $ git clone https://github.com/StackOfMusic/StackOfMusic.git
     $ cd StackOfMusic
+    
     ## Please create a virtual environment and install Python package. ##
+    
     $ virtualenv -p python3 myvenv
     $ . myvenv/bin/activate
     $ pip install -r requirements.txt
@@ -38,5 +40,6 @@ How to run in local
     $ python manage.py runserver
     
     ## Please turn on the other terminal. ##
+    
     $ celery -A StackOfMusic worker -l info
     
