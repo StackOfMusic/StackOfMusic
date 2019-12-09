@@ -45,3 +45,17 @@ How to run in local
     
     $ celery -A StackOfMusic worker -l info
     
+Contribute
+----------------
+* Issue Tracker: https://github.com/StackOfMusic/StackOfMusic/issues
+* Source Code: https://github.com/StackOfMusic/StackOfMusic/
+
+Contribution guidelines
+-----------------------
+If you want to contribute to HML, be sure to review the [contribution guideline](https://github.com/StackOfMusic/StackOfMusic/). This project adheres to HML's code of conduct. By participating, you are expected to uphold this code.
+
+We use GitHub issues for tracking requests and bugs.
+
+License
+------------------------
+MIT license
