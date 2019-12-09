@@ -5,7 +5,7 @@
 
         <br><br>
         <div style="margin-left: 350px; height: 100px;float: left"></div>
-        <p style="color: #f2f2f2; background: #ff4a4a; font-size: 20px; line-height: 20px; font-weight: 700; margin: 0 5px 24px; float: left; padding: 10px; margin: 0 5px 24px; font-family: 'Libre Baskerville', serif;">Today's Musics</p>
+        <p style="color: #f2f2f2; background: #ff4a4a; font-size: 20px; line-height: 20px; font-weight: 700; margin: 0 5px 24px; float: left; padding: 10px; margin: 0 5px 24px; font-family: 'Libre Baskerville', serif;">Liked Music</p>
         <br><br>
         <center>
             <div style="margin-left: 250px;">
@@ -13,6 +13,7 @@
                     <button class="my-transparent-button" onclick="location.href='{% url 'completed_music_detail' user_liked_music.id %}'" style="float: left;">
                         <a href="{% url 'completed_music_detail' user_liked_music.id %}">
                             <div class="card-body">
+                                <img src="{{ user_liked_music.album_jacket.url }}">
                                 <h6 class="card-title" style="color: white">{{ user_liked_music }}</h6>
                             </div>
                         </a>
