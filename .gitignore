@@ -119,7 +119,7 @@ temp
 config/
 log/
 *.pyc
-000*
+00*
 
 media/*
 myvenv
