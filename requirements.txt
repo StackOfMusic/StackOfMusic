@@ -21,7 +21,7 @@ django-pipeline==1.6.14
 django-redis==4.10.0
 django-s3direct==1.1.5
 django-storages==1.7.2
-djangorestframework==3.10.3
+djangorestframework==3.11.2
 docutils==0.15.2
 enum34==1.1.6
 funcsigs==1.0.2
