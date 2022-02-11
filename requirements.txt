@@ -41,7 +41,7 @@ oauthlib==3.1.0
 pandas==0.24.2
 Pillow==6.1.0
 pkg-resources==0.0.0
-protobuf==3.10.0
+protobuf==3.15.0
 PyAudio==0.2.11
 pycparser==2.19
 pydub==0.23.1
