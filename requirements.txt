@@ -13,7 +13,7 @@ decorator==4.4.1
 Django==2.2.5
 django-cachalot==2.1.0
 django-celery==3.3.1
-django-celery-results==1.1.2
+django-celery-results==2.4.0
 django-cors-headers==3.1.1
 django-debug-toolbar==2.1
 django-oauth-toolkit==1.2.0
