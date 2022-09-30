@@ -29,7 +29,7 @@ gunicorn==19.9.0
 idna==2.8
 importlib-metadata==0.23
 jmespath==0.9.4
-joblib==0.14.0
+joblib==1.2.0
 kombu==4.6.6
 librosa==0.7.1
 llvmlite==0.30.0
